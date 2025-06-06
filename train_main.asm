@@ -5,45 +5,42 @@
 	
 
 START:
+	EI								; need for halts
 	call	DRAW_SCENE
-  
-  
-  
-  
+	call	SETUP_BUILDINGS
+	
+	call	ANIMATE
 
-
-END:
+EXIT:
 	ret
-  
- 
+
+SETUP_BUILDINGS:
+	ret;
+
+ANIMATE:
+	halt
+	jr		ANIMATE
+   
 DRAW_SCENE:
 ; basic border
-	ld		a, COL_CYN				; blue in a
+	ld		a, COL_CYN				; cyan in a
 	call	ROM_BORDER				; sets border to val in a
 	
 ; clear screen
 	call	ROM_CLS					; so AT works, not just print at bottom of screen
 
-; draw characters
-
-LOOP_CHARS:
+; set UDG
 	ld		hl, UDG_START			; load first UDG addr
+	ld		b, 4					; 2 lots of alternating pattern
+LOOP_UDG:	
 	ld		(hl), %10101010			; load alternate 1010 patters, 'unrolled' ;)
 	inc 	hl
 	ld		(hl), %01010101
 	inc 	hl
-	ld		(hl), %10101010			
-	inc 	hl
-	ld		(hl), %01010101
-	inc 	hl
-	ld		(hl), %10101010			
-	inc 	hl
-	ld		(hl), %01010101
-	inc 	hl
-	ld		(hl), %10101010			
-	inc 	hl
-	ld		(hl), %01010101
+	djnz	LOOP_UDG				
 	
+
+; draw characters	
 	ld		hl, SCENE_CHARACTERS	; load addr of characters 
 LOOP_CHAR:
 	ld		a, (hl)					; get char to display
