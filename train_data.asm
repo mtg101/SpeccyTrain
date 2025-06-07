@@ -67,11 +67,11 @@ SCENE_ATTRS:
 	defb	ATTR_BLK_PAP, 1
 	defb	ATTR_RED_PAP, 8
 	defb	ATTR_BLK_PAP, 1
-	defb	ATTR_RED_PAP, 3
+	defb	ATTR_RED_PAP, 4
 	defb	ATTR_BLK_PAP, 1
-	defb	ATTR_RED_PAP, 14
+	defb	ATTR_RED_PAP, 12
 	defb	ATTR_BLK_PAP, 1
-	defb	ATTR_RED_PAP, 3
+	defb	ATTR_RED_PAP, 4
 	defb	ATTR_BLK_PAP, 1
 	defb	ATTR_RED_PAP, 8
 	defb	ATTR_BLK_PAP, 3

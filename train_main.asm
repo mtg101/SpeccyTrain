@@ -55,6 +55,7 @@ LOOP_RLE_CHAR:						; assume: num times not 0...
 	jr		LOOP_CHAR				; next RLE block
 	
 CHARS_DONE:
+
 ; draw attrs
 	ld		hl, SCENE_ATTRS
 	ld		de, ATTR_START			; de points to ATTR mem
