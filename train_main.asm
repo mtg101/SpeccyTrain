@@ -16,7 +16,6 @@ EXIT:
 	ret
 
 SETUP_BUILDINGS:
-	call	MAKE_NEXT_BUILDING		; store random var in NEXT_BUILDING
 	call	BUFFER_BUILDINGS		; buffer based on the rng 
 	ret;
 
@@ -76,36 +75,36 @@ DRAW_BUILDING_ROW_OFFSET_LOOP:
 	pop		bc						; restore loop var
 	ret
 
-MAKE_NEXT_BUILDING:
-	call	RNG						; rnd in SEED
-	ld		hl, NEXT_BUILDING		
-	ld		(hl), SEED				; generate compiler warning, that's fine...
-									; assume lSB, but either is random enough I assume ;)
-	ret
-
 BUFFER_BUILDINGS:
+	call	RNG						; rng in a
+	ld		hl, NEXT_BUILDING		
+	ld		(hl), a					; NEXT_BUILDING is now rng
 	ld		a, %00110000			; mask for type
-	and		NEXT_BUILDING			; get type from generated next building
-									; compiler warning - again is fine
+	ld		hl, NEXT_BUILDING
+	and		(hl)					; get type from generated next building
 	ld		d, a					; store type in d
 	cp		%00000000				; gap?
-	jr		z, ADD_GAP
+	call	z, ADD_GAP
 	ld		a, d					; type back in a
 	cp		%00010000				; udg gap?
-	jr		z, ADD_UDG_GAP
+	call	z, ADD_UDG_GAP
 	ld		a, d					; type back in a
-	cp		%00100000				; building? (2 or 3 so just look at MSB)
-	jr		z, ADD_BUILDING
+	cp		%00100000				; building1?
+	call	z, ADD_BUILDING
+	ld		a, d					; type back in a
+	cp		%00110000				; building2?
+	call	z, ADD_BUILDING
 	
 	ld		a, WIN_COL_VIS			; have we filled the buffer?
-	cp		NEXT_BUILDING_COL
-	jr		c, BUFFER_BUILDINGS		; carry means < -- so we're always putting extra
+	ld		hl, NEXT_BUILDING_COL
+	cp		(hl)
+	call	p, BUFFER_BUILDINGS		; branch if positive
 									; something in buffer 
 	ret
 
 BLANK_WIN_COL						; whole column blank (space)
 	ld		a, C_SPACE				; we're printing spaces
-	ld 		b, WIN_ROWS
+	ld 		b, WIN_ROWS	
 ADD_BLANK_LOOP:
 	call	BUF_ROW_AT_COL			; draw the char to buffer
 	djnz	ADD_BLANK_LOOP			; until done all rows
@@ -113,7 +112,7 @@ ADD_BLANK_LOOP:
 
 ADD_GAP:
 	call	BLANK_WIN_COL
-	ld		de, NEXT_BUILDING_COL	; move to next column
+	ld		de, (NEXT_BUILDING_COL)	; move to next column
 	inc		de
 	ld		(NEXT_BUILDING_COL), de
 	ret
@@ -121,23 +120,27 @@ ADD_GAP:
 ADD_UDG_GAP:						; which one from other bits in NEXT_BUILDING
 	call	BLANK_WIN_COL			; clear first
 	
-	ld		de, NEXT_BUILDING
-	and		%00000011				; now it's 0-3
-	ld		hl, UDG_START			; first UDG
-	inc		hl						; step over dither
-	add		hl, de					; find udg
-	ld		a, (hl)					; put in a
+	ld		a, %00000011
+	ld		hl, NEXT_BUILDING
+	and		(hl)					; now a is 0-3 
+	ld		d, a					; a for math
+	ld		a, C_UDG_1				; first UDG
+	inc		a						; step over dither
+	add		a, d					; find udg
 	ld		b, WIN_ROWS-2			; draw in top grass row
 	call	BUF_ROW_AT_COL
 
+	ld		c, a					; remember UDG
+	ld		a, d					; 0-3 type
 	cp		%00000011				; is it a tree?
 	jr		nz, NOT_TREE	
-	inc		hl						; next UDG is tree top								
-	ld		b, WIN_ROWS-3			; draw in top grass row
+	ld		a, c					; tree bottom
+	inc		a						; next udg (tree top)
+	ld		b, WIN_ROWS-3			; draw in bottom sky row
 	call	BUF_ROW_AT_COL
 									
 NOT_TREE:
-	ld		de, NEXT_BUILDING_COL	; move to next column
+	ld		de, (NEXT_BUILDING_COL)	; move to next column
 	inc		de
 	ld		(NEXT_BUILDING_COL), de
 	ret;
@@ -148,13 +151,22 @@ ADD_BUILDING:
 
 BUF_ROW_AT_COL:						; a char, b row 1-10 (bjnz means can't 0 index...)
 	push	bc						; looping again so preserve b
+	push	af						; need to do math in a, but that's what to print...
+	push	de						; dont' trash de
 	ld		hl, BUILDING_BUF		; start of buff
-	ld		de, NEXT_BUILDING_COL	; current col
+	ld		de, (NEXT_BUILDING_COL)	; current col
 	add		hl, de
 	ld		de, WIN_COL_TOTAL
+	dec		b						; indexes
+	ld		a, b
+	cp 		0
+	jr		z, BUF_ROW_READY
 BUF_ROW_AT_COL_LOOP:
 	add		hl, de					; move down a row
 	djnz	BUF_ROW_AT_COL_LOOP		; until correct row
+BUF_ROW_READY:	
+	pop		de
+	pop		af
 	ld		(hl), a					; draw char
 	pop		bc
 	ret
@@ -185,6 +197,7 @@ LOOP_RLE_CHAR:						; assume: num times not 0...
 	jr		LOOP_CHAR				; next RLE block
 	
 CHAR_BUF_DONE:
+
 ; RLE attrs to buffer
 	ld		hl, SCENE_ATTRS			; load addr of RLE attrs
 	ld		de, ATTR_BUF			; de points to ATTR buffer
@@ -203,14 +216,22 @@ LOOP_RLE_ATTR:						; assume: num times not 0...
 	jr		LOOP_ATTR				; next RLE block
 	
 ATTR_BUF_DONE:
+
 ; basic border
 	ld		a, COL_BLU				; cyan in a
 	call	ROM_BORDER				; sets border to val in a
 	
 ; clear screen
+	ld		a, $FF
+	ld		(MASK_P), a				; RST $10 uses ATTRs, doesn't overwrite
 	call	ROM_CLS					; so AT works, not just print at bottom of screen
 	halt							; wait for vsync for best chance of nice draw...
 									; but t-states hurt so maybe need more tricksy stuff
+; ldir ATTRs (has to come after chars, as RST $10 uses system ink/paper :(
+	ld		de, ATTR_START			; ATTR mem target
+	ld		hl, ATTR_BUF			; buffer source
+	ld		bc, SCREEN_ATTRS		; num attrs to blit
+	ldir
 ; RST chars
 	ld		hl, CHAR_BUF			; point to start of buffer
 	ld		b, 255					; 8 bit counter
@@ -232,17 +253,11 @@ CHAR_RST_3:							; so unroll and do thrice
 	inc		hl						; next char
 	djnz	CHAR_RST_3				; loop until done
 
-; ldir ATTRs (has to come after chars, as RST $10 uses system ink/paper :(
-	ld		de, ATTR_START			; ATTR mem target
-	ld		hl, ATTR_BUF			; buffer source
-	ld		bc, SCREEN_ATTRS		; num attrs to blit
-	ldir
-
 DRAW_SCENE_DONE:
 	ret
 
-RNG: 								; uses first 8KiB ROM for pseudo
-	ld		hl,(SEED)        		; SEED is both seed and the random number
+RNG: 								; uses first 8KiB ROM for pseudo, retuns in a
+	ld		hl,(SEED)        		 
     ld		a,h
     and		$1F              		; keep it within first 8k of ROM.
     ld		h,a
@@ -265,7 +280,7 @@ NEXT_BUILDING:						; ic bt bh bw
 	defb	0
 	
 NEXT_BUILDING_COL:
-	defb	0
+	defw	0
 
 ; re-use the scene buffers for the building buffer too
 ; as we need more window buffers for other parallaxes, will need more management

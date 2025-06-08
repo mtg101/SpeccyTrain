@@ -33,6 +33,7 @@ ROM_BORDER		= $229B					; set border to value in a
 UDG_START		= $FF58
 ATTR_START		= $5800
 SCREEN_START	= $4000
+MASK_P			= $5C8E
 
 ; screen sizes
 SCREEN_PIXELS	= $C000
