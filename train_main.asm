@@ -22,7 +22,7 @@ SETUP_BUILDINGS:
 ANIMATE:
 	halt
 	call	DRAW_BUILDINGS			; draw 'em
-									; shift left
+									; shift each row left
 									; add more if needed 
 									; move col left
 									; check if extra buff empty
@@ -146,7 +146,45 @@ NOT_TREE:
 	ret;
 
 ADD_BUILDING:
-	call	ADD_UDG_GAP				; HACK it's just gaps to start...
+; load d height, e width
+	ld		a, %00001100
+	ld		hl, NEXT_BUILDING
+	and		(hl)					; now a is 0000 - 0300
+	rra								; shift right twice
+	rra
+	inc		a						; inc twice so 2-5
+	inc		a
+	ld		d, a					; d=height
+	ld		a, %00000011
+	ld		hl, NEXT_BUILDING
+	and		(hl)					; now a is 0-3 
+	inc		a						; now a is 1-4
+	ld		e, a					; e=width
+
+	ld		b, e					; for each column...
+ADD_BULDING_COL_LOOP:
+	push	bc
+	call	BLANK_WIN_COL			; clear first
+									; add building UDGs to height
+									; HACK - just add single UDG at base
+	ld		b, d
+ADD_BULDING_ROW_LOOP:
+	push	bc						; preserve bc
+	ld		a, WIN_ROWS-1			; starts at top grass
+	sub		b						; then height
+	ld		b, a					; into b for call
+	ld		a, C_UDG_1 + 6			; building udg in a
+	call	BUF_ROW_AT_COL			; buf it
+	pop		bc						; restore bc
+	djnz	ADD_BULDING_ROW_LOOP
+	
+	
+	ld		bc, (NEXT_BUILDING_COL)	; move to next column
+	inc		bc
+	ld		(NEXT_BUILDING_COL), bc
+	pop		bc
+	djnz	ADD_BULDING_COL_LOOP
+	
 	ret;
 
 BUF_ROW_AT_COL:						; a char, b row 1-10 (bjnz means can't 0 index...)
@@ -266,7 +304,7 @@ RNG: 								; uses first 8KiB ROM for pseudo, retuns in a
     ld		(SEED),hl
     ret
 SEED:
-	defw	0
+	defw	23
 	
 NEXT_BUILDING:						; ic bt bh bw 
 									; ic = paper colour (blk, blue, red, mag)
