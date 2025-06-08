@@ -22,13 +22,58 @@ SETUP_BUILDINGS:
 ANIMATE:
 	halt
 	call	DRAW_BUILDINGS			; draw 'em
-									; shift each row left
-									; add more if needed 
-									; move col left
-									; check if extra buff empty
-									; recall BUFFER_BUILDINGS if need to
+	call	SHIFT_BUILDINGS_LEFT								
+	ld		de, (NEXT_BUILDING_COL)	; move col left
+	dec		de
+	ld		(NEXT_BUILDING_COL), de
+	ld		a, (NEXT_BUILDING_COL)	; check if extra buff empty
+	cp		WIN_COL_VIS+1
+	call	m, BUFFER_BUILDINGS		; call BUFFER_BUILDINGS if need to
 	jr		ANIMATE
 ; end main loop
+
+SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
+	ld		de, BUILDING_CHAR_BUF		; target
+	ld		hl, BUILDING_CHAR_BUF + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS			; move whole visible window
+	ldir
+	ld		de, BUILDING_CHAR_BUF + WIN_COL_TOTAL			; target
+	ld		hl, BUILDING_CHAR_BUF + WIN_COL_TOTAL + 1		; source is one to the right
+	ld		bc, WIN_COL_VIS			; move whole visible window
+	ldir
+	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 2)		; target
+	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 2) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS			; move whole visible window
+	ldir
+	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 3)		; target
+	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 3) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS			; move whole visible window
+	ldir
+	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 4)		; target
+	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 4) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS			; move whole visible window
+	ldir
+	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 5)		; target
+	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 5) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS			; move whole visible window
+	ldir
+	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 6)		; target
+	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 6) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS			; move whole visible window
+	ldir
+	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 7)		; target
+	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 7) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS			; move whole visible window
+	ldir
+	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 8)		; target
+	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 8) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS			; move whole visible window
+	ldir
+	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 9)		; target
+	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 9) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS			; move whole visible window
+	ldir
+	ret
 
 DRAW_BUILDINGS:						
 	ld		b, WIN_ROWS				
@@ -47,7 +92,7 @@ DRAW_BUIDLING_ROW:					; b row 1-10 (can't index 0)
 	ld		e, WIN_COL_START		; always same
 
 ; hl needs the addr of the chars to RST
-	ld		hl, BUILDING_BUF		
+	ld		hl, BUILDING_CHAR_BUF		
 	ld		a, b
 	cp		0						; 
 	jr		z, DRAW_BUILDING_ROW_OFFSET	; already at the start
@@ -191,7 +236,7 @@ BUF_ROW_AT_COL:						; a char, b row 1-10 (bjnz means can't 0 index...)
 	push	bc						; looping again so preserve b
 	push	af						; need to do math in a, but that's what to print...
 	push	de						; dont' trash de
-	ld		hl, BUILDING_BUF		; start of buff
+	ld		hl, BUILDING_CHAR_BUF		; start of buff
 	ld		de, (NEXT_BUILDING_COL)	; current col
 	add		hl, de
 	ld		de, WIN_COL_TOTAL
@@ -242,7 +287,7 @@ CHAR_BUF_DONE:
 LOOP_ATTR:
 	ld		a, (hl)					; get attr to use
 	cp		a, 0					; check it's not null
-	jr		z, ATTR_BUF_DONE			; if null we're done
+	jr		z, ATTR_BUF_DONE		; if null we're done
 	inc		hl						; move to num times
 	ld		b, (hl)					; load b counter with num times to display
 LOOP_RLE_ATTR:						; assume: num times not 0...
@@ -290,8 +335,6 @@ CHAR_RST_3:							; so unroll and do thrice
 	RST		$10						; RST it to screen
 	inc		hl						; next char
 	djnz	CHAR_RST_3				; loop until done
-
-DRAW_SCENE_DONE:
 	ret
 
 RNG: 								; uses first 8KiB ROM for pseudo, retuns in a
@@ -323,10 +366,11 @@ NEXT_BUILDING_COL:
 ; re-use the scene buffers for the building buffer too
 ; as we need more window buffers for other parallaxes, will need more management
 ; hopefully all bufs will fit into scene's 1,472 bytes - a resonable working memory!
-BUILDING_BUF:						; share same as the scene ram
+BUILDING_CHAR_BUF:						; share same as the scene ram
 CHAR_BUF:
 	defs	SCREEN_2_CHARS			; space for chars to RST to screen
 	
+BUILDING_ATTR_BUF:
 ATTR_BUF:
 	defs	SCREEN_ATTRS			; space for the ATTRs to ldir to screen
 
