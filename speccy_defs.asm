@@ -32,4 +32,11 @@ ROM_BORDER		= $229B					; set border to value in a
 ; system vars
 UDG_START		= $FF58
 ATTR_START		= $5800
+SCREEN_START	= $4000
 
+; screen sizes
+SCREEN_PIXELS	= $C000
+SCREEN_ATTRS	= $300
+SCREEN_2_CHARS	= $02C0
+
+SCREEN_255_REST	= $C2					; for 255/255/rest limit loops
