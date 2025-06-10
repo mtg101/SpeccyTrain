@@ -28,6 +28,8 @@ ATTR_YPBI		= %00110001
 ; ROM calls
 ROM_CLS			= $0DAF					; cls and open Channel 2 
 ROM_BORDER		= $229B					; set border to value in a
+ROM_PRINT		= $203C					; de point to text in mem, bc is length
+ROM_CHAR_PRINT	= $10					; RST $10
 
 ; system vars
 UDG_START		= $FF58
