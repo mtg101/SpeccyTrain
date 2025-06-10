@@ -18,10 +18,12 @@ COL_C_PAP		= $11
 COL_C_FLA		= $12
 COL_C_BRI		= $13
 
-ATTR_BLK_PAP	= %01000000
+; f b ppp iii (flash, bright, paper, ink)
+ATTR_ALL_BLK	= %01000000
 ATTR_RED_PAP	= %00010000
 ATTR_CYN_PAP	= %00101000
 ATTR_B_GRN_PAP	= %01100000
+ATTR_ALL_WHT	= %00111111
 ATTR_YPBI		= %00110001
 
 
@@ -35,7 +37,8 @@ ROM_CHAR_PRINT	= $10					; RST $10
 UDG_START		= $FF58
 ATTR_START		= $5800
 SCREEN_START	= $4000
-MASK_P			= $5C8E
+MASK_P			= $5C8E					; set bits take from existing color, not ATTR_P
+ATTR_P			= $5C8D					; current ATTRs
 
 ; screen sizes
 SCREEN_PIXELS	= $C000

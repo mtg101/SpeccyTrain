@@ -44,49 +44,49 @@ SCENE_ATTRS:
 	defb	ATTR_RED_PAP, 12
 	defb	ATTR_B_GRN_PAP, 20
 	defb	ATTR_RED_PAP, 10
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 1
 	defb	ATTR_B_GRN_PAP, 20
 	defb	ATTR_RED_PAP, 1
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 8
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 1
 	defb	ATTR_B_GRN_PAP, 20
 	defb	ATTR_RED_PAP, 1
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 8	
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 22
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 8	
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 2
-	defb	ATTR_BLK_PAP, 18
+	defb	ATTR_ALL_BLK, 18
 	defb	ATTR_RED_PAP, 2
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 8
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 4
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 12
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 4
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 8
-	defb	ATTR_BLK_PAP, 3
+	defb	ATTR_ALL_BLK, 3
 	defb	ATTR_RED_PAP, 18
-	defb	ATTR_BLK_PAP, 3
+	defb	ATTR_ALL_BLK, 3
 	defb	ATTR_RED_PAP, 9
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 20
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 10
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 20
-	defb	ATTR_BLK_PAP, 1
+	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 3
 
 
-	defb	ATTR_BLK_PAP, 64
+	defb	ATTR_ALL_BLK, 64
 	defb	0

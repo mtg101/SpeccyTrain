@@ -5,6 +5,7 @@ DRAW_SCENE:
 ; RLE characters to buffer
 	ld		hl, SCENE_CHARACTERS	; load addr of RLE characters 
 	ld		de, CHAR_BUF			; buffer pointer
+									; set ink white so drawing is invisible until ready
 LOOP_CHAR:
 	ld		a, (hl)					; get char to display
 	cp		a, 0					; check it's not null
@@ -40,21 +41,25 @@ LOOP_RLE_ATTR:						; assume: num times not 0...
 	
 ATTR_BUF_DONE:
 
-; basic border
-	ld		a, COL_BLU				; cyan in a
-	call	ROM_BORDER				; sets border to val in a
-	
-; clear screen
+SETUP_SCREEN:
+; black loading screen
 	ld		a, $FF
-	ld		(MASK_P), a				; RST $10 uses ATTRs, doesn't overwrite
-	call	ROM_CLS					; so AT works, not just print at bottom of screen
+	ld		(MASK_P), a				; so RST $10 uses my  ATTRs, doesn't overwrite
+	ld		a, COL_BLK
+	call	ROM_BORDER				; sets border to val in a
+	ld		a, ATTR_ALL_BLK			
+	ld		(ATTR_P), a				; black for loading
+	call	ROM_CLS					; needed to set channel 2 for proper AT drawing (not just scrolling)
+
+; actual setup
+	ld		a, $FF
+	ld		(MASK_P), a				; so RST $10 uses my  ATTRs, doesn't overwrite
+	ld		a, ATTR_ALL_WHT
+	ld		(ATTR_P), a				; set pap&ink white for init draw (invisible until attrs) 
 	halt							; wait for vsync for best chance of nice draw...
 									; but t-states hurt so maybe need more tricksy stuff
-; ldir ATTRs (has to come after chars, as RST $10 uses system ink/paper :(
-	ld		de, ATTR_START			; ATTR mem target
-	ld		hl, ATTR_BUF			; buffer source
-	ld		bc, SCREEN_ATTRS		; num attrs to blit
-	ldir
+
+DRAW_SCENE_CHARS:					; invisible due to ink&paper white
 ; RST chars
 	ld		hl, CHAR_BUF			; point to start of buffer
 	ld		b, 255					; 8 bit counter
@@ -75,6 +80,16 @@ CHAR_RST_3:							; so unroll and do thrice
 	RST		$10						; RST it to screen
 	inc		hl						; next char
 	djnz	CHAR_RST_3				; loop until done
-	ret
 
+; basic border
+	ld		a, COL_BLU
+	call	ROM_BORDER				; sets border to val in a
+	
+DRAW_SCENE_ATTRS:
+; ldir ATTRs 
+	ld		de, ATTR_START			; ATTR mem target
+	ld		hl, ATTR_BUF			; buffer source
+	ld		bc, SCREEN_ATTRS		; num attrs to blit
+	ldir
+	
    
