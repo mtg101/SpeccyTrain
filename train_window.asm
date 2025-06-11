@@ -6,46 +6,90 @@ SETUP_BUILDINGS:
 	ret;
 
 SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
-	ld		de, BUILDING_CHAR_BUF		; target
-	ld		hl, BUILDING_CHAR_BUF + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	; chars
+	ld		de, BUILDING_CHAR_BUF							; target
+	ld		hl, BUILDING_CHAR_BUF + 1						; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
 	ld		de, BUILDING_CHAR_BUF + WIN_COL_TOTAL			; target
 	ld		hl, BUILDING_CHAR_BUF + WIN_COL_TOTAL + 1		; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
 	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 2)		; target
 	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 2) + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
 	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 3)		; target
 	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 3) + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
 	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 4)		; target
 	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 4) + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
 	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 5)		; target
 	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 5) + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
 	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 6)		; target
 	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 6) + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
 	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 7)		; target
 	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 7) + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
 	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 8)		; target
 	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 8) + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
 	ld		de, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 9)		; target
 	ld		hl, BUILDING_CHAR_BUF + (WIN_COL_TOTAL * 9) + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
+	
+	; attrs
+	ld		de, BUILDING_ATTR_BUF							; target
+	ld		hl, BUILDING_ATTR_BUF + 1						; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
+	ldir
+	ld		de, BUILDING_ATTR_BUF + WIN_COL_TOTAL			; target
+	ld		hl, BUILDING_ATTR_BUF + WIN_COL_TOTAL + 1		; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
+	ldir
+	ld		de, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 2)		; target
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 2) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
+	ldir
+	ld		de, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 3)		; target
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 3) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
+	ldir
+	ld		de, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 4)		; target
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 4) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
+	ldir
+	ld		de, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 5)		; target
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 5) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
+	ldir
+	ld		de, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 6)		; target
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 6) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
+	ldir
+	ld		de, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 7)		; target
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 7) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
+	ldir
+	ld		de, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 8)		; target
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 8) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
+	ldir
+	ld		de, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 9)		; target
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 9) + 1	; source is one to the right
+	ld		bc, WIN_COL_VIS									; move whole visible window
+	ldir
+	
 	ret
 
 DRAW_BUILDINGS:						
@@ -58,31 +102,50 @@ DRAW_BUILDINGS_LOOP:
 DRAW_BUIDLING_ROW:					; b row 1-10 (can't index 0)
 	push	bc						; preserve parent loop
 	dec		b						; 0-9
+
 ; get AT d, e
 	ld		a, WIN_ROW_START		
 	add		b						; add rows
 	ld		d, a
 	ld		e, WIN_COL_START		; always same
-
-; hl needs the addr of the chars to RST
-	ld		hl, BUILDING_CHAR_BUF		
-	ld		a, b
-	cp		0						; 
-	jr		z, DRAW_BUILDING_ROW_OFFSET	; already at the start
-	push	de						; ran out of registers
-	ld		de, WIN_COL_TOTAL
-DRAW_BUIDLING_ROW_BUF_LOOP:	
-	add		hl, de			 		; add extra rows
-	djnz	DRAW_BUIDLING_ROW_BUF_LOOP
-	pop		de
 	
-DRAW_BUILDING_ROW_OFFSET:			; de is y, x - hl pointing to chars to RST
+; setcursot AT y, x - de is y, x
 	ld		a, C_AT
 	RST		$10						; AT
 	ld		a, d
 	RST		$10						; y	
 	ld		a, e
 	RST		$10						; x
+
+; work out offset from start of buffers
+	ld		hl, BUILDING_CHAR_BUF
+	ld		(BUF_INDEX_ADDR), hl	; starts at buf
+	ld		hl, WIN_ATTR_START
+	ld		(ATTR_INDEX_ADDR), hl	; starts a screem mem offset
+	ld		a, b
+	cp		0						; 
+	jr		z, DRAW_BUILDING_ROW_OFFSET	; already at the start
+
+; get buf offer
+	ld		hl, (BUF_INDEX_ADDR)	; hl is offset, starting at buf start
+	ld		de, WIN_COL_TOTAL		; for buf
+DRAW_BUIDLING_ROW_BUF_LOOP:	
+	add		hl, de			 		; add extra rows
+	djnz	DRAW_BUIDLING_ROW_BUF_LOOP
+	ld		(BUF_INDEX_ADDR), hl
+
+; get attr offset
+	ld		hl, (ATTR_INDEX_ADDR)	; hl is offset, starting 0
+	ld		de, SCREEN_COLUMNS		; for attr mem location
+DRAW_BUIDLING_ROW_ATTR_LOOP:	
+	add		hl, de			 		; add extra screen rows
+	djnz	DRAW_BUIDLING_ROW_ATTR_LOOP
+	ld		(ATTR_INDEX_ADDR), hl
+
+DRAW_BUILDING_ROW_OFFSET:
+
+; hl needs the addr of the chars to RST, bc the attrs - hl pointing to chars to RST
+	ld		hl, (BUF_INDEX_ADDR)	; hl indexed into char bufs
 	ld		b, WIN_COL_VIS
 DRAW_BUILDING_ROW_OFFSET_LOOP:
 	ld		a, (hl)					; load char
@@ -90,8 +153,14 @@ DRAW_BUILDING_ROW_OFFSET_LOOP:
 	inc		hl						; next char
 	djnz	DRAW_BUILDING_ROW_OFFSET_LOOP
 	
+; ldir attrs
+	ld		de, (ATTR_INDEX_ADDR)	; destination, screen mem, starting at base window attr
+	ld		hl, bc					; source, attr buf
+	ld		bc, WIN_COL_TOTAL		; count
+	ldir
+	
 	pop		bc						; restore loop var
-	ret
+	ret								; DRAW_BUIDLING_ROW
 
 BUFFER_BUILDINGS:
 	call	RNG						; rng in a
@@ -260,5 +329,11 @@ NEXT_BUILDING:						; ic bt bh bw
 	defb	0
 	
 NEXT_BUILDING_COL:
+	defw	0
+	
+BUF_INDEX_ADDR:
+	defw	0
+
+ATTR_INDEX_ADDR:
 	defw	0
 
