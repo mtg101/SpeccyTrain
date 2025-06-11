@@ -3,7 +3,7 @@
 	
 SETUP_BUILDINGS:
 	call	BUFFER_BUILDINGS		; buffer based on the rng 
-	ret;
+	ret								; SETUP_BUILDINGS
 
 SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
 	; chars
@@ -90,7 +90,7 @@ SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
 	ld		bc, WIN_COL_VIS									; move whole visible window
 	ldir
 	
-	ret
+	ret														; SHIFT_BUILDINGS_LEFT
 
 DRAW_BUILDINGS:						
 	ld		b, WIN_ROWS				
@@ -119,33 +119,46 @@ DRAW_BUIDLING_ROW:					; b row 1-10 (can't index 0)
 
 ; work out offset from start of buffers
 	ld		hl, BUILDING_CHAR_BUF
-	ld		(BUF_INDEX_ADDR), hl	; starts at buf
+	ld		(CHAR_BUF_INDEX_ADDR), hl	; starts at char buf
+	ld		hl, BUILDING_ATTR_BUF
+	ld		(ATTR_BUF_INDEX_ADDR), hl	; starts at attr buf
 	ld		hl, WIN_ATTR_START
-	ld		(ATTR_INDEX_ADDR), hl	; starts a screem mem offset
-	ld		a, b
-	cp		0						; 
+	ld		(ATTR_SCR_INDEX_ADDR), hl	; starts a screem mem offset
+	ld		a, b						; for comp, also cache b in a 
+	cp		0						
 	jr		z, DRAW_BUILDING_ROW_OFFSET	; already at the start
 
-; get buf offer
-	ld		hl, (BUF_INDEX_ADDR)	; hl is offset, starting at buf start
-	ld		de, WIN_COL_TOTAL		; for buf
+; get both buf offer
+	ld		hl, 0						; hl is offset, starting at 0
+	ld		de, WIN_COL_TOTAL			; for buf
 DRAW_BUIDLING_ROW_BUF_LOOP:	
-	add		hl, de			 		; add extra rows
+	add		hl, de			 			; add extra rows
 	djnz	DRAW_BUIDLING_ROW_BUF_LOOP
-	ld		(BUF_INDEX_ADDR), hl
 
-; get attr offset
-	ld		hl, (ATTR_INDEX_ADDR)	; hl is offset, starting 0
+; char buf offset addr
+	ld		b, a						; reset b
+	ld		de, hl						; de now has offset
+	ld		hl, (CHAR_BUF_INDEX_ADDR)	; char buf
+	add		hl, de						; add offset
+	ld		(CHAR_BUF_INDEX_ADDR), hl	; store back to mem
+
+; attr buf offset addr
+	ld		hl, (ATTR_BUF_INDEX_ADDR)	; char buf
+	add		hl, de						; add offset
+	ld		(ATTR_BUF_INDEX_ADDR), hl	; store back to mem
+
+; get attr screen offset
+	ld		hl, (ATTR_SCR_INDEX_ADDR)	; hl is offset, starting 0
 	ld		de, SCREEN_COLUMNS		; for attr mem location
 DRAW_BUIDLING_ROW_ATTR_LOOP:	
 	add		hl, de			 		; add extra screen rows
 	djnz	DRAW_BUIDLING_ROW_ATTR_LOOP
-	ld		(ATTR_INDEX_ADDR), hl
+	ld		(ATTR_SCR_INDEX_ADDR), hl
 
 DRAW_BUILDING_ROW_OFFSET:
 
 ; hl needs the addr of the chars to RST, bc the attrs - hl pointing to chars to RST
-	ld		hl, (BUF_INDEX_ADDR)	; hl indexed into char bufs
+	ld		hl, (CHAR_BUF_INDEX_ADDR)	; hl indexed into char bufs
 	ld		b, WIN_COL_VIS
 DRAW_BUILDING_ROW_OFFSET_LOOP:
 	ld		a, (hl)					; load char
@@ -154,9 +167,9 @@ DRAW_BUILDING_ROW_OFFSET_LOOP:
 	djnz	DRAW_BUILDING_ROW_OFFSET_LOOP
 	
 ; ldir attrs
-	ld		de, (ATTR_INDEX_ADDR)	; destination, screen mem, starting at base window attr
-	ld		hl, bc					; source, attr buf
-	ld		bc, WIN_COL_TOTAL		; count
+	ld		de, (ATTR_SCR_INDEX_ADDR)	; destination, screen mem, starting at base window attr
+	ld		hl, (ATTR_BUF_INDEX_ADDR)	; source, attr buf
+	ld		bc, WIN_COL_VIS			; count
 	ldir
 	
 	pop		bc						; restore loop var
@@ -191,18 +204,31 @@ BUFFER_BUILDINGS:
 
 BLANK_WIN_COL						; whole column blank (space)
 	ld		a, C_SPACE				; we're printing spaces
-	ld 		b, WIN_ROWS	
+	ld		c, ATTR_CYN_PAP			; sky is cyan
+	ld 		b, WIN_SKY_ROWS
 ADD_BLANK_LOOP:
-	call	BUF_ROW_AT_COL			; draw the char to buffer
+	call	BUF_ROW_AT_COL			; draw the char & attr to buffer
 	djnz	ADD_BLANK_LOOP			; until done all rows
-	ret
+
+; unroll the grass to avoid thinking about loop logic... :(
+	ld		c, ATTR_GRN_PAP			; green grass
+	ld		b, WIN_SKY_ROWS+1		
+	call	BUF_ROW_AT_COL			; draw the char & attr to buffer
+	
+	ld		b, WIN_SKY_ROWS+2		
+	call	BUF_ROW_AT_COL			; draw the char & attr to buffer
+
+	ld		b, WIN_SKY_ROWS+3		
+	call	BUF_ROW_AT_COL			; draw the char & attr to buffer
+
+	ret								; BLANK_WIN_COL
 
 ADD_GAP:
 	call	BLANK_WIN_COL
 	ld		de, (NEXT_BUILDING_COL)	; move to next column
 	inc		de
 	ld		(NEXT_BUILDING_COL), de
-	ret
+	ret								; ADD_GAP
 	
 ADD_UDG_GAP:						; which one from other bits in NEXT_BUILDING
 	call	BLANK_WIN_COL			; clear first
@@ -210,10 +236,19 @@ ADD_UDG_GAP:						; which one from other bits in NEXT_BUILDING
 	ld		a, %00000011
 	ld		hl, NEXT_BUILDING
 	and		(hl)					; now a is 0-3 
-	ld		d, a					; a for math
-	ld		a, C_UDG_1				; first UDG
-	inc		a						; step over dither
-	add		a, d					; find udg
+
+	ld		d, a					; a for math, store char in d
+
+	inc		a						; over dither, so 1-4
+
+	ld		hl, UDG_ATTRS			; point to attrs
+	ld		b, 0					; have to add 16 bit...
+	ld		c, a
+	add		hl, bc					; point correct attr
+	ld		c, (HL)					; c is attr
+
+	add		a, C_UDG_1				; find correct udg
+
 	ld		b, WIN_ROWS-2			; draw in top grass row
 	call	BUF_ROW_AT_COL
 
@@ -223,6 +258,7 @@ ADD_UDG_GAP:						; which one from other bits in NEXT_BUILDING
 	jr		nz, NOT_TREE	
 	ld		a, c					; tree bottom
 	inc		a						; next udg (tree top)
+	ld		c, UDG_TREE_HIGH_ATTR	; attr for tree top
 	ld		b, WIN_ROWS-3			; draw in bottom sky row
 	call	BUF_ROW_AT_COL
 									
@@ -252,9 +288,8 @@ ADD_BUILDING:
 ADD_BULDING_COL_LOOP:
 	push	bc
 	call	BLANK_WIN_COL			; clear first
-									; add building UDGs to height
-									; HACK - just add single UDG at base
-	ld		b, d
+	ld		c, UDG_BUILDING_ATTR	; for all
+	ld		b, d					; add building UDGs to height
 ADD_BULDING_ROW_LOOP:
 	push	bc						; preserve bc
 	ld		a, WIN_ROWS-1			; starts at top grass
@@ -274,11 +309,12 @@ ADD_BULDING_ROW_LOOP:
 	
 	ret;
 
-BUF_ROW_AT_COL:						; a char, b row 1-10 (bjnz means can't 0 index...)
-	push	bc						; looping again so preserve b
-	push	af						; need to do math in a, but that's what to print...
+BUF_ROW_AT_COL:						; a char, b row 1-10 (bjnz means can't 0 index...), c attr 
 	push	de						; dont' trash de
-	ld		hl, BUILDING_CHAR_BUF		; start of buff
+	push	bc						; looping again so preserve bc
+	push	af						; need to do math in a, but that's what to print...
+
+	ld		hl, 0					; index from 0
 	ld		de, (NEXT_BUILDING_COL)	; current col
 	add		hl, de
 	ld		de, WIN_COL_TOTAL
@@ -289,19 +325,31 @@ BUF_ROW_AT_COL:						; a char, b row 1-10 (bjnz means can't 0 index...)
 BUF_ROW_AT_COL_LOOP:
 	add		hl, de					; move down a row
 	djnz	BUF_ROW_AT_COL_LOOP		; until correct row
-BUF_ROW_READY:	
-	pop		de
-	pop		af
+BUF_ROW_READY:						; hl is common offset
+	pop		af						; a char
+	pop		bc						; c attr
+
+; char
+	ld		de, hl					; de is common offset
+	ld		hl, BUILDING_CHAR_BUF
+	add		hl, de	
 	ld		(hl), a					; draw char
-	pop		bc
-	ret
+
+;attr	
+	ld		hl, de					; de is common offset
+	ld		hl, BUILDING_ATTR_BUF	
+	add		hl, de	
+	ld		(hl), c					; draw attr
+	
+	pop		de					
+	ret								; BUF_ROW_AT_COL
 	
 LOAD_UDGS:
 	ld		de, UDG_START			; first UDG addr
 	ld		hl, UDGS				; my UDGs
 	ld		bc, NUM_UDGS * 8		; loop
 	ldir
-	ret
+	ret								; LOAD_UDGS
   
 
 ; uses first 8KiB ROM for pseudo, retuns in a
@@ -313,9 +361,11 @@ RNG:
     ld		a,(hl)           		; Get "random" number from location.
     inc		hl              		; Increment pointer.
     ld		(SEED),hl
-    ret
+    ret								; RNG
+
+; data
 SEED:
-	defw	23
+	defw	23						; seed 23 fnord
 	
 NEXT_BUILDING:						; ic bt bh bw 
 									; ic = paper colour (blk, blue, red, mag)
@@ -331,9 +381,12 @@ NEXT_BUILDING:						; ic bt bh bw
 NEXT_BUILDING_COL:
 	defw	0
 	
-BUF_INDEX_ADDR:
+CHAR_BUF_INDEX_ADDR:
 	defw	0
 
-ATTR_INDEX_ADDR:
+ATTR_BUF_INDEX_ADDR:
+	defw	0
+
+ATTR_SCR_INDEX_ADDR:
 	defw	0
 
