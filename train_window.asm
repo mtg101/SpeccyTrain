@@ -92,16 +92,31 @@ SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
 	
 	ret														; SHIFT_BUILDINGS_LEFT
 
-DRAW_BUILDINGS:						
-	ld		b, WIN_ROWS				
-DRAW_BUILDINGS_LOOP:
-	call	DRAW_BUIDLING_ROW		; draw each row
-	djnz	DRAW_BUILDINGS_LOOP
-	ret
+DRAW_BUILDINGS:						; unrolled as inc b is 4 t-state, djnz is 13 t-state
+	ld		b, 0
+	call	DRAW_BUIDLING_ROW		
+	ld		b, 1
+	call	DRAW_BUIDLING_ROW		
+	ld		b, 2
+	call	DRAW_BUIDLING_ROW		
+	ld		b, 3
+	call	DRAW_BUIDLING_ROW		
+	ld		b, 4
+	call	DRAW_BUIDLING_ROW		
+	ld		b, 5
+	call	DRAW_BUIDLING_ROW		
+	ld		b, 6
+	call	DRAW_BUIDLING_ROW		
+	ld		b, 7
+	call	DRAW_BUIDLING_ROW		
+	ld		b, 8
+	call	DRAW_BUIDLING_ROW		
+	ld		b, 9
+	call	DRAW_BUIDLING_ROW		
+	ret								; DRAW_BUILDINGS
 	
 DRAW_BUIDLING_ROW:					; b row 1-10 (can't index 0)
 	push	bc						; preserve parent loop
-	dec		b						; 0-9
 
 ; get AT d, e
 	ld		a, WIN_ROW_START		
@@ -334,7 +349,6 @@ BUF_ROW_AT_COL:						; a char, b row 1-10 (bjnz means can't 0 index...), c attr
 	ld		de, (NEXT_BUILDING_COL)	; current col
 	add		hl, de
 	ld		de, WIN_COL_TOTAL
-	dec		b						; indexes
 	ld		a, b
 	cp 		0
 	jr		z, BUF_ROW_READY
