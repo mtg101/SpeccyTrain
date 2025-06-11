@@ -157,6 +157,12 @@ DRAW_BUIDLING_ROW_ATTR_LOOP:
 
 DRAW_BUILDING_ROW_OFFSET:
 
+; ldir attrs
+	ld		de, (ATTR_SCR_INDEX_ADDR)	; destination, screen mem, starting at base window attr
+	ld		hl, (ATTR_BUF_INDEX_ADDR)	; source, attr buf
+	ld		bc, WIN_COL_VIS			; count
+	ldir
+
 ; hl needs the addr of the chars to RST, bc the attrs - hl pointing to chars to RST
 	ld		hl, (CHAR_BUF_INDEX_ADDR)	; hl indexed into char bufs
 	ld		b, WIN_COL_VIS
@@ -165,12 +171,6 @@ DRAW_BUILDING_ROW_OFFSET_LOOP:
 	RST		$10						; print
 	inc		hl						; next char
 	djnz	DRAW_BUILDING_ROW_OFFSET_LOOP
-	
-; ldir attrs
-	ld		de, (ATTR_SCR_INDEX_ADDR)	; destination, screen mem, starting at base window attr
-	ld		hl, (ATTR_BUF_INDEX_ADDR)	; source, attr buf
-	ld		bc, WIN_COL_VIS			; count
-	ldir
 	
 	pop		bc						; restore loop var
 	ret								; DRAW_BUIDLING_ROW
