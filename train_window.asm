@@ -279,27 +279,43 @@ ADD_BUILDING:
 	inc		a
 	ld		d, a					; d=height
 	ld		a, %00000011
-	ld		hl, NEXT_BUILDING
 	and		(hl)					; now a is 0-3 
 	inc		a						; now a is 1-4
 	ld		e, a					; e=width
 
+; ink color attr
+	ld		a, %11000000			; color in top 2 bits
+	and		(hl)
+	rra
+	rra
+	rra
+	rra
+	rra
+	rra								; now in lowest bits
+	and		%00000011				; clear others
+	or		UDG_BUILDING_ATTR		; add ink colour 0-3 
+	ld		c, a					; c has attr
+
 	ld		b, e					; for each column...
+
 ADD_BULDING_COL_LOOP:
 	push	bc
 	call	BLANK_WIN_COL			; clear first
-	ld		c, UDG_BUILDING_ATTR	; for all
+	pop		bc						; c for attr...
+	push	bc
+	
 	ld		b, d					; add building UDGs to height
 ADD_BULDING_ROW_LOOP:
 	push	bc						; preserve bc
+
 	ld		a, WIN_ROWS-1			; starts at top grass
 	sub		b						; then height
 	ld		b, a					; into b for call
 	ld		a, C_UDG_1 + 6			; building udg in a
+
 	call	BUF_ROW_AT_COL			; buf it
 	pop		bc						; restore bc
 	djnz	ADD_BULDING_ROW_LOOP
-	
 	
 	ld		bc, (NEXT_BUILDING_COL)	; move to next column
 	inc		bc
@@ -368,8 +384,7 @@ SEED:
 	defw	23						; seed 23 fnord
 	
 NEXT_BUILDING:						; ic bt bh bw 
-									; ic = paper colour (blk, blue, red, mag)
-									; 	$8F is solid ink char 
+									; ic = ink colour (blk, blue, red, mag)
 									; bt - building type: 
 									; 	0 blank gap
 									;	1 UDG gap (reuse seed for which one)
