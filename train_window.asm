@@ -100,7 +100,7 @@ DRAW_BUILDINGS:
 	ld		hl, ATTR_SCR_ROW_0
 	ld		(ATTR_SCR_INDEX_ADDR), hl
 	ld		hl, CHAR_AT_Y_0
-	ld		(CHAR_AT_Y), hl
+	ld		(PRINT_AT_Y), hl
 	call	DRAW_BUILDING_ROW
 
 	ld		hl, CHAR_BUF_ROW_1
@@ -110,7 +110,7 @@ DRAW_BUILDINGS:
 	ld		hl, ATTR_SCR_ROW_1
 	ld		(ATTR_SCR_INDEX_ADDR), hl
 	ld		hl, CHAR_AT_Y_1
-	ld		(CHAR_AT_Y), hl
+	ld		(PRINT_AT_Y), hl
 	call	DRAW_BUILDING_ROW		
 
 	ld		hl, CHAR_BUF_ROW_2
@@ -120,7 +120,7 @@ DRAW_BUILDINGS:
 	ld		hl, ATTR_SCR_ROW_2
 	ld		(ATTR_SCR_INDEX_ADDR), hl
 	ld		hl, CHAR_AT_Y_2
-	ld		(CHAR_AT_Y), hl
+	ld		(PRINT_AT_Y), hl
 	call	DRAW_BUILDING_ROW		
 
 	ld		hl, CHAR_BUF_ROW_3
@@ -130,7 +130,7 @@ DRAW_BUILDINGS:
 	ld		hl, ATTR_SCR_ROW_3
 	ld		(ATTR_SCR_INDEX_ADDR), hl
 	ld		hl, CHAR_AT_Y_3
-	ld		(CHAR_AT_Y), hl
+	ld		(PRINT_AT_Y), hl
 	call	DRAW_BUILDING_ROW		
 
 	ld		hl, CHAR_BUF_ROW_4
@@ -140,7 +140,7 @@ DRAW_BUILDINGS:
 	ld		hl, ATTR_SCR_ROW_4
 	ld		(ATTR_SCR_INDEX_ADDR), hl
 	ld		hl, CHAR_AT_Y_4
-	ld		(CHAR_AT_Y), hl
+	ld		(PRINT_AT_Y), hl
 	call	DRAW_BUILDING_ROW		
 
 	ld		hl, CHAR_BUF_ROW_5
@@ -150,7 +150,7 @@ DRAW_BUILDINGS:
 	ld		hl, ATTR_SCR_ROW_5
 	ld		(ATTR_SCR_INDEX_ADDR), hl
 	ld		hl, CHAR_AT_Y_5
-	ld		(CHAR_AT_Y), hl
+	ld		(PRINT_AT_Y), hl
 	call	DRAW_BUILDING_ROW		
 
 	ld		hl, CHAR_BUF_ROW_6
@@ -160,7 +160,7 @@ DRAW_BUILDINGS:
 	ld		hl, ATTR_SCR_ROW_6
 	ld		(ATTR_SCR_INDEX_ADDR), hl
 	ld		hl, CHAR_AT_Y_6
-	ld		(CHAR_AT_Y), hl
+	ld		(PRINT_AT_Y), hl
 	call	DRAW_BUILDING_ROW		
 
 	ld		hl, CHAR_BUF_ROW_7
@@ -170,7 +170,7 @@ DRAW_BUILDINGS:
 	ld		hl, ATTR_SCR_ROW_7
 	ld		(ATTR_SCR_INDEX_ADDR), hl
 	ld		hl, CHAR_AT_Y_7
-	ld		(CHAR_AT_Y), hl
+	ld		(PRINT_AT_Y), hl
 	call	DRAW_BUILDING_ROW		
 
 	ld		hl, CHAR_BUF_ROW_8
@@ -180,7 +180,7 @@ DRAW_BUILDINGS:
 	ld		hl, ATTR_SCR_ROW_8
 	ld		(ATTR_SCR_INDEX_ADDR), hl
 	ld		hl, CHAR_AT_Y_8
-	ld		(CHAR_AT_Y), hl
+	ld		(PRINT_AT_Y), hl
 	call	DRAW_BUILDING_ROW		
 
 	ld		hl, CHAR_BUF_ROW_9
@@ -190,34 +190,180 @@ DRAW_BUILDINGS:
 	ld		hl, ATTR_SCR_ROW_9
 	ld		(ATTR_SCR_INDEX_ADDR), hl
 	ld		hl, CHAR_AT_Y_9
-	ld		(CHAR_AT_Y), hl
+	ld		(PRINT_AT_Y), hl
 	call	DRAW_BUILDING_ROW		
 	ret								; DRAW_BUILDINGS
 	
 	
 DRAW_BUILDING_ROW:
-; setcursot AT y, x
-	ld		a, C_AT
-	RST		$10						; AT
-	ld		a, (CHAR_AT_Y)
-	RST		$10						; y	
-	ld		a, CHAR_AT_X
-	RST		$10						; x
-	
 ; ldir attrs
 	ld		de, (ATTR_SCR_INDEX_ADDR)	; destination, screen mem, starting at base window attr
 	ld		hl, (ATTR_BUF_INDEX_ADDR)	; source, attr buf
 	ld		bc, WIN_COL_VIS			; count
 	ldir
 
-; hl needs the addr of the chars to RST, bc the attrs - hl pointing to chars to RST
+; set location
+	ld		a, CHAR_AT_X
+	ld		(PRINT_AT_X), a
+
+; hl needs the addr of the chars to print
 	ld		hl, (CHAR_BUF_INDEX_ADDR)	; hl indexed into char bufs
-	ld		b, WIN_COL_VIS
-DRAW_BUILDING_ROW_OFFSET_LOOP:
-	ld		a, (hl)					; load char
-	RST		$10						; print
+
+	ld		a, (hl)					; load char 0
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
 	inc		hl						; next char
-	djnz	DRAW_BUILDING_ROW_OFFSET_LOOP
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 1
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 2
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 3
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 4
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 5
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 6
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 7
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 8
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 9
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 10
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 11
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 12
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 13
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 14
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 15
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 16
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 17
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 18
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
+	inc		hl						; next char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next column
+	ld		(PRINT_AT_X), a
+
+	ld		a, (hl)					; load char 19
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X		; print char
 	
 	ret								; DRAW_BUILDING_ROW
 
@@ -465,8 +611,5 @@ CHAR_TO_BUF:
 	defb	0
 	
 ATTR_TO_BUF:
-	defb	0
-
-CHAR_AT_Y:
 	defb	0
 

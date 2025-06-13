@@ -43,8 +43,6 @@ ATTR_BUF_DONE:
 
 SETUP_SCREEN:
 ; black loading screen
-	ld		a, $FF
-	ld		(MASK_P), a				; so RST $10 uses my  ATTRs, doesn't overwrite
 	ld		a, COL_BLK
 	call	ROM_BORDER				; sets border to val in a
 	ld		a, ATTR_ALL_BLK			
