@@ -42,9 +42,9 @@ MASK_P			= $5C8E					; set bits take from existing color, not ATTR_P
 ATTR_P			= $5C8D					; current ATTRs
 
 ; screen sizes
-SCREEN_PIXELS	= $C000
-SCREEN_ATTRS	= $300
-SCREEN_2_CHARS	= $02C0
+NUM_SCREEN_PIXELS	= $C000
+NUM_SCREEN_ATTRS	= $300
+NUM_SCREEN_2_CHARS	= $02C0
 
 SCREEN_COLUMNS	= 32
 SCREEN_2_ROWS	= 22

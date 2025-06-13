@@ -89,7 +89,7 @@ DRAW_SCENE_ATTRS:
 ; ldir ATTRs 
 	ld		de, ATTR_START			; ATTR mem target
 	ld		hl, ATTR_BUF			; buffer source
-	ld		bc, SCREEN_ATTRS		; num attrs to blit
+	ld		bc, NUM_SCREEN_ATTRS		; num attrs to blit
 	ldir
 	
    
