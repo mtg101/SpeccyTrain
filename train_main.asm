@@ -12,6 +12,7 @@ ATTR_BUF:
 	defs	NUM_SCREEN_ATTRS			; space for the ATTRs to ldir to screen
 
 	INCLUDE "speccy_defs.asm"		; must be indented
+	INCLUDE "print_char_y_x.asm"
 	INCLUDE "train_scene.asm"
 	INCLUDE "train_window.asm"
 	

@@ -40,6 +40,9 @@ ATTR_START		= $5800
 SCREEN_START	= $4000
 MASK_P			= $5C8E					; set bits take from existing color, not ATTR_P
 ATTR_P			= $5C8D					; current ATTRs
+ROM_TOP			= $3FFF
+ROM_CHARS		= $3D00					; pixels
+MAX_ROM_CHAR	= $8F
 
 ; screen sizes
 NUM_SCREEN_PIXELS	= $C000

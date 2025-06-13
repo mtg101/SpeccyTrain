@@ -62,24 +62,31 @@ SETUP_SCREEN:
 DRAW_SCENE_CHARS:					; invisible due to ink&paper white
 ; RST chars
 	ld		hl, CHAR_BUF			; point to start of buffer
-	ld		b, 255					; 8 bit counter
-CHAR_RST_1:							; so unroll and do thrice
-	ld		a, (hl)					; char in a
-	RST		$10						; RST it to screen
-	inc		hl						; next char
-	djnz	CHAR_RST_1				; loop until done
-	ld		b, 255					; 8 bit counter
-CHAR_RST_2:							; so unroll and do thrice
-	ld		a, (hl)					; char in a
-	RST		$10						; RST it to screen
-	inc		hl						; next char
-	djnz	CHAR_RST_2				; loop until done
-	ld		b, SCREEN_255_REST		; 8 bit counter, last ones not full 255
-CHAR_RST_3:							; so unroll and do thrice
-	ld		a, (hl)					; char in a
-	RST		$10						; RST it to screen
-	inc		hl						; next char
-	djnz	CHAR_RST_3				; loop until done
+	
+	ld		a, 0
+	ld		(PRINT_AT_X), a			; x is 0
+	ld		a, 0
+	ld		(PRINT_AT_Y), a			; y is 0
+
+	ld		b, SCREEN_ALL_ROWS		; all 24!
+DRAW_SCENE_CHARS_ROW_LOOP:
+	push	bc						; double loop...
+	ld		b, SCREEN_COLUMNS		; all columns
+DRAW_SCENE_CHARS_COl_LOOP:
+	ld		a, (hl)
+	ld		(PRINT_CHAR), a			; char to print from buffer
+	call	PRINT_CHAR_AT_Y_X		; print char
+	ld		a, (PRINT_AT_X)
+	inc		a						; next col
+	ld		(PRINT_AT_X), a
+	inc		hl
+	djnz	DRAW_SCENE_CHARS_COl_LOOP
+	
+	ld		a, (PRINT_AT_Y)
+	inc		a						; next row
+	ld		(PRINT_AT_Y), a
+	pop		bc						; for outer row loop
+	djnz	DRAW_SCENE_CHARS_ROW_LOOP
 
 ; basic border
 	ld		a, COL_BLU

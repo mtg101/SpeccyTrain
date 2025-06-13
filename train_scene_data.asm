@@ -20,11 +20,12 @@ SCENE_CHARACTERS:
 	defb	$82, 1
 	defb	C_SPACE, 218
 	defb	C_UDG_1, 192
+	defb	C_SPACE, 64
 	defb	0
 
 SCENE_ATTRS:
 	; RLE attr, numTime (max 255 - b is lower bit!), 0 terminated
-	; total 32*24=768 (ignoring channel 1 lower area for now)
+	; total 32*24=768 
 	defb	ATTR_RED_PAP, 200
 	defb	ATTR_CYN_PAP, 20
 	defb	ATTR_RED_PAP, 12
