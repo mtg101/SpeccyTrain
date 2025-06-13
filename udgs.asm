@@ -1,0 +1,193 @@
+; UDGs
+NUM_UDGS			= 15
+
+UDG_DITHER			= $90
+
+UDG_FENCE			= $91
+UDG_FENCE_ATTR		= %00100000	
+
+UDG_WALL			= $92
+UDG_WALL_ATTR		= %00100010	
+
+UDG_HEDGE			= $93
+UDG_HEDGE_ATTR		= %00100001	
+
+UDG_TREE_LOW		= $94
+UDG_TREE_LOW_ATTR	= %00100010	
+
+UDG_TREE_HIGH		= $95
+UDG_TREE_HIGH_ATTR	= %00101010	
+
+UDG_BUILDING		= $96
+UDG_BUILDING_ATTR	= %00111000	
+
+UDG_BORDER_TL		= $97
+UDG_BORDER_T		= $98
+UDG_BORDER_TR		= $99
+UDG_BORDER_R		= $9A
+UDG_BORDER_BR		= $9B
+UDG_BORDER_B		= $9C
+UDG_BORDER_BL		= $9D
+UDG_BORDER_L		= $9E
+
+
+UDG_ATTRS:
+	defb	0				; dither
+	defb	UDG_FENCE_ATTR
+	defb	UDG_WALL_ATTR
+	defb	UDG_HEDGE_ATTR	
+	defb	UDG_TREE_LOW_ATTR
+	defb	UDG_TREE_HIGH_ATTR
+	defb	UDG_BUILDING_ATTR
+
+UDGS:
+; UDG_DITHER
+	defb	%10101010
+	defb	%01010101
+	defb	%10101010
+	defb	%01010101
+	defb	%10101010
+	defb	%01010101
+	defb	%10101010
+	defb	%01010101
+
+; UDG_FENCE
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%01010101
+	defb	%11111111
+	defb	%10101010
+	defb	%10101010
+
+; UDG_WALL
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%11111111
+	defb	%11011101
+	defb	%10110111
+	defb	%11011101
+	defb	%10111011
+
+; UDG_HEDGE
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%01110100
+	defb	%01111110
+	defb	%11111111
+
+; UDG_TREE_LOW
+	defb	%00011000
+	defb	%00011000
+	defb	%00011000
+	defb	%00011100
+	defb	%00011000
+	defb	%00011000
+	defb	%00111100
+	defb	%01111100
+
+; UDG_TREE_HIGH
+	defb	%00011000
+	defb	%00111100
+	defb	%01111110
+	defb	%01111110
+	defb	%01111100
+	defb	%00111100
+	defb	%00111100
+	defb	%00011000
+
+; UDG_BUILDING
+	defb	%11111111
+	defb	%10000001
+	defb	%10000001
+	defb	%10000001
+	defb	%10000001
+	defb	%11111111
+	defb	%11111111
+	defb	%11111111
+
+; UDG_BORDER_TL
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000011
+	defb	%00000011
+
+; UDG_BORDER_T
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%11111111
+	defb	%11111111
+
+; UDG_BORDER_TR
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%11000000
+	defb	%11000000
+
+; UDG_BORDER_R
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+
+; UDG_BORDER_BR
+	defb	%11000000
+	defb	%11000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+
+; UDG_BORDER_B
+	defb	%11111111
+	defb	%11111111
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+
+; UDG_BORDER_BL
+	defb	%00000011
+	defb	%00000011
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+
+; UDG_BORDER_L
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+

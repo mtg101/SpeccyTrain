@@ -3,21 +3,20 @@ SCENE_CHARACTERS:
 	; total 32*22=704 (ignoring channel 1 lower area for now)
 	defb	'*', 32
 	defb	'-', 32
-	defb	$86, 128
-	defb	C_SPACE, 33
-	defb	$84, 1
-	defb	$8C, 3
-	defb	$88, 1
+	defb	C_SPACE, 161
+	defb	UDG_BORDER_TL, 1
+	defb	UDG_BORDER_T, 3
+	defb	UDG_BORDER_TR, 1
 	defb	C_SPACE, 27
-	defb	$85, 1
+	defb	UDG_BORDER_L, 1
 	defb	'Z', 1
 	defb	'X', 1
 	defb	'R', 1
-	defb	$8A, 1
+	defb	UDG_BORDER_R, 1
 	defb	C_SPACE, 27
-	defb	$81, 1
-	defb	$83, 3
-	defb	$82, 1
+	defb	UDG_BORDER_BL, 1
+	defb	UDG_BORDER_B, 3
+	defb	UDG_BORDER_BR, 1
 	defb	C_SPACE, 218
 	defb	C_UDG_1, 192
 	defb	C_SPACE, 64

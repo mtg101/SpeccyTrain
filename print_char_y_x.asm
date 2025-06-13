@@ -3,6 +3,7 @@
 ; this routine blits the char to the y, x position
 ; it does not deal with ATTRs
 ; it uses vars PRINT_AT_Y, PRINT_AT_X & PRINT_CHAR 
+; can't print the 2x2 $70-$7F as they don't seem to have a font in ROM or anywhere
 
 
 ; any char
@@ -11,48 +12,24 @@ PRINT_CHAR_AT_Y_X:
     push	bc
     push	de
     push	hl
+	
+	ld		hl, ROM_CHARS		; hl points to pix mem in rom
+	ld		c, C_SPACE			; c is first char
+	ld		a, (PRINT_CHAR)		
+	cp		MAX_ROM_CHAR		; is it a regular char?
+	jp		m, GOT_BASE_PIX		
+	ld		hl, UDG_START		; it's a udg
+	ld		c, C_UDG_1			; c is first char
 
-; if it's a UDG, just jump to that
+GOT_BASE_PIX	; hl points to base pixels
+
+; put mem addr of offset pixels in de
 	ld		a, (PRINT_CHAR)
-	cp		MAX_ROM_CHAR
-	jp		p, PRINT_CHAR_ENTRY	; jr doesn't have p check...
-	
-; else get ROM char addr
-	ld		de, ROM_CHARS		; first char (space)
-	sub		C_SPACE				; offset from first char
-	jr		z, DONE_CHAR_PIXEL_ADDR	; if it's space, we're done
-
-; step to correct char pixel addr...
-	ld		b, a				; loop index
-	ld		hl, ROM_CHARS		; for math
-	ld		de, 64				; 8x8 UDG
-CHAR_ADDR_LOOP:
-	add		hl, de				; step to next char
-	djnz	CHAR_ADDR_LOOP
-	ld		de, hl				; de with char addr ready for printing
-; and jump to DONE_CHAR_PIXEL_ADDR
-	jr	DONE_CHAR_PIXEL_ADDR
-; DONE PRINT_CHAR_AT_Y_X
-
-
-; optimized for only UDGs
-PRINT_UDG_AT_Y_X:
-    push	af
-    push	bc
-    push	de
-    push	hl
-
-PRINT_CHAR_ENTRY:				; for call from PRINT_CHAR_AT_Y_X
-; put mem addr of UDG pixels in de
-	ld		a, (PRINT_CHAR)		; udg TO PRINT
-	sub		C_UDG_1				; make into offset from base UDG
-
-	ld		hl, UDG_START		; mem address of first UDG's pixels
-	
+	sub		c					; space or first udg from above
 	cp		0					; no need to move for first UDG
 	jr		z, DONE_CHAR_PIXEL_ADDR
 	ld		b, a				; loop index
-	ld		de, 64				; 8x8 UDG
+	ld		de, 8				; 8x8 UDG, 8 is one row
 UDG_ADDR_LOOP:
 	add		hl, de				; step over
 	djnz	UDG_ADDR_LOOP
@@ -60,6 +37,7 @@ UDG_ADDR_LOOP:
 DONE_CHAR_PIXEL_ADDR:
 	ld		de, hl				; de points to pixels for our char
 
+; :math:
 	ld		a, (PRINT_AT_Y)		; block Y
 	sla		a					; multiple by 8 to make in pixel
 	sla		a
@@ -117,7 +95,7 @@ DONE_CHAR_PIXEL_ADDR:
 	pop		de
 	pop		bc
 	pop		af
-    ret							; PRINT_UDG_AT_Y_X / PRINT_CHAR_AT_Y_X:
+    ret							; PRINT_CHAR_AT_Y_X:
 
 
 ; based on http://www.breakintoprogram.co.uk/hardware/computers/zx-spectrum/screen-memory-layout 

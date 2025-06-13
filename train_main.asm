@@ -13,6 +13,7 @@ ATTR_BUF:
 
 	INCLUDE "speccy_defs.asm"		; must be indented
 	INCLUDE "print_char_y_x.asm"
+	INCLUDE "udgs.asm"
 	INCLUDE "train_scene.asm"
 	INCLUDE "train_window.asm"
 	
