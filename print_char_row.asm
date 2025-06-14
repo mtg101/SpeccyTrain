@@ -423,28 +423,23 @@ BUF_CHAR_ROWS:
     push	de
     push	hl
 
-	ld		hl, (BUILDING_CHAR_BUF)		; start of chars to print
-	ld		ix, PRINT_CHAR_BUF			; start of pixel buf
-	ld		b, WIN_ROWS					; num rows
-
 	; for each row
 BUF_CHAR_ROW_LOOP:
 	
 	; for each column / char
+	push	bc
 BUF_CHAR_COL_LOOP:
 	; point to colum offset
 
 	; get char pixels
 	
 	; copy each pixel row, 0-7, incrementing WIN_COL_VIS between each
-	; de += WIN_COL_VIS each time
-	
+
 	; next column / char
 	djnz	BUF_CHAR_COL_LOOP
+	pop		bc
 	
 	; next row
-
-	; move de to next row
 	djnz	BUF_CHAR_ROW_LOOP
 	
 	pop		hl
