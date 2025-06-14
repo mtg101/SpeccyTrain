@@ -422,20 +422,47 @@ BUF_CHAR_ROWS:
     push	bc
     push	de
     push	hl
+	
 
 	; for each row
+	ld		b, WIN_ROWS
 BUF_CHAR_ROW_LOOP:
-	
+	ld		ix, BUILDING_CHAR_BUF		; 'slow' ix but keeps it separate, and this is buff not draw
+	ld		iy, PRINT_CHAR_BUF			; points to row pixel buf
+										; points to first byte of block first byte, top left of block
+										; math does the rest unrolled for the 0-7 lines
 	; for each column / char
+	ld		c, b						; inner loop can use c to get row
 	push	bc
+	ld		b, WIN_COL_VIS
 BUF_CHAR_COL_LOOP:
-	; point to colum offset
-
 	; get char pixels
+	; ix points to next char
+	ld		(PRINT_CHAR), ix
+	;;; call to print_x_y funtion to get pixel addr in hl
+	;;; so qw need a mem variable for this? avoid register fuckfoolery?
+
+	; point to colum offset
+	;;; offset colum, b
+	;;; offset row, c
 	
-	; copy each pixel row, 0-7, incrementing WIN_COL_VIS between each
+
+
+
+	
+
+	
+	; copy each pixel row, 0-7
+	; iy is base buffer pixel offset, 2nd row is 19 bytes away...
+	;;; first byte there
+	;;; skip over row
+	;;; next byte
+	;;; repeat unrolled 0-7
 
 	; next column / char
+	inc		ix							; next char
+	ld		bc, 8						; next pixel buf top left addr, 8 bytes over for iy
+	add		iy, bc
 	djnz	BUF_CHAR_COL_LOOP
 	pop		bc
 	
