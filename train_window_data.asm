@@ -1,7 +1,7 @@
 ; window details
-WIN_COL_VIS			= 19				; 19 vis (allows ix+240 offset, 20 is >255) 4 extra buf
+WIN_COL_VIS			= 19
 WIN_ROWS			= 10
-WIN_COL_TOTAL		= 23				; fnords
+WIN_COL_TOTAL		= 23
 WIN_SKY_ROWS		= 7
 WIN_GRASS_ROWS		= 3
 

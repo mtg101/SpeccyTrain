@@ -410,7 +410,6 @@ PRINT_CHAR_ROW:
 	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
-
 	pop		hl
 	pop		de
 	pop		bc
@@ -433,40 +432,60 @@ BUF_CHAR_ROW_LOOP:
 										; math does the rest unrolled for the 0-7 lines
 	; for each column / char
 	ld		c, b						; inner loop can use c to get row
-	push	bc
+	push	bc							; outer loop
 	ld		b, WIN_COL_VIS
 BUF_CHAR_COL_LOOP:
 	; get char pixels
 	; ix points to next char
 	ld		(PRINT_CHAR), ix
-	;;; call to print_x_y funtion to get pixel addr in hl
-	;;; so qw need a mem variable for this? avoid register fuckfoolery?
+	;;; call to one of print_x_y's funtions to get pixel addr in hl
+	;;; so do need a mem variable for this? avoid register fuckfoolery?
 
-	; point to colum offset
-	;;; offset colum, b
-	;;; offset row, c
-	
-
-
-
-	
-
-	
 	; copy each pixel row, 0-7
 	; iy is base buffer pixel offset, 2nd row is 19 bytes away...
-	;;; first byte there
-	;;; skip over row
-	;;; next byte
-	;;; repeat unrolled 0-7
-
-	; next column / char
-	inc		ix							; next char
-	ld		bc, 8						; next pixel buf top left addr, 8 bytes over for iy
-	add		iy, bc
-	djnz	BUF_CHAR_COL_LOOP
-	pop		bc
+	ld		a, (hl)						; byte of pixel data
+	ld		(iy), a						; into buffer
 	
-	; next row
+	inc		hl							; next byte of char pixel data
+	ld		a, (hl)						; byte of pixel data
+	ld		(iy + WIN_COL_VIS), a		; into buffer with row offset
+	
+	inc		hl							; next byte of char pixel data
+	ld		a, (hl)						; byte of pixel data
+	ld		(iy + (WIN_COL_VIS * 2)), a	; into buffer with row offset
+	
+	inc		hl							; next byte of char pixel data
+	ld		a, (hl)						; byte of pixel data
+	ld		(iy + (WIN_COL_VIS * 3)), a	; into buffer with row offset
+	
+	inc		hl							; next byte of char pixel data
+	ld		a, (hl)						; byte of pixel data
+	ld		(iy + (WIN_COL_VIS * 4)), a	; into buffer with row offset
+	
+	inc		hl							; next byte of char pixel data
+	ld		a, (hl)						; byte of pixel data
+	ld		(iy + (WIN_COL_VIS * 5)), a	; into buffer with row offset
+	
+	inc		hl							; next byte of char pixel data
+	ld		a, (hl)						; byte of pixel data
+	ld		(iy + (WIN_COL_VIS * 6)), a	; into buffer with row offset
+	
+	inc		hl							; next byte of char pixel data
+	ld		a, (hl)						; byte of pixel data
+; can't index (WIN_COL_VIS * 7) as it's > 127 8bitty things
+	ld		de, (WIN_COL_VIS * 7)		; the oversized offset
+	ld		hl, iy						; the base
+	add		hl, de						; add 'em
+	ld		(hl), a						; into buffer
+	
+; next column / char
+	inc		ix							; next char
+	inc		iy							; next byte, remember the whole point is pixel line by line
+	djnz	BUF_CHAR_COL_LOOP
+	pop		bc							; for outer loop
+	
+; next row
+; inner loop altery incremented what we need
 	djnz	BUF_CHAR_ROW_LOOP
 	
 	pop		hl
