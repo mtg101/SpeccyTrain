@@ -361,10 +361,6 @@ DRAW_BUILDING_ROW:
 	inc		a						; next column
 	ld		(PRINT_AT_X), a
 
-	ld		a, (hl)					; load char 19
-	ld		(PRINT_CHAR), a
-	call	PRINT_CHAR_AT_Y_X		; print char
-	
 	ret								; DRAW_BUILDING_ROW
 
 BUFFER_BUILDINGS:

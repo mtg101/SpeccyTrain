@@ -1,12 +1,12 @@
 ; window details
-WIN_COL_VIS			= 20				; 20 vis, 4 extra buf
+WIN_COL_VIS			= 19				; 19 vis (allows ix+240 offset, 20 is >255) 4 extra buf
 WIN_ROWS			= 10
-WIN_COL_TOTAL		= 24
+WIN_COL_TOTAL		= 23				; fnords
 WIN_SKY_ROWS		= 7
 WIN_GRASS_ROWS		= 3
 
 WIN_ROW_START		= 6
-WIN_COL_START		= 8
+WIN_COL_START		= 9
 
 WIN_ATTR_START		= ATTR_START + (WIN_ROW_START * 32) + WIN_COL_START	
 
