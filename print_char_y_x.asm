@@ -12,29 +12,8 @@ PRINT_CHAR_AT_Y_X:
     push	bc
     push	de
     push	hl
-	
-	ld		hl, ROM_CHARS		; hl points to pix mem in rom
-	ld		c, C_SPACE			; c is first char
-	ld		a, (PRINT_CHAR)		
-	cp		MAX_ROM_CHAR		; is it a regular char?
-	jp		m, GOT_BASE_PIX		
-	ld		hl, UDG_START		; it's a udg
-	ld		c, C_UDG_1			; c is first char
 
-GOT_BASE_PIX	; hl points to base pixels
-
-; put mem addr of offset pixels in de
-	ld		a, (PRINT_CHAR)
-	sub		c					; space or first udg from above
-	cp		0					; no need to move for first UDG
-	jr		z, DONE_CHAR_PIXEL_ADDR
-	ld		b, a				; loop index
-	ld		de, 8				; 8x8 UDG, 8 is one row
-UDG_ADDR_LOOP:
-	add		hl, de				; step over
-	djnz	UDG_ADDR_LOOP
-
-DONE_CHAR_PIXEL_ADDR:
+	call	PRINT_CHAR_PIXEL_MEM; addr for piels from udg / rom in hl
 	ld		de, hl				; de points to pixels for our char
 
 ; :math:
@@ -97,6 +76,30 @@ DONE_CHAR_PIXEL_ADDR:
 	pop		af
     ret							; PRINT_CHAR_AT_Y_X:
 
+PRINT_CHAR_PIXEL_MEM:
+	ld		hl, ROM_CHARS		; hl points to pix mem in rom
+	ld		c, C_SPACE			; c is first char
+	ld		a, (PRINT_CHAR)		
+	cp		MAX_ROM_CHAR		; is it a regular char?
+	jp		m, GOT_BASE_PIX		
+	ld		hl, UDG_START		; it's a udg
+	ld		c, C_UDG_1			; c is first char
+
+GOT_BASE_PIX	; hl points to base pixels
+
+; put mem addr of offset pixels in de
+	ld		a, (PRINT_CHAR)
+	sub		c					; space or first udg from above
+	cp		0					; no need to move for first UDG
+	jr		z, DONE_CHAR_PIXEL_ADDR
+	ld		b, a				; loop index
+	ld		de, 8				; 8x8 UDG, 8 is one row
+UDG_ADDR_LOOP:
+	add		hl, de				; step over
+	djnz	UDG_ADDR_LOOP
+
+DONE_CHAR_PIXEL_ADDR:
+	ret							; PRINT_CHAR_PIXEL_MEM
 
 ; based on http://www.breakintoprogram.co.uk/hardware/computers/zx-spectrum/screen-memory-layout 
 ;  b = Y pixel position
