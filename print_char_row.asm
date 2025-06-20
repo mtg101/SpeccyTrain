@@ -3,7 +3,7 @@
 
 ; print row from buf
 ; buf is pixel row at a time, precalc'd for draw speed
-PRINT_CHAR_RO
+PRINT_CHAR_ROW
     push	af
     push	bc
     push	de
