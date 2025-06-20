@@ -23,7 +23,7 @@ START:
 	call	LOAD_UDGS
 	call	DRAW_SCENE
 	call	SETUP_BUILDINGS
-	call	ANIMATE
+	call	ANIMATE_ROW
 
 EXIT:
 	ret
@@ -41,9 +41,13 @@ ANIMATE:
 	jr		ANIMATE
 
 ANIMATE_ROW:
+	di								; back to safe mode for iy
+	push	iy						; preserve for when we ei
 	call	BUF_CHAR_ROWS			; buffer things row-by-row
+	pop		iy						; restore before ei (or things fuck up)
+	ei								; now we need interrupts 
 	halt							; wait for vsync
-	call	PRINT_CHAR_ROW			; draw row-by-row
+	; call	PRINT_CHAR_ROW			; draw row-by-row
 	call	SHIFT_BUILDINGS_LEFT								
 	ld		de, (NEXT_BUILDING_COL)	; move col left
 	dec		de
