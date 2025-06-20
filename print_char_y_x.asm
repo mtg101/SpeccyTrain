@@ -85,7 +85,7 @@ PRINT_CHAR_PIXEL_MEM:
 	ld		hl, UDG_START		; it's a udg
 	ld		c, C_UDG_1			; c is first char
 
-GOT_BASE_PIX	; hl points to base pixels
+GOT_BASE_PIX:					; hl points to base pixels
 
 ; put mem addr of offset pixels in de
 	ld		a, (PRINT_CHAR)

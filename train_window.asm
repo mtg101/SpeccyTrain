@@ -90,7 +90,7 @@ SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
 	ld		bc, WIN_COL_VIS			; move whole visible window
 	ldir
 	
-	ret														; SHIFT_BUILDINGS_LEFT
+	ret								; SHIFT_BUILDINGS_LEFT
 
 DRAW_BUILDINGS:	
 	ld		hl, CHAR_BUF_ROW_0
