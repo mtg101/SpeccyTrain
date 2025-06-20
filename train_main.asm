@@ -41,9 +41,10 @@ ANIMATE:
 	jr		ANIMATE
 
 ANIMATE_ROW:
-	call	BUF_CHAR_ROWS			; buffer things row-by-row
+; hack - just rely on pattern in the buffer to get basic draw working
+;	call	BUF_CHAR_ROWS			; buffer things row-by-row
 	halt							; wait for vsync
-	; call	PRINT_CHAR_ROW			; draw row-by-row
+	call	PRINT_CHAR_ROW			; draw row-by-row
 	call	SHIFT_BUILDINGS_LEFT								
 	ld		de, (NEXT_BUILDING_COL)	; move col left
 	dec		de

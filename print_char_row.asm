@@ -9,7 +9,8 @@ PRINT_CHAR_ROW
     push	de
     push	hl
 
-	ld		hl, PRINT_CHAR_BUF			; start of buffer
+	ld		hl, PRINT_ROW_PIXEL_BUF		; start of pixel buffer, row-by-row for ldir
+										; ldir incs it, so we don't need to touch it again
 	
 	ld		de, ROW_0_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
@@ -17,17 +18,14 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_0_LINE_1			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_0_LINE_2			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_0_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 ; ldir attrs for row, half way through pixel rows...
@@ -46,42 +44,34 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_0_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_0_LINE_5			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_0_LINE_6			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_0_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_1_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_1_LINE_1			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_1_LINE_2			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_1_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 ; ldir attrs for row, half way through pixel rows...
@@ -100,42 +90,34 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_1_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_1_LINE_5			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_1_LINE_6			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_1_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_2_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_2_LINE_1			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_2_LINE_2			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_2_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 ; ldir attrs for row, half way through pixel rows...
@@ -154,42 +136,34 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_2_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_2_LINE_5			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_2_LINE_6			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_2_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_3_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_3_LINE_1			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_3_LINE_2			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_3_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 ; ldir attrs for row, half way through pixel rows...
@@ -208,42 +182,34 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_3_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_3_LINE_5			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_3_LINE_6			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_3_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_4_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_4_LINE_1			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_4_LINE_2			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_4_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 ; ldir attrs for row, half way through pixel rows...
@@ -262,42 +228,34 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_4_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_4_LINE_5			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_4_LINE_6			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_4_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_5_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_5_LINE_1			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_5_LINE_2			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_5_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 ; ldir attrs for row, half way through pixel rows...
@@ -316,42 +274,34 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_5_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_5_LINE_5			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_5_LINE_6			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_5_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_6_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_6_LINE_1			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_6_LINE_2			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_6_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 ; ldir attrs for row, half way through pixel rows...
@@ -370,42 +320,34 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_6_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_6_LINE_5			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_6_LINE_6			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_6_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_7_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_7_LINE_1			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_7_LINE_2			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_7_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 ; ldir attrs for row, half way through pixel rows...
@@ -424,42 +366,34 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_7_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_7_LINE_5			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_7_LINE_6			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_7_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_8_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_8_LINE_1			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_8_LINE_2			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_8_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 ; ldir attrs for row, half way through pixel rows...
@@ -478,42 +412,34 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_8_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_8_LINE_5			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_8_LINE_6			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_8_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_9_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_9_LINE_1			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_9_LINE_2			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_9_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 ; ldir attrs for row, half way through pixel rows...
@@ -532,22 +458,18 @@ PRINT_CHAR_ROW
 	
 	ld		de, ROW_9_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_9_LINE_5			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_9_LINE_6			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	ld		de, ROW_9_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
-	add		hl, bc						; step over pixel buffer by same amount
 	ldir
 	
 	pop		hl
@@ -569,7 +491,7 @@ BUF_CHAR_ROWS:
 	ld		b, WIN_ROWS
 BUF_CHAR_ROW_LOOP:
 	ld		ix, BUILDING_CHAR_BUF		; 'slow' ix but keeps it separate, and this is buff not draw
-	ld		iy, PRINT_CHAR_BUF			; points to row pixel buf
+	ld		iy, PRINT_ROW_PIXEL_BUF		; points to row pixel buf
 										; points to first byte of block first byte, top left of block
 										; math does the rest unrolled for the 0-7 lines
 ; for each column / char
@@ -639,11 +561,11 @@ BUF_CHAR_COL_LOOP:
 	ei									; can have them on again now
     ret							; BUF_CHAR_ROW:
 
-; window size 20x10x8
-PRINT_CHAR_BUF: 				
-	defs		20 * 10 * 8
+; window size 19x10 - 8 bytes per block, set to pattern to use as test card for basic drawing
+PRINT_ROW_PIXEL_BUF: 				
+	defs		19 * 10 * 8, %10101010
 
-; mem address of lines
+; mem address of line
 
 ; not based on WIN_ROW_START or similar, as we need weird bit packing...
 ; current values used to compare to train_window_data.asm
