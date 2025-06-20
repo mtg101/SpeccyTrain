@@ -5,7 +5,7 @@
 ; so define before includes -- which does mean it's between code rather than just being at end...
 BUILDING_CHAR_BUF:						; share same as the scene ram
 CHAR_BUF:
-	defs	NUM_SCREEN_2_CHARS			; space for chars to RST to screen
+	defs	NUM_SCREEN_CHARS			; space for chars to RST to screen
 	
 BUILDING_ATTR_BUF:
 ATTR_BUF:
@@ -41,8 +41,7 @@ ANIMATE:
 	jr		ANIMATE
 
 ANIMATE_ROW:
-; hack - just rely on pattern in the buffer to get basic draw working
-;	call	BUF_CHAR_ROWS			; buffer things row-by-row
+	call	BUF_CHAR_ROWS			; buffer things row-by-row
 	halt							; wait for vsync
 	call	PRINT_CHAR_ROW			; draw row-by-row
 	call	SHIFT_BUILDINGS_LEFT								

@@ -1,14 +1,64 @@
 ; PRINT_CHAR_Y_X has to recalculate pixel row every char, which is slow
-; this prints a row at a time, specifically for the 20x10 window
+; this prints a row at a time, specifically for the 19x10 window
 
 ; print row from buf
 ; buf is pixel row at a time, precalc'd for draw speed
 PRINT_CHAR_ROW
-    push	af
-    push	bc
-    push	de
-    push	hl
+; ldir attrs for all rows
+	ld		de, ATTR_SCR_ROW_0			; destination
+	ld		hl, ATTR_BUF_ROW_0			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
 
+	ld		de, ATTR_SCR_ROW_1			; destination
+	ld		hl, ATTR_BUF_ROW_1			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_2			; destination
+	ld		hl, ATTR_BUF_ROW_2			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_3			; destination
+	ld		hl, ATTR_BUF_ROW_3			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_4			; destination
+	ld		hl, ATTR_BUF_ROW_4			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_5			; destination
+	ld		hl, ATTR_BUF_ROW_5			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_6			; destination
+	ld		hl, ATTR_BUF_ROW_6			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_7			; destination
+	ld		hl, ATTR_BUF_ROW_7			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_8			; destination
+	ld		hl, ATTR_BUF_ROW_8			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_9			; destination
+	ld		hl, ATTR_BUF_ROW_9			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+
+
+
+; now blit the pixel rows... 
 	ld		hl, PRINT_ROW_PIXEL_BUF		; start of pixel buffer, row-by-row for ldir
 										; ldir incs it, so we don't need to touch it again
 	
@@ -27,21 +77,7 @@ PRINT_CHAR_ROW
 	ld		de, ROW_0_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
-	
-; ldir attrs for row, half way through pixel rows...
-	push	hl
-	push	bc
-	push	de
-
-	ld		de, ATTR_SCR_ROW_0			; destination
-	ld		hl, ATTR_BUF_ROW_0			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-	
-	pop		de
-	pop		bc
-	pop		hl
-	
+		
 	ld		de, ROW_0_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
@@ -73,20 +109,6 @@ PRINT_CHAR_ROW
 	ld		de, ROW_1_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
-	
-; ldir attrs for row, half way through pixel rows...
-	push	hl
-	push	bc
-	push	de
-
-	ld		de, ATTR_SCR_ROW_1			; destination
-	ld		hl, ATTR_BUF_ROW_2			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-	
-	pop		de
-	pop		bc
-	pop		hl
 	
 	ld		de, ROW_1_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
@@ -120,20 +142,6 @@ PRINT_CHAR_ROW
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
 	
-; ldir attrs for row, half way through pixel rows...
-	push	hl
-	push	bc
-	push	de
-
-	ld		de, ATTR_SCR_ROW_2			; destination
-	ld		hl, ATTR_BUF_ROW_2			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-	
-	pop		de
-	pop		bc
-	pop		hl
-	
 	ld		de, ROW_2_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
@@ -165,20 +173,6 @@ PRINT_CHAR_ROW
 	ld		de, ROW_3_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
-	
-; ldir attrs for row, half way through pixel rows...
-	push	hl
-	push	bc
-	push	de
-
-	ld		de, ATTR_SCR_ROW_3			; destination
-	ld		hl, ATTR_BUF_ROW_3			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-	
-	pop		de
-	pop		bc
-	pop		hl
 	
 	ld		de, ROW_3_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
@@ -212,20 +206,6 @@ PRINT_CHAR_ROW
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
 	
-; ldir attrs for row, half way through pixel rows...
-	push	hl
-	push	bc
-	push	de
-
-	ld		de, ATTR_SCR_ROW_4			; destination
-	ld		hl, ATTR_BUF_ROW_4			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-	
-	pop		de
-	pop		bc
-	pop		hl
-	
 	ld		de, ROW_4_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
@@ -257,20 +237,6 @@ PRINT_CHAR_ROW
 	ld		de, ROW_5_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
-	
-; ldir attrs for row, half way through pixel rows...
-	push	hl
-	push	bc
-	push	de
-
-	ld		de, ATTR_SCR_ROW_5			; destination
-	ld		hl, ATTR_BUF_ROW_5			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-	
-	pop		de
-	pop		bc
-	pop		hl
 	
 	ld		de, ROW_5_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
@@ -304,20 +270,6 @@ PRINT_CHAR_ROW
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
 	
-; ldir attrs for row, half way through pixel rows...
-	push	hl
-	push	bc
-	push	de
-
-	ld		de, ATTR_SCR_ROW_6			; destination
-	ld		hl, ATTR_BUF_ROW_6			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-	
-	pop		de
-	pop		bc
-	pop		hl
-	
 	ld		de, ROW_6_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
@@ -349,20 +301,6 @@ PRINT_CHAR_ROW
 	ld		de, ROW_7_LINE_3			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
-	
-; ldir attrs for row, half way through pixel rows...
-	push	hl
-	push	bc
-	push	de
-
-	ld		de, ATTR_SCR_ROW_7			; destination
-	ld		hl, ATTR_BUF_ROW_7			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-	
-	pop		de
-	pop		bc
-	pop		hl
 	
 	ld		de, ROW_7_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
@@ -396,20 +334,6 @@ PRINT_CHAR_ROW
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
 	
-; ldir attrs for row, half way through pixel rows...
-	push	hl
-	push	bc
-	push	de
-
-	ld		de, ATTR_SCR_ROW_8			; destination
-	ld		hl, ATTR_BUF_ROW_8			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-	
-	pop		de
-	pop		bc
-	pop		hl
-	
 	ld		de, ROW_8_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
@@ -442,20 +366,6 @@ PRINT_CHAR_ROW
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
 	
-; ldir attrs for row, half way through pixel rows...
-	push	hl
-	push	bc
-	push	de
-
-	ld		de, ATTR_SCR_ROW_9			; destination
-	ld		hl, ATTR_BUF_ROW_9			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-	
-	pop		de
-	pop		bc
-	pop		hl
-	
 	ld		de, ROW_9_LINE_4			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
@@ -472,28 +382,22 @@ PRINT_CHAR_ROW
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
 	
-	pop		hl
-	pop		de
-	pop		bc
-	pop		af
     ret									; PRINT_CHAR_ROW:
+
+
 
 ; uses iy, so need to fuck around with ei/di and iy to protect things from 
 BUF_CHAR_ROWS:
-	di								; back to safe mode for iy
-	push	iy						; preserve for when we ei
-    push	af
-    push	bc
-    push	de
-    push	hl
+	di									; back to safe mode for iy
+	push	iy							; preserve for when we ei
 	
+	ld		ix, BUILDING_CHAR_BUF		; 'slow/big' ix but keeps it separate, and this is buff not draw
+	ld		iy, PRINT_ROW_PIXEL_BUF		; points to row pixel buf
+
 ; for each row
 	ld		b, WIN_ROWS
 BUF_CHAR_ROW_LOOP:
-	ld		ix, BUILDING_CHAR_BUF		; 'slow' ix but keeps it separate, and this is buff not draw
-	ld		iy, PRINT_ROW_PIXEL_BUF		; points to row pixel buf
-										; points to first byte of block first byte, top left of block
-										; math does the rest unrolled for the 0-7 lines
+
 ; for each column / char
 	ld		c, b						; inner loop can use c to get row
 	push	bc							; outer loop
@@ -501,7 +405,8 @@ BUF_CHAR_ROW_LOOP:
 BUF_CHAR_COL_LOOP:
 ; get char pixels
 ; ix points to next char
-	ld		(PRINT_CHAR), ix
+	ld		hl, (ix)
+	ld		(PRINT_CHAR), hl
 	push	bc
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	pop		bc
@@ -538,34 +443,31 @@ BUF_CHAR_COL_LOOP:
 	inc		hl							; next byte of char pixel data
 	ld		a, (hl)						; byte of pixel data
 ; can't index (WIN_COL_VIS * 7) as it's > 127 8bitty things
-	ld		de, (WIN_COL_VIS * 7)		; the oversized offset
+	ld		de, WIN_COL_VIS * 7			; the oversized offset
 	ld		hl, iy						; the base
 	add		hl, de						; add 'em
 	ld		(hl), a						; into buffer
 	
 ; next column / char
 	inc		ix							; next char
-	inc		iy							; next byte, remember the whole point is pixel line by line
+	inc		iy							; step to next column, for that char to draw its pixel rows
+	
 	djnz	BUF_CHAR_COL_LOOP
 	pop		bc							; for outer loop
 	
 ; next row
-; inner loop altery incremented what we need
+	ld		de, WIN_COL_BUF				; ix needs to skip over extra chars
+	add		ix, de
+	ld		de, WIN_COL_VIS * 5 		; iy needs to skip to top-left of the next block row
+	add		iy, de
 	djnz	BUF_CHAR_ROW_LOOP
 
-	pop		hl
-	pop		de
-	pop		bc
-	pop		af
 	pop		iy							; restore before ei (or things fuck up)
 	ei									; can have them on again now
-    ret							; BUF_CHAR_ROW:
+    ret									; BUF_CHAR_ROW:
 
-; not based on WIN_ROW_START or similar, as we need weird bit packing...
-; current values used to compare to train_window_data.asm
-; window size 19x10 - 8 bytes per block, set to pattern to use as test card for basic drawing
 PRINT_ROW_PIXEL_BUF: 				
-	defs		19 * 10 * 8, %10101010
+	defs		WIN_COL_VIS * WIN_ROWS * 8, %10101010
 
 ; mem address of line
 

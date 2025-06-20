@@ -1,5 +1,6 @@
 ; window details
 WIN_COL_VIS			= 19
+WIN_COL_BUF			= 4
 WIN_ROWS			= 10
 WIN_COL_TOTAL		= 23
 WIN_SKY_ROWS		= 7

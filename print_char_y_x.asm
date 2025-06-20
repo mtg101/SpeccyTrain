@@ -13,7 +13,7 @@ PRINT_CHAR_AT_Y_X:
     push	de
     push	hl
 
-	call	PRINT_CHAR_PIXEL_MEM; addr for piels from udg / rom in hl
+	call	PRINT_CHAR_PIXEL_MEM; addr for pixels from udg / rom in hl
 	ld		de, hl				; de points to pixels for our char
 
 ; :math:
