@@ -399,7 +399,6 @@ BUF_CHAR_ROWS:
 BUF_CHAR_ROW_LOOP:
 
 ; for each column / char
-	ld		c, b						; inner loop can use c to get row
 	push	bc							; outer loop
 	ld		b, WIN_COL_VIS
 BUF_CHAR_COL_LOOP:
