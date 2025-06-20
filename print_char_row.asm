@@ -561,6 +561,8 @@ BUF_CHAR_COL_LOOP:
 	ei									; can have them on again now
     ret							; BUF_CHAR_ROW:
 
+; not based on WIN_ROW_START or similar, as we need weird bit packing...
+; current values used to compare to train_window_data.asm
 ; window size 19x10 - 8 bytes per block, set to pattern to use as test card for basic drawing
 PRINT_ROW_PIXEL_BUF: 				
 	defs		19 * 10 * 8, %10101010
