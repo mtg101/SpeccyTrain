@@ -3,7 +3,7 @@
 
 ; print row from buf
 ; buf is pixel row at a time, precalc'd for draw speed
-PRINT_CHAR_ROW:
+PRINT_CHAR_RO
     push	af
     push	bc
     push	de
@@ -556,7 +556,10 @@ PRINT_CHAR_ROW:
 	pop		af
     ret									; PRINT_CHAR_ROW:
 
+; uses iy, so need to fuck around with ei/di and iy to protect things from 
 BUF_CHAR_ROWS:
+	di								; back to safe mode for iy
+	push	iy						; preserve for when we ei
     push	af
     push	bc
     push	de
@@ -632,6 +635,8 @@ BUF_CHAR_COL_LOOP:
 	pop		de
 	pop		bc
 	pop		af
+	pop		iy							; restore before ei (or things fuck up)
+	ei									; can have them on again now
     ret							; BUF_CHAR_ROW:
 
 ; window size 20x10x8
