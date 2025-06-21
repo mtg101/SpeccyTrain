@@ -457,7 +457,7 @@ BUF_CHAR_COL_LOOP:
 ; next row
 	ld		de, WIN_COL_BUF				; ix needs to skip over extra chars
 	add		ix, de
-	ld		de, WIN_COL_VIS * 5 		; iy needs to skip to top-left of the next block row
+	ld		de, WIN_COL_VIS * 7 		; iy needs to skip to top-left of the next block row
 	add		iy, de
 	djnz	BUF_CHAR_ROW_LOOP
 
