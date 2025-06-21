@@ -8,5 +8,7 @@ So, this is my little hobby project to write something purely in assembler for t
 
 It's an animated scene, not a game, as I just want to focus on clever tricks for speed, like in demos, rather than worry about moving enemies and tracking misslies. 
 
-Emulator: FUSE - 48K Spectrum
-Compiler: sJasmPlus
+Toolchain is basically this: http://www.breakintoprogram.co.uk/hardware/computers/zx-spectrum/assembly-language/z80-development-toolchain -- VScode IDE, sjasmplus compiler, ZEsarUX emulator, DeZog debugger & simulator, plus Z80 assembler highlighting - once you get it working by lerning from a sample project https://github.com/maziac/z80-sample-program and associated VScode extensions, it's a proper modern IDE experience for ZX Spectrum assembler development!
+
+Also have FUSE, Notepad++ and HxD from my simpler days...
+
