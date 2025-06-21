@@ -482,7 +482,7 @@ ADD_BUILDING:
 	ld		e, a					; e=width
 
 ; ink color attr
-	ld		a, %11000000			; color in top 2 bits
+	ld		a, %11000000			; color in top 1 bit - blue or black
 	and		(hl)
 	rra
 	rra
@@ -490,17 +490,21 @@ ADD_BUILDING:
 	rra
 	rra
 	rra								; now in lowest bits
-	and		%00000011				; clear others
-	or		UDG_BUILDING_ATTR		; add ink colour 0-3 
-	ld		(ATTR_TO_BUF), a		
+	and		%00000001				; clear others
+	or		UDG_BUILDING_ATTR		; add ink colour
+	ld		(BUILD_ATTR_TO_BUF), a		
 
 	ld		b, e					; for each column...
 
 ADD_BULDING_COL_LOOP:
 	push	bc
 	call	BLANK_WIN_COL			; clear first
+	ld      bc, (BUILD_ATTR_TO_BUF)	; BLANK_WIN_COL trashes attrs
+	ld		(ATTR_TO_BUF), bc
 	pop		bc						; c for attr...
 	push	bc
+
+
 	
 	ld		b, d					; add building UDGs to height
 ADD_BULDING_ROW_LOOP:
@@ -609,3 +613,5 @@ CHAR_TO_BUF:
 ATTR_TO_BUF:
 	defb	0
 
+BUILD_ATTR_TO_BUF:
+	defb	0
