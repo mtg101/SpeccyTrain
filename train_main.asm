@@ -72,36 +72,37 @@ Initialise_Interrupt:
 	RET										; Initialise_Interrupt
  
 Interrupt:              
-	DI                                      ; Disable interrupts 
-	PUSH AF                                 ; Save all the registers on the stack
-	PUSH BC                                 ; This is probably not necessary unless
-	PUSH DE                                 ; we're looking at returning cleanly
-	PUSH HL                                 ; back to BASIC at some point
-	PUSH IX
-	EXX
-	EX AF,AF'
-	PUSH AF
-	PUSH BC
-	PUSH DE
-	PUSH HL
-	PUSH IY
+	; DI                                      ; Disable interrupts 
+	; PUSH AF                                 ; Save all the registers on the stack
+	; PUSH BC                                 ; This is probably not necessary unless
+	; PUSH DE                                 ; we're looking at returning cleanly
+	; PUSH HL                                 ; back to BASIC at some point
+	; PUSH IX
+	; EXX
+	; EX AF,AF'
+	; PUSH AF
+	; PUSH BC
+	; PUSH DE
+	; PUSH HL
+	; PUSH IY
 ;
 ; Your code here...
 ;
-; But I do't need any, just need to resume from halt
+; But I don't need any, just need to resume from halt
+; Also means can not bother DI/EI, push/popping, etc, so commented out
 ; 
-	POP IY                                  ; Restore all the registers
-	POP HL
-	POP DE
-	POP BC
-	POP AF
-	EXX
-	EX AF,AF'
-	POP IX
-	POP HL
-	POP DE
-	POP BC
-	POP AF
+	; POP IY                                  ; Restore all the registers
+	; POP HL
+	; POP DE
+	; POP BC
+	; POP AF
+	; EXX
+	; EX AF,AF'
+	; POP IX
+	; POP HL
+	; POP DE
+	; POP BC
+	; POP AF
 	EI                                      ; Enable interrupts
 	RET                                     ; And return
 
