@@ -1,3 +1,4 @@
+	SLDOPT COMMENT WPMEM, LOGPOINT, ASSERTION	; for VSCODE and debugging
 	DEVICE ZXSPECTRUM48 			; needed for SNA export (must be tab indented)
 	org $8000
 	

@@ -1,2 +1,4 @@
 *.sna
 *.lst
+speccy_train.sld
+.tmp/disasm.list
