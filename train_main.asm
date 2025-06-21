@@ -26,9 +26,6 @@ START:
 	call	SETUP_BUILDINGS
 	call	ANIMATE_ROW
 
-EXIT:
-	ret
-
 ANIMATE:
 	halt
 	call	DRAW_BUILDINGS			; draw 'em

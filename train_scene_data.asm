@@ -48,17 +48,17 @@ SCENE_ATTRS:
 	defb	ATTR_RED_PAP, 13
 	defb	ATTR_CYN_PAP, 19
 	defb	ATTR_RED_PAP, 13
-	defb	ATTR_GRN_PAP, 19
+	defb	ATTR_CYN_PAP, 19
 	defb	ATTR_RED_PAP, 11
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 1
-	defb	ATTR_GRN_PAP, 19
+	defb	ATTR_BGRN_PAP, 19
 	defb	ATTR_RED_PAP, 1
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 9
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 1
-	defb	ATTR_GRN_PAP, 19
+	defb	ATTR_BGRN_PAP, 19
 	defb	ATTR_RED_PAP, 1
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 9	

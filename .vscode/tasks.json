@@ -8,6 +8,7 @@
             "args": [
                 "--sld=speccy_train.sld",
                 "--fullpath",
+                "--lst",
                 "train_main.asm"
             ],
             "problemMatcher": {

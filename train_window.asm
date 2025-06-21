@@ -402,7 +402,7 @@ ADD_BLANK_LOOP:
 	djnz	ADD_BLANK_LOOP			; until done all rows
 
 ; unroll the grass to avoid thinking about loop logic... :(
-	ld		a, ATTR_GRN_PAP			; green grass
+	ld		a, ATTR_BGRN_PAP			; green grass
 	ld		(ATTR_TO_BUF), a
 	ld		b, WIN_SKY_ROWS+1		
 	call	BUF_ROW_AT_COL			; draw the char & attr to buffer
