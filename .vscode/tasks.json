@@ -44,6 +44,7 @@
             ],
             "options": {
                 "cwd": "C:\\Users\\Vulkyn\\Documents\\Code\\Spectrum\\ZEsarUX_windows-12.0",
+                // "cwd": "C:\\Users\\russe\\Documents\\code\\Speccy\\ZEsarUX_windows-12.0",
             },
             "detail": "zesarux --noconfigfile --machine tbblue --tbblue-fast-boot-mode --snap-no-change-machine --enable-esxdos-handler --enable-remoteprotocol --disable-autoframeskip --esxdos-root-dir .",
             "problemMatcher": []
@@ -64,6 +65,7 @@
             ],
             "options": {
                 "cwd": "C:\\Users\\Vulkyn\\Documents\\Code\\Spectrum\\ZEsarUX_windows-12.0",
+                // "cwd": "C:\\Users\\russe\\Documents\\code\\Speccy\\ZEsarUX_windows-12.0",
             },
             "detail": "zesarux --noconfigfile --machine tbblue --tbblue-fast-boot-mode --snap-no-change-machine --enable-esxdos-handler --enable-remoteprotocol --disable-autoframeskip --esxdos-root-dir .",
             "problemMatcher": []
