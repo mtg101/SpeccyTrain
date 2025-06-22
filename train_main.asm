@@ -9,7 +9,7 @@ CLOUD_CHAR_BUF:
 BUILDING_CHAR_BUF:						
 	defs	WIN_BUILDING_ROWS * WIN_COL_TOTAL
 FG_CHAR_BUF:							
-	defs	WIN_GRASS_ROWS * WIN_COL_TOTAL
+	defs	WIN_FG_ROWS * WIN_COL_TOTAL
 EXTRA_CHAR_BUF:
 	defs	538							; top up to 768 for scene buf
 	
@@ -19,7 +19,7 @@ CLOUD_ATTR_BUF:
 BUILDING_ATTR_BUF:						
 	defs	WIN_BUILDING_ROWS * WIN_COL_TOTAL
 FG_ATTR_BUF:							
-	defs	WIN_GRASS_ROWS * WIN_COL_TOTAL
+	defs	WIN_FG_ROWS * WIN_COL_TOTAL
 EXTRA_ATTR_BUF:
 	defs	538							; top up to 768 for scene buf
 
@@ -41,13 +41,7 @@ ANIMATE_ROW:
 	call	BUF_CHAR_ROWS			; buffer things row-by-row
 	halt							; wait for vsync
 	call	PRINT_CHAR_ROW			; draw row-by-row
-	call	SHIFT_BUILDINGS_LEFT								
-	ld		de, (NEXT_BUILDING_COL)	; move col left
-	dec		de
-	ld		(NEXT_BUILDING_COL), de
-	ld		a, (NEXT_BUILDING_COL)	; check if extra buff empty
-	cp		WIN_COL_VIS+1
-	call	m, BUFFER_BUILDINGS		; call BUFFER_BUILDINGS if need to
+	call	ANIMATE_WINDOW			; update what needs updating in buffers
 	jr		ANIMATE_ROW
 
 ; set up IM2 - so can use iy and don't wate time scanning keyboard and so on

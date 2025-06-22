@@ -2,8 +2,60 @@
 	INCLUDE "train_window_data.asm"
 	
 SETUP_WINDOW:
-	call	BUFFER_BUILDINGS		; buffer based on the rng 
+	call	SETUP_CLOUDS
+	call	BUFFER_BUILDINGS		
+	call	SETUP_FG
 	ret								; SETUP_BUILDINGS
+
+SETUP_CLOUDS:
+	ld		b, WIN_CLOUD_ROWS * WIN_COL_TOTAL
+	ld		c, C_SPACE				; everything is spaces
+	ld		a, %00101111			; everything cyan pap, white ink
+	ld		hl, CLOUD_CHAR_BUF
+	ld		de, CLOUD_ATTR_BUF
+SETUP_CLOUD_LOOP:
+	ld		(hl), c
+	ld		(de), a
+	inc		hl
+	inc		de
+	djnz	SETUP_CLOUD_LOOP
+	ret								; SETUP_CLOUDS
+
+SETUP_FG:
+	ld		b, WIN_FG_ROWS * WIN_COL_TOTAL
+	ld		c, C_SPACE				; everything is spaces
+	ld		a, %01100000			; everything bright, green pap, black ink
+	ld		hl, FG_CHAR_BUF
+	ld		de, FG_ATTR_BUF
+SETUP_FG_LOOP:
+	ld		(hl), c
+	ld		(de), a
+	inc		hl
+	inc		de
+	djnz	SETUP_FG_LOOP
+	ret								; SETUP_FG
+
+ANIMATE_WINDOW:
+	call	ANIMATE_CLOUDS
+	call	ANIMATE_BUILDINGS
+	call	ANIMATE_FG
+	ret								; ANIMATE_WINDOW
+
+ANIMATE_CLOUDS:
+	ret								; ANIMATE_CLOUDS
+
+ANIMATE_BUILDINGS:
+	call	SHIFT_BUILDINGS_LEFT								
+	ld		de, (NEXT_BUILDING_COL)	; move col left
+	dec		de
+	ld		(NEXT_BUILDING_COL), de
+	ld		a, (NEXT_BUILDING_COL)	; check if extra buff empty
+	cp		WIN_COL_VIS+1			
+	call	m, BUFFER_BUILDINGS		; call BUFFER_BUILDINGS if need to
+	ret								; ANIMATE_BUILDINGS
+
+ANIMATE_FG:
+	ret								; ANIMATE_FG
 
 SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
 	; chars
