@@ -163,7 +163,7 @@ ADD_BUILDING:
 	rra
 	rra								; now in lowest bits
 	and		%00000001				; clear others
-	or		UDG_BUILDING_ATTR		; add ink colour
+	or		UDG_BUILDING_ATTR		; add pap colour
 	ld		(BUILD_ATTR_TO_BUF), a		
 
 	ld		b, e					; for each column...
@@ -171,8 +171,8 @@ ADD_BUILDING:
 ADD_BULDING_COL_LOOP:
 	push	bc
 	call	BLANK_BUILDING_WIN_COL	; clear first
-	ld      bc, (BUILD_ATTR_TO_BUF)	; BLANK_WIN_COL trashes attrs
-	ld		(ATTR_TO_BUF), bc
+	ld      a, (BUILD_ATTR_TO_BUF)	; BLANK_WIN_COL trashes attrs
+	ld		(ATTR_TO_BUF), a
 	pop		bc						; c for attr...
 	push	bc
 
@@ -213,7 +213,7 @@ BUF_ROW_AT_COL_LOOP:
 	add		hl, de					; move down a row
 	djnz	BUF_ROW_AT_COL_LOOP		; until correct row
 BUF_ROW_READY:						; hl is common offset
-	pop		bc						; loop done retore
+	pop		bc						; loop done restore
 
 	ld		de, hl					; de is common offset
 
