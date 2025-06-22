@@ -64,7 +64,9 @@ BUFFER_BUILDINGS:
 	call	z, ADD_GAP				; bit not set, gap, 50/50
 	call	nz, ADD_BUILDING		; bit set, building, 50/50
 	
-	ld		a, WIN_COL_VIS			; have we filled the buffer?
+	ld		a, WIN_COL_VIS+1		; have we filled the buffer? 
+									; +1 as needed or pixel-by-pixel shift
+									; so make consistent
 	ld		hl, NEXT_BUILDING_COL
 	cp		(hl)
 	call	p, BUFFER_BUILDINGS		; branch if positive
@@ -77,20 +79,20 @@ BLANK_BUILDING_WIN_COL						; whole column blank (space)
 	ld		a, ATTR_CYN_PAP			; sky is cyan
 	ld		(ATTR_TO_BUF), a
 
-	ld		b, WIN_BUILDING_ROW_START
-	call	BUF_ROW_AT_COL			; draw the char & attr to buffer
-
-	ld		b, WIN_BUILDING_ROW_START + 1
-	call	BUF_ROW_AT_COL			; draw the char & attr to buffer
+	ld		b, WIN_BUILDING_ROW_START + 1	; index from 1...
+	call	BUF_ROW_AT_COL			
 
 	ld		b, WIN_BUILDING_ROW_START + 2
-	call	BUF_ROW_AT_COL			; draw the char & attr to buffer
+	call	BUF_ROW_AT_COL			
 
 	ld		b, WIN_BUILDING_ROW_START + 3
-	call	BUF_ROW_AT_COL			; draw the char & attr to buffer
+	call	BUF_ROW_AT_COL			
 
 	ld		b, WIN_BUILDING_ROW_START + 4
-	call	BUF_ROW_AT_COL			; draw the char & attr to buffer
+	call	BUF_ROW_AT_COL			
+
+	ld		b, WIN_BUILDING_ROW_START + 5
+	call	BUF_ROW_AT_COL			
 
 	ret								; BLANK_WIN_COL
 
