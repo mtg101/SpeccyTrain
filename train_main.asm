@@ -3,16 +3,27 @@
 	org $8000
 	
 ; re-use the scene buffers for the building buffer too
-; so define before includes -- which does mean it's between code rather than just being at end...
-BUILDING_CHAR_BUF:						; share same as the scene ram
-CHAR_BUF:
-	defs	NUM_SCREEN_CHARS			; space for chars to RST to screen
+CHAR_BUF:								; needs 768 bytes total
+CLOUD_CHAR_BUF:							
+	defs	WIN_CLOUD_ROWS * WIN_COL_TOTAL	
+BUILDING_CHAR_BUF:						
+	defs	WIN_BUILDING_ROWS * WIN_COL_TOTAL
+FG_CHAR_BUF:							
+	defs	WIN_GRASS_ROWS * WIN_COL_TOTAL
+EXTRA_CHAR_BUF:
+	defs	538							; top up to 768 for scene buf
 	
-BUILDING_ATTR_BUF:
-ATTR_BUF:
-	defs	NUM_SCREEN_ATTRS			; space for the ATTRs to ldir to screen
+ATTR_BUF:								; needs 768 bytes total
+CLOUD_ATTR_BUF:							
+	defs	WIN_CLOUD_ROWS * WIN_COL_TOTAL	
+BUILDING_ATTR_BUF:						
+	defs	WIN_BUILDING_ROWS * WIN_COL_TOTAL
+FG_ATTR_BUF:							
+	defs	WIN_GRASS_ROWS * WIN_COL_TOTAL
+EXTRA_ATTR_BUF:
+	defs	538							; top up to 768 for scene buf
 
-	INCLUDE "speccy_defs.asm"		; must be indented
+	INCLUDE "speccy_defs.asm"			; must be indented
 	INCLUDE "print_char_y_x.asm"
 	INCLUDE "print_char_row.asm"
 	INCLUDE "udgs.asm"
