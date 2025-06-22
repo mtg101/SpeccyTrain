@@ -391,7 +391,7 @@ BUF_CHAR_ROWS:
 	di									; back to safe mode for iy
 	push	iy							; preserve for when we ei
 	
-	ld		ix, BUILDING_CHAR_BUF		; 'slow/big' ix but keeps it separate, and this is buff not draw
+	ld		ix, CHAR_BUF				; 'slow/big' ix but keeps it separate, and this is buff not draw
 	ld		iy, PRINT_ROW_PIXEL_BUF		; points to row pixel buf
 
 ; for each row

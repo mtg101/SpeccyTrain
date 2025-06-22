@@ -34,20 +34,8 @@ START:
 	call	Initialise_Interrupt		; IM2 with ROM trick
 	call	LOAD_UDGS
 	call	DRAW_SCENE
-	call	SETUP_BUILDINGS
+	call	SETUP_WINDOW
 	call	ANIMATE_ROW
-
-ANIMATE:
-	halt
-	call	DRAW_BUILDINGS			; draw 'em
-	call	SHIFT_BUILDINGS_LEFT								
-	ld		de, (NEXT_BUILDING_COL)	; move col left
-	dec		de
-	ld		(NEXT_BUILDING_COL), de
-	ld		a, (NEXT_BUILDING_COL)	; check if extra buff empty
-	cp		WIN_COL_VIS+1
-	call	m, BUFFER_BUILDINGS		; call BUFFER_BUILDINGS if need to
-	jr		ANIMATE
 
 ANIMATE_ROW:
 	call	BUF_CHAR_ROWS			; buffer things row-by-row
