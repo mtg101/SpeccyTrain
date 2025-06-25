@@ -182,19 +182,6 @@ ADD_OTHER_GAP:
 
 ADD_FENCE_GAP:
 	push	af						; preserve for outer logic
-
-
-
-
-
-
-
-
-
-
-
-
-
 ; load e width
 	ld		hl, NEXT_BUILDING
 	ld		a, %00000011
@@ -214,8 +201,8 @@ ADD_FENCE_GAP:
 	or		a, %00000111			; make white
 	ld		(BUILD_ATTR_TO_BUF), a
 GOT_FENCE_COLOUR:
-	ld		b, e					; for each column...
-
+; for each column...
+	ld		b, e					
 ADD_FENCE_COL_LOOP:
 	push	bc
 	call	BLANK_BUILDING_WIN_COL	; clear first
@@ -232,17 +219,8 @@ ADD_FENCE_COL_LOOP:
 	inc		bc
 	ld		(NEXT_BUILDING_COL), bc
 	pop		bc
-	djnz	ADD_FENCE_COL_LOOP
+	djnz	ADD_FENCE_COL_LOOP		; for each column
 	
-
-
-
-
-
-
-
-
-
 	pop		af						; restore for outer logic
 	ret								; ADD_SIMPLE_GAP
 
