@@ -115,7 +115,7 @@ BUFFER_BUILDINGS:
 	call	z, ADD_GAP				; bit not set, gap, 50/50
 	call	nz, ADD_BUILDING		; bit set, building, 50/50
 	
-	ld		a, WIN_COL_VIS+1		; have we filled the buffer? 
+	ld		a, WIN_COL_VIS			; have we filled the buffer? 
 									; +1 as needed or pixel-by-pixel shift
 									; so make consistent
 	ld		hl, NEXT_BUILDING_COL
