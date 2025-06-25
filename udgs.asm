@@ -146,93 +146,93 @@ UDG_BORDER_L_PIXELS
 
 UDG_HEDGE_CLOUD_1x1_PIXELS:
 	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%01110100
+	defb	%00001100
+	defb	%00011110
+	defb	%01011110
+	defb	%11101111
+	defb	%11110111
+	defb	%11110111
 	defb	%01111110
-	defb	%11111111
 
 UDG_HEDGE_CLOUD_1x2_L_PIXELS:
 	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%01110100
-	defb	%01111110
-	defb	%11111111
+	defb	%00001101
+	defb	%00011111
+	defb	%01011110
+	defb	%11101111
+	defb	%11110111
+	defb	%11110111
+	defb	%01111111
 
 UDG_HEDGE_CLOUD_1x2_R_PIXELS:
 	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%01110100
-	defb	%01111110
-	defb	%11111111
+	defb	%10110000
+	defb	%01111100
+	defb	%11111010
+	defb	%11110110
+	defb	%11101111
+	defb	%11101111
+	defb	%11111110
 
 UDG_HEDGE_CLOUD_2x1_T_PIXELS:
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%01110100
-	defb	%01111110
-	defb	%11111111
+	defb	%00011000
+	defb	%00111100
+	defb	%01011010
+	defb	%11101111
+	defb	%11110111
+	defb	%01110110
+	defb	%00111110
+	defb	%00011100
 
 UDG_HEDGE_CLOUD_2x1_B_PIXELS:
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%01110100
-	defb	%01111110
+	defb	%00011100
+	defb	%00011100
+	defb	%00011100
+	defb	%00111100
+	defb	%00101100
+	defb	%00110100
+	defb	%01110110
 	defb	%11111111
 
 UDG_HEDGE_CLOUD_2x2_TL_PIXELS:
 	defb	%00000000
 	defb	%00000000
 	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%01110100
-	defb	%01111110
-	defb	%11111111
+	defb	%00000001
+	defb	%00000100
+	defb	%00011111
+	defb	%00111111
+	defb	%01111111
 
 UDG_HEDGE_CLOUD_2x2_TR_PIXELS:
 	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%01110100
+	defb	%01111000
+	defb	%11111100
+	defb	%11111110
 	defb	%01111110
-	defb	%11111111
+	defb	%10111110
+	defb	%10111110
+	defb	%11011110
 
 UDG_HEDGE_CLOUD_2x2_BL_PIXELS:
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%01110100
-	defb	%01111110
+	defb	%01111111
 	defb	%11111111
+	defb	%11111111
+	defb	%11111111
+	defb	%11111111
+	defb	%11111111
+	defb	%01111111
+	defb	%00111111
 
 UDG_HEDGE_CLOUD_2x2_BR_PIXELS:
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%00000000
-	defb	%01110100
-	defb	%01111110
-	defb	%11111111
+	defb	%11011111
+	defb	%11101111
+	defb	%11101111
+	defb	%11011111
+	defb	%11011110
+	defb	%11111110
+	defb	%11111110
+	defb	%11111000
 
 
 
