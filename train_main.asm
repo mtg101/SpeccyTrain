@@ -31,7 +31,7 @@ EXTRA_ATTR_BUF:
 	INCLUDE "train_window.asm"
 	
 START:
-	call	Initialise_Interrupt		; IM2 with ROM trick
+	call	INITIALISE_INTERRUPT		; IM2 with ROM trick
 	call	LOAD_UDGS
 	call	DRAW_SCENE
 	call	SETUP_WINDOW
@@ -46,54 +46,54 @@ ANIMATE_ROW:
 ; set up IM2 - so can use iy and don't wate time scanning keyboard and so on
 ; use ROM trick for interrupt table
 ; from http://www.breakintoprogram.co.uk/hardware/computers/zx-spectrum/interrupts 
-Initialise_Interrupt:   			
-	DI                                      ; Disable interrupts
-	LD HL,Interrupt
-	LD IX,0xFFF0                            ; This code is to be written at 0xFF
-	LD (IX+04h),0xC3                        ; Opcode for JP
-	LD (IX+05h),L                           ; Store the address of the interrupt routine in
-	LD (IX+06h),H
-	LD (IX+0Fh),0x18                        ; Opcode for JR; this will do JR to FFF4h
-	LD A,0x39                               ; Interrupt table at page 0x3900 (ROM)
-	LD I,A                                  ; Set the interrupt register to that page
-	IM 2                                    ; Set the interrupt mode
-	EI                                      ; Enable interrupts
-	RET										; Initialise_Interrupt
+INITIALISE_INTERRUPT:   			
+	di                              ; Disable interrupts
+	ld		hl, INTERRUPT
+	ld		ix, $FFF0				; This code is to be written at 0xFF
+	ld		(ix + $04), $C3         ; Opcode for JP
+	ld		(ix + $05), l           ; Store the address of the interrupt routine in
+	ld		(ix + $06), h
+	ld		(ix + $0F), $18         ; Opcode for JR; this will do JR to FFF4h
+	ld		a, $39                  ; Interrupt table at page 0x3900 (ROM)
+	ld		i, a                    ; Set the interrupt register to that page
+	im		2                       ; Set the interrupt mode
+	ei                              ; Enable interrupts
+	ret								; Initialise_Interrupt
  
-Interrupt:              
-	; DI                                      ; Disable interrupts 
-	; PUSH AF                                 ; Save all the registers on the stack
-	; PUSH BC                                 ; This is probably not necessary unless
-	; PUSH DE                                 ; we're looking at returning cleanly
-	; PUSH HL                                 ; back to BASIC at some point
-	; PUSH IX
-	; EXX
-	; EX AF,AF'
-	; PUSH AF
-	; PUSH BC
-	; PUSH DE
-	; PUSH HL
-	; PUSH IY
+INTERRUPT:              
+	; di                                      ; disable interrupts 
+	; push af                                 ; save all the registers on the stack
+	; push bc                                 ; this is probably not necessary unless
+	; push de                                 ; we're looking at returning cleanly
+	; push hl                                 ; back to basic at some point
+	; push ix
+	; exx
+	; ex af,af'
+	; push af
+	; push bc
+	; push de
+	; push hl
+	; push iy
 ;
 ; Your code here...
 ;
 ; But I don't need any, just need to resume from halt
 ; Also means can not bother DI/EI, push/popping, etc, so commented out
 ; 
-	; POP IY                                  ; Restore all the registers
-	; POP HL
-	; POP DE
-	; POP BC
-	; POP AF
-	; EXX
-	; EX AF,AF'
-	; POP IX
-	; POP HL
-	; POP DE
-	; POP BC
-	; POP AF
-	EI                                      ; Enable interrupts
-	RET                                     ; And return
+	; pop iy                                  ; restore all the registers
+	; pop hl
+	; pop de
+	; pop bc
+	; pop af
+	; exx
+	; ex af,af'
+	; pop ix
+	; pop hl
+	; pop de
+	; pop bc
+	; pop af
+	ei                                      ; Enable interrupts
+	ret                                     ; And return
 
 
 ; Deployment: Snapshot
