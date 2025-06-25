@@ -1,5 +1,5 @@
 ; UDGs
-NUM_UDGS			= 19			; max 21, $A4
+NUM_UDGS			= 19			; max 19, $A2, due to top-RAM interrupts (plus 128k only has 19)
 
 UDG_DITHER			= $90
 
@@ -31,7 +31,6 @@ UDG_HEDGE_CLOUD_2x2_TR	= $A1
 UDG_HEDGE_CLOUD_2x2_BL	= $A2
 UDG_HEDGE_CLOUD_2x2_BR	= $A3
 
-UDG_LAST_LEFT			= $A4		; currently unused
 
 
 UDGS_PIXELS:
