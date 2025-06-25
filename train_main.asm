@@ -35,7 +35,6 @@ START:
 	call	LOAD_UDGS
 	call	DRAW_SCENE
 	call	SETUP_WINDOW
-	call	ANIMATE_ROW
 
 ANIMATE_ROW:
 	call	BUF_CHAR_ROWS			; buffer things row-by-row

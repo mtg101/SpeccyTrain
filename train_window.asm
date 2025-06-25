@@ -106,8 +106,7 @@ SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
 
 BUFFER_BUILDINGS:
 	call	RNG						; rng in a
-	ld		hl, NEXT_BUILDING		
-	ld		(hl), a					; NEXT_BUILDING is now rng
+	ld		(NEXT_BUILDING), a		; NEXT_BUILDING is now rng
 
 	ld		a, %00010000			; mask for type, only need one bit
 	and		(hl)					; get type from generated next building
@@ -183,6 +182,67 @@ ADD_OTHER_GAP:
 
 ADD_FENCE_GAP:
 	push	af						; preserve for outer logic
+
+
+
+
+
+
+
+
+
+
+
+
+
+; load e width
+	ld		hl, NEXT_BUILDING
+	ld		a, %00000011
+	and		(hl)					; now a is 0-3 
+	inc		a						; now a is 1-4
+	ld		e, a					; e=width
+
+; ink color attr
+	ld		a, UDG_FENCE_ATTR		; base black
+	ld		(BUILD_ATTR_TO_BUF), a
+
+	ld		a, %11000000			; color bits
+	and		(hl)					; next building rng
+	cp		0						; 1 in 4 change it's white
+	jr		nz, GOT_FENCE_COLOUR	; it's not white, stick with black
+	ld		a, UDG_FENCE_ATTR		; base black ink
+	or		a, %00000111			; make white
+	ld		(BUILD_ATTR_TO_BUF), a
+GOT_FENCE_COLOUR:
+	ld		b, e					; for each column...
+
+ADD_FENCE_COL_LOOP:
+	push	bc
+	call	BLANK_BUILDING_WIN_COL	; clear first
+	ld      a, (BUILD_ATTR_TO_BUF)	; BLANK_WIN_COL trashes attrs
+	ld		(ATTR_TO_BUF), a
+
+	ld		b, WIN_BUILDING_ROW_START + 5	; bottom row (copied from BLANK_BUILDING_WIN_COL)
+	ld		a, UDG_FENCE			; fence udg in a
+	ld		(CHAR_TO_BUF), a
+
+	call	BUF_ROW_AT_COL			; buf it
+
+	ld		bc, (NEXT_BUILDING_COL)	; move to next column
+	inc		bc
+	ld		(NEXT_BUILDING_COL), bc
+	pop		bc
+	djnz	ADD_FENCE_COL_LOOP
+	
+
+
+
+
+
+
+
+
+
 	pop		af						; restore for outer logic
 	ret								; ADD_SIMPLE_GAP
 
@@ -225,7 +285,7 @@ ADD_BULDING_COL_LOOP:
 	call	BLANK_BUILDING_WIN_COL	; clear first
 	ld      a, (BUILD_ATTR_TO_BUF)	; BLANK_WIN_COL trashes attrs
 	ld		(ATTR_TO_BUF), a
-	pop		bc						; c for attr...
+	pop		bc						; loops...
 	push	bc
 
 	ld		b, d					; add building UDGs to height
