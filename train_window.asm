@@ -106,45 +106,45 @@ SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
 	; chars
 	ld		de, CHAR_BUF_ROW_3		; target
 	ld		hl, CHAR_BUF_ROW_3 + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 	ld		de, CHAR_BUF_ROW_4		; target
 	ld		hl, CHAR_BUF_ROW_4 + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 	ld		de, CHAR_BUF_ROW_5		; target
 	ld		hl, CHAR_BUF_ROW_5 + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 	ld		de, CHAR_BUF_ROW_6		; target
 	ld		hl, CHAR_BUF_ROW_6 + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 	ld		de, CHAR_BUF_ROW_7		; target
 	ld		hl, CHAR_BUF_ROW_7 + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 	
 	; attrs
 	ld		de, ATTR_BUF_ROW_3		; target
 	ld		hl, ATTR_BUF_ROW_3 + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 	ld		de, ATTR_BUF_ROW_4		; target
 	ld		hl, ATTR_BUF_ROW_4 + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 	ld		de, ATTR_BUF_ROW_5		; target
 	ld		hl, ATTR_BUF_ROW_5 + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 	ld		de, ATTR_BUF_ROW_6		; target
 	ld		hl, ATTR_BUF_ROW_6 + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 	ld		de, ATTR_BUF_ROW_7		; target
 	ld		hl, ATTR_BUF_ROW_7 + 1	; source is one to the right
-	ld		bc, WIN_COL_VIS			; move whole visible window
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 	
 	ret								; SHIFT_BUILDINGS_LEFT
@@ -270,7 +270,138 @@ ADD_FENCE_COL_LOOP:
 	ret								; ADD_SIMPLE_GAP
 
 ADD_HEDGE_GAP:
-	ret								; ADD_SIMPLE_GAP
+; ink color attr
+	ld		a, UDG_HEDGE_ATTR		; default green on cyan
+	ld		(BUILD_ATTR_TO_BUF), a
+
+	ld		a, %11000000			; color bits
+	and		(hl)					; next building rng
+	cp		0						; 1 in 4 change it's magenta
+	jr		nz, GOT_HEDGE_COLOUR	; it's not magenta, stick with green
+	ld		a, UDG_HEDGE_ATTR		; default green on cyan
+	or		a, %00000011			; make magenta
+	and		a, %11111011
+	ld		(BUILD_ATTR_TO_BUF), a
+
+GOT_HEDGE_COLOUR:
+; which shape hedge? from width as height used to fence v hedge
+	ld		a, %00000011
+	ld		hl, NEXT_BUILDING
+	and		(hl)					; now a is 0000 - 0300
+
+	cp		0						; case 0:
+	jr		z, ADD_HEDGE_1x1
+	cp		1						; case 1:
+	jr		z, ADD_HEDGE_1x2
+	cp		2						; case 2:
+	jp		z, ADD_HEDGE_2x1
+
+; falls through to last case to save a cp
+ADD_HEDGE_2x2:
+	call	BLANK_BUILDING_WIN_COL			; clear first
+	ld      a, (BUILD_ATTR_TO_BUF)			; BLANK_WIN_COL trashes attrs
+	ld		(ATTR_TO_BUF), a
+
+	ld		b, WIN_BUILDING_ROW_START + 5	; bottom row (copied from BLANK_BUILDING_WIN_COL)
+	ld		a, UDG_HEDGE_CLOUD_2x2_BL		; BL udg in a
+	ld		(CHAR_TO_BUF), a
+	call	BUF_ROW_AT_COL					; buf it
+
+	ld		a, UDG_HEDGE_CLOUD_2x2_TL		; TL udg in a
+	ld		(CHAR_TO_BUF), a
+	dec		b								; above trunk
+	call	BUF_ROW_AT_COL					; buf it
+
+	ld		bc, (NEXT_BUILDING_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_BUILDING_COL), bc
+
+	call	BLANK_BUILDING_WIN_COL			; clear first
+	ld      a, (BUILD_ATTR_TO_BUF)			; BLANK_WIN_COL trashes attrs
+	ld		(ATTR_TO_BUF), a
+
+	ld		b, WIN_BUILDING_ROW_START + 5	; bottom row (copied from BLANK_BUILDING_WIN_COL)
+	ld		a, UDG_HEDGE_CLOUD_2x2_BR		; BR udg in a
+	ld		(CHAR_TO_BUF), a
+	call	BUF_ROW_AT_COL					; buf it
+
+	ld		a, UDG_HEDGE_CLOUD_2x2_TR		; TR udg in a
+	ld		(CHAR_TO_BUF), a
+	dec		b								; above trunk
+	call	BUF_ROW_AT_COL					; buf it
+
+	ld		bc, (NEXT_BUILDING_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_BUILDING_COL), bc
+	ret								; ADD_HEDGE_GAP - yes, each hedge size routines returns main routine
+
+ADD_HEDGE_1x1:
+	call	BLANK_BUILDING_WIN_COL			; clear first
+	ld      a, (BUILD_ATTR_TO_BUF)			; BLANK_WIN_COL trashes attrs
+	ld		(ATTR_TO_BUF), a
+
+	ld		b, WIN_BUILDING_ROW_START + 5	; bottom row (copied from BLANK_BUILDING_WIN_COL)
+	ld		a, UDG_HEDGE_CLOUD_1x1			; hedge udg in a
+	ld		(CHAR_TO_BUF), a
+
+	call	BUF_ROW_AT_COL					; buf it
+
+	ld		bc, (NEXT_BUILDING_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_BUILDING_COL), bc
+	ret								; ADD_HEDGE_GAP - yes, each hedge size routines returns main routine
+
+ADD_HEDGE_1x2:
+	call	BLANK_BUILDING_WIN_COL			; clear first
+	ld      a, (BUILD_ATTR_TO_BUF)			; BLANK_WIN_COL trashes attrs
+	ld		(ATTR_TO_BUF), a
+
+	ld		b, WIN_BUILDING_ROW_START + 5	; bottom row (copied from BLANK_BUILDING_WIN_COL)
+	ld		a, UDG_HEDGE_CLOUD_1x2_L		; hedge udg in a
+	ld		(CHAR_TO_BUF), a
+
+	call	BUF_ROW_AT_COL					; buf it
+
+	ld		bc, (NEXT_BUILDING_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_BUILDING_COL), bc
+
+	call	BLANK_BUILDING_WIN_COL			; clear first
+	ld      a, (BUILD_ATTR_TO_BUF)			; BLANK_WIN_COL trashes attrs
+	ld		(ATTR_TO_BUF), a
+
+	ld		b, WIN_BUILDING_ROW_START + 5	; bottom row (copied from BLANK_BUILDING_WIN_COL)
+	ld		a, UDG_HEDGE_CLOUD_1x2_R		; hedge udg in a
+	ld		(CHAR_TO_BUF), a
+
+	call	BUF_ROW_AT_COL					; buf it
+
+	ld		bc, (NEXT_BUILDING_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_BUILDING_COL), bc
+	ret								; ADD_HEDGE_GAP - yes, each hedge size routines returns main routine
+
+ADD_HEDGE_2x1:
+	call	BLANK_BUILDING_WIN_COL			; clear first
+	ld      a, (BUILD_ATTR_TO_BUF)			; BLANK_WIN_COL trashes attrs
+	ld		(ATTR_TO_BUF), a
+
+	ld		b, WIN_BUILDING_ROW_START + 5	; bottom row (copied from BLANK_BUILDING_WIN_COL)
+	ld		a, UDG_HEDGE_CLOUD_2x1_B		; tree trunk udg in a
+	ld		(CHAR_TO_BUF), a
+	call	BUF_ROW_AT_COL					; buf it
+
+	ld		a, UDG_HEDGE_CLOUD_2x1_T		; tree top udg in a
+	ld		(CHAR_TO_BUF), a
+	dec		b								; above trunk
+	call	BUF_ROW_AT_COL					; buf it
+
+	ld		bc, (NEXT_BUILDING_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_BUILDING_COL), bc
+	ret								; ADD_HEDGE_GAP - yes, each hedge size routines returns main routine
+
+
 
 
 ADD_BUILDING:
