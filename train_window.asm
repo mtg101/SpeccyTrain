@@ -2,6 +2,7 @@
 	INCLUDE "train_window_data.asm"
 	
 SETUP_WINDOW:
+	call	LOAD_WINDOW_UDGS
 	call	SETUP_CLOUDS
 	call	BUFFER_BUILDINGS		
 	call	SETUP_FG
@@ -366,10 +367,10 @@ BUF_ROW_READY:						; hl is common offset
 	pop		de					
 	ret								; BUF_ROW_AT_COL
 	
-LOAD_UDGS:
+LOAD_WINDOW_UDGS:
 	ld		de, UDG_START			; first UDG addr
-	ld		hl, UDGS_PIXELS			; my UDGs
-	ld		bc, NUM_UDGS * 8		; loop
+	ld		hl, UDGS_WINDOW_PIXELS	; my UDGs
+	ld		bc, NUM_WINDOW_UDGS * 8	; loop
 	ldir
 	ret								; LOAD_UDGS
   

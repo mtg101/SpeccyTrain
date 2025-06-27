@@ -26,13 +26,11 @@ EXTRA_ATTR_BUF:
 	INCLUDE "speccy_defs.asm"			; must be indented
 	INCLUDE "print_char_y_x.asm"
 	INCLUDE "print_char_row.asm"
-	INCLUDE "udgs.asm"
 	INCLUDE "train_scene.asm"
 	INCLUDE "train_window.asm"
 	
 START:
 	call	INITIALISE_INTERRUPT		; IM2 with ROM trick
-	call	LOAD_UDGS
 	call	DRAW_SCENE
 	call	SETUP_WINDOW
 

@@ -96,3 +96,111 @@ SCENE_ATTRS:
 
 	defb	ATTR_ALL_BLK, 64
 	defb	0
+
+; UDGs
+NUM_SCENE_UDGS		= 9			; max 19, $A2, due to top-RAM interrupts (plus 128k only has 19)
+
+UDG_DITHER			= $90
+
+UDG_BORDER_TL		= $91
+UDG_BORDER_T		= $92
+UDG_BORDER_TR		= $93
+UDG_BORDER_R		= $94
+UDG_BORDER_BR		= $95
+UDG_BORDER_B		= $96
+UDG_BORDER_BL		= $97
+UDG_BORDER_L		= $98
+
+UDGS_SCENE_PIXELS:
+UDG_DITHER_PIXELS:
+	defb	%10101010
+	defb	%01010101
+	defb	%10101010
+	defb	%01010101
+	defb	%10101010
+	defb	%01010101
+	defb	%10101010
+	defb	%01010101
+
+UDG_BORDER_TL_PIXELS
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000011
+	defb	%00000011
+
+UDG_BORDER_T_PIXELS
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%11111111
+	defb	%11111111
+
+UDG_BORDER_TR_PIXELS
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%11000000
+	defb	%11000000
+
+UDG_BORDER_R_PIXELS
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+	defb	%11000000
+
+UDG_BORDER_BR_PIXELS
+	defb	%11000000
+	defb	%11000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+
+UDG_BORDER_B_PIXELS
+	defb	%11111111
+	defb	%11111111
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+
+UDG_BORDER_BL_PIXELS
+	defb	%00000011
+	defb	%00000011
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+
+UDG_BORDER_L_PIXELS
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+	defb	%00000011
+
+
+

@@ -2,6 +2,8 @@
 	INCLUDE "train_scene_data.asm"
 
 DRAW_SCENE:
+	call	LOAD_SCENE_UDGS
+
 ; RLE characters to buffer
 	ld		hl, SCENE_CHARACTERS	; load addr of RLE characters 
 	ld		de, CHAR_BUF			; buffer pointer
@@ -90,11 +92,17 @@ DRAW_SCENE_CHARS_COl_LOOP:
 	ld		a, COL_BLU
 	call	ROM_BORDER				; sets border to val in a
 	
-DRAW_SCENE_ATTRS:
 ; ldir ATTRs 
 	ld		de, ATTR_START			; ATTR mem target
 	ld		hl, ATTR_BUF			; buffer source
-	ld		bc, NUM_SCREEN_ATTRS		; num attrs to blit
+	ld		bc, NUM_SCREEN_ATTRS	; num attrs to blit
 	ldir
-	
+
+	ret								; DRAW_SCENE
    
+LOAD_SCENE_UDGS:
+	ld		de, UDG_START			; first UDG addr
+	ld		hl, UDGS_SCENE_PIXELS	; my UDGs
+	ld		bc, NUM_SCENE_UDGS * 8	; loop
+	ldir
+	ret								; LOAD_UDGS
