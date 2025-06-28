@@ -221,7 +221,7 @@ PRINT_CHAR_ROW
 	ld		de, ROW_3_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
-										; don't skip for new row
+	inc		hl							; stop over extra column
 	
 	ld		de, ROW_4_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
@@ -261,7 +261,7 @@ PRINT_CHAR_ROW
 	ld		de, ROW_4_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
-										; don't skip for new row
+	inc		hl							; stop over extra column
 	
 	ld		de, ROW_5_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
@@ -301,7 +301,7 @@ PRINT_CHAR_ROW
 	ld		de, ROW_5_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
-										; don't skip for new row
+	inc		hl							; stop over extra column
 	
 	ld		de, ROW_6_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
@@ -341,7 +341,7 @@ PRINT_CHAR_ROW
 	ld		de, ROW_6_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
-										; don't skip for new row
+	inc		hl							; stop over extra column
 	
 	ld		de, ROW_7_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
@@ -381,7 +381,7 @@ PRINT_CHAR_ROW
 	ld		de, ROW_7_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
-										; don't skip for new row
+	inc		hl							; stop over extra column
 	
 	ld		de, ROW_8_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy

@@ -267,7 +267,7 @@ BUF_BUILDING_CHAR_COL_LOOP:
 ; next row
 	ld		de, WIN_COL_BUF				; ix needs to skip over extra chars
 	add		ix, de
-	ld		de, (WIN_COL_VIS+1) * 7		; iy needs to skip to top-left of the next block row
+	ld		de, ((WIN_COL_VIS+1) * 7) + 1	; iy needs to skip to top-left of the next block row, +1 for the extra col
 	add		iy, de
 	djnz	BUF_BUILDING_CHAR_ROW_LOOP
 
