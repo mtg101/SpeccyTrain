@@ -6,9 +6,9 @@
 CHAR_BUF:							; needs 768 bytes total
 CLOUD_CHAR_BUF:							
 	defs	WIN_CLOUD_ROWS * WIN_COL_TOTAL	
-BUILDING_CHAR_BUF:						
+BUILDING_CHAR_BUF:
 	defs	WIN_BUILDING_ROWS * WIN_COL_TOTAL
-FG_CHAR_BUF:							
+FG_CHAR_BUF:	
 	defs	WIN_FG_ROWS * WIN_COL_TOTAL
 EXTRA_CHAR_BUF:
 	defs	538						; top up to 768 for scene buf
@@ -25,7 +25,7 @@ EXTRA_ATTR_BUF:
 
 	INCLUDE "speccy_defs.asm"		; must be indented
 	INCLUDE "print_char_y_x.asm"
-	INCLUDE "print_char_row.asm"
+	INCLUDE "print_window_row.asm"
 	INCLUDE "train_scene.asm"
 	INCLUDE "train_window_main.asm"
 	

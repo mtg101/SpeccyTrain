@@ -201,11 +201,11 @@ BUF_BUILDING_CHAR_ROWS:
 	di									; back to safe mode for iy
 	push	iy							; preserve for when we ei
 	
-	ld		ix, CHAR_BUF				; 'slow/big' ix but keeps it separate, and this is buff not draw
-	ld		iy, PRINT_ROW_PIXEL_BUF		; points to row pixel buf
+	ld		ix, BUILDING_CHAR_BUF			; 'slow/big' ix but keeps it separate, and this is buff not draw
+	ld		iy, BUILDINGS_LAYER_PIXEL_BUF	; points to row pixel buf
 
 ; for each row
-	ld		b, WIN_ROWS
+	ld		b, WIN_BUILDING_ROWS
 BUF_BUILDING_CHAR_ROW_LOOP:
 
 ; for each column / char
@@ -221,41 +221,41 @@ BUF_BUILDING_CHAR_COL_LOOP:
 	pop		bc
 
 ; copy each pixel row, 0-7
-; iy is base buffer pixel offset, 2nd row is 19 bytes away...
-	ld		a, (hl)						; byte of pixel data
-	ld		(iy), a						; into buffer
+; iy is base buffer pixel offset, 2nd row is WIN_COL_VIS+1 bytes away...
+	ld		a, (hl)							; byte of pixel data
+	ld		(iy), a							; into buffer
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
-	ld		(iy + WIN_COL_VIS), a		; into buffer with row offset
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(iy + (WIN_COL_VIS+1)), a		; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
-	ld		(iy + (WIN_COL_VIS * 2)), a	; into buffer with row offset
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(iy + ((WIN_COL_VIS+1) * 2)), a	; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
-	ld		(iy + (WIN_COL_VIS * 3)), a	; into buffer with row offset
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(iy + ((WIN_COL_VIS+1) * 3)), a	; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
-	ld		(iy + (WIN_COL_VIS * 4)), a	; into buffer with row offset
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(iy + ((WIN_COL_VIS+1) * 4)), a	; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
-	ld		(iy + (WIN_COL_VIS * 5)), a	; into buffer with row offset
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(iy + ((WIN_COL_VIS+1) * 5)), a	; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
-	ld		(iy + (WIN_COL_VIS * 6)), a	; into buffer with row offset
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(iy + ((WIN_COL_VIS+1) * 6)), a	; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
 ; can't index (WIN_COL_VIS * 7) as it's > 127 8bitty things
-	ld		de, WIN_COL_VIS * 7			; the oversized offset
-	ld		hl, iy						; the base
-	add		hl, de						; add 'em
-	ld		(hl), a						; into buffer
+	ld		de, (WIN_COL_VIS+1) * 7			; the oversized offset
+	ld		hl, iy							; the base
+	add		hl, de							; add 'em
+	ld		(hl), a							; into buffer
 	
 ; next column / char
 	inc		ix							; next char
@@ -267,13 +267,13 @@ BUF_BUILDING_CHAR_COL_LOOP:
 ; next row
 	ld		de, WIN_COL_BUF				; ix needs to skip over extra chars
 	add		ix, de
-	ld		de, WIN_COL_VIS * 7 		; iy needs to skip to top-left of the next block row
+	ld		de, (WIN_COL_VIS+1) * 7		; iy needs to skip to top-left of the next block row
 	add		iy, de
 	djnz	BUF_BUILDING_CHAR_ROW_LOOP
 
 	pop		iy							; restore before ei (or things fuck up)
 	ei									; can have them on again now
-    ret									; BUF_CHAR_ROW:
+    ret									; BUF_BUILDING_CHAR_ROWS
 
 
 NEXT_BUILDING_COL:

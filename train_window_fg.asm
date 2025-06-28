@@ -1,17 +1,51 @@
 
 
 SETUP_FG:
+; attrs
 	ld		b, WIN_FG_ROWS * WIN_COL_TOTAL
-	ld		c, $7C					; everything is | character (use attre to turn on/off)
 	ld		a, %01100100			; everything bright, green pap, green ink (flip attrs to make vis)
-	ld		hl, FG_CHAR_BUF
 	ld		de, FG_ATTR_BUF
-SETUP_FG_LOOP:
-	ld		(hl), c
+SETUP_FG_ATTRS_LOOP:
 	ld		(de), a
 	inc		hl
 	inc		de
-	djnz	SETUP_FG_LOOP
+	djnz	SETUP_FG_ATTRS_LOOP
+
+; chars
+	ld		a, %00011000			; vertical pole 
+	ld		hl, SINGLE_CHAR_PIXEL_BUF	; 8 byte buf
+	ld		(hl), a					; 0
+	inc		hl
+	ld		(hl), a					; 1
+	inc		hl
+	ld		(hl), a					; 2
+	inc		hl
+	ld		(hl), a					; 3
+	inc		hl
+	ld		(hl), a					; 4
+	inc		hl
+	ld		(hl), a					; 5
+	inc		hl
+	ld		(hl), a					; 6
+	inc		hl
+	ld		(hl), a					; 7
+
+	ld		b, (WIN_COL_VIS+1) 		
+	ld		ix, FG_LAYER_PIXEL_BUF		; first row
+SETUP_FG_CHAR_LOOP_1:
+	ld		hl, SINGLE_CHAR_PIXEL_BUF	; call trashes it so have to reload every loop
+	call	BUF_CHAR_PIXELS
+	inc		ix
+	djnz	SETUP_FG_CHAR_LOOP_1
+
+	ld		b, (WIN_COL_VIS+1) 		
+	ld		ix, FG_LAYER_PIXEL_BUF + ((WIN_COL_VIS+1) * 8)		; second row
+SETUP_FG_CHAR_LOOP_2:
+	ld		hl, SINGLE_CHAR_PIXEL_BUF	; call trashes it so have to reload every loop
+	call	BUF_CHAR_PIXELS
+	inc		ix
+	djnz	SETUP_FG_CHAR_LOOP_2
+
 	ret								; SETUP_FG
 
 ; animate by flipping attrs to show | characters, based on LUT
