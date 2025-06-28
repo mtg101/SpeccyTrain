@@ -1,5 +1,6 @@
 
 ANIMATE_BUILDINGS:
+	call	LOAD_SHIFT_B_LAYER_BUF	
 	call	SHIFT_BUILDINGS_LEFT								
 	ld		de, (NEXT_BUILDING_COL)	; move col left
 	dec		de
@@ -7,8 +8,6 @@ ANIMATE_BUILDINGS:
 	ld		a, (NEXT_BUILDING_COL)	; check if extra buff empty
 	cp		WIN_COL_VIS+1			
 	call	m, SETUP_BUILDINGS		; call BUFFER_BUILDINGS if need to
-	call	LOAD_SHIFT_B_LAYER_BUF	
-;	call 	BUF_BUILDING_CHAR_ROWS	; old
 	ret								; ANIMATE_BUILDINGS
 
 SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
