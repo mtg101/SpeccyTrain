@@ -77,25 +77,25 @@ SETUP_BUILDINGS:
 									; something in buffer 
 	ret								; BUFFER_BUILDINGS
 
-BLANK_BUILDING_WIN_COL						; whole column blank (space)
+BLANK_BUILDING_WIN_COL:				; whole column blank (space)
 	ld		a, C_SPACE				; we're printing spaces
 	ld		(CHAR_TO_BUF), a
 	ld		a, ATTR_CYN_PAP			; sky is cyan
 	ld		(ATTR_TO_BUF), a
 
-	ld		b, WIN_BUILDING_ROW_START + 1	; index from 1...
+	ld		b, 0
 	call	BUF_ROW_AT_COL			
 
-	ld		b, WIN_BUILDING_ROW_START + 2
+	ld		b, 1
 	call	BUF_ROW_AT_COL			
 
-	ld		b, WIN_BUILDING_ROW_START + 3
+	ld		b, 2
 	call	BUF_ROW_AT_COL			
 
-	ld		b, WIN_BUILDING_ROW_START + 4
+	ld		b, 3
 	call	BUF_ROW_AT_COL			
 
-	ld		b, WIN_BUILDING_ROW_START + 5
+	ld		b, 4
 	call	BUF_ROW_AT_COL			
 
 	ret								; BLANK_WIN_COL
@@ -144,7 +144,7 @@ ADD_BULDING_COL_LOOP:
 ADD_BULDING_ROW_LOOP:
 	push	bc						; preserve bc
 
-	ld		a, WIN_BUILDING_ROW_END + 2	; +2 for index from 1 in two ways...
+	ld		a, WIN_BUILDING_ROWS 	; base row
 	sub		b						; then height
 	ld		b, a					; into b for call
 	ld		a, UDG_BUILDING			; building udg in a
@@ -162,12 +162,10 @@ ADD_BULDING_ROW_LOOP:
 	
 	ret								; ADD_BUILDING
 
-BUF_ROW_AT_COL:						; b row 1-10 (bjnz means can't 0 index...)
+BUF_ROW_AT_COL:						; b building row 0-4 
 	push	de						; don't trash de
 	push	bc						; looping again so preserve bc
 
-	dec		b
-	
 	ld		hl, (NEXT_BUILDING_COL)
 	ld		a, b
 	cp 		0
@@ -182,13 +180,13 @@ BUF_ROW_READY:						; hl is common offset
 	ld		de, hl					; de is common offset
 
 ; char
-	ld		hl, CHAR_BUF
+	ld		hl, BUILDING_CHAR_BUF
 	add		hl, de	
 	ld		a, (CHAR_TO_BUF)
 	ld		(hl), a					; buf char
 
 ; attr	
-	ld		hl, ATTR_BUF	
+	ld		hl, BUILDING_ATTR_BUF	
 	add		hl, de	
 	ld		a, (ATTR_TO_BUF)
 	ld		(hl), a					; buf attr

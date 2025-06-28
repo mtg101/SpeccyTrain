@@ -5,13 +5,11 @@
 ; re-use the scene buffers for the building buffer too
 CHAR_BUF:							; needs 768 bytes total
 CLOUD_CHAR_BUF:							
-	defs	WIN_CLOUD_ROWS * WIN_COL_TOTAL	
+	defs	WIN_CLOUD_ROWS * WIN_COL_TOTAL
 BUILDING_CHAR_BUF:
 	defs	WIN_BUILDING_ROWS * WIN_COL_TOTAL
-FG_CHAR_BUF:	
-	defs	WIN_FG_ROWS * WIN_COL_TOTAL
 EXTRA_CHAR_BUF:
-	defs	538						; top up to 768 for scene buf
+	defs	584						; top up to 768 for scene buf
 	
 ATTR_BUF:							; needs 768 bytes total
 CLOUD_ATTR_BUF:							
