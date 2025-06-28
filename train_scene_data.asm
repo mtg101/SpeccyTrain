@@ -24,14 +24,14 @@ SCENE_CHARACTERS:
 	defb	UDG_BORDER_B, 3
 	defb	UDG_BORDER_BR, 1
 	defb	C_SPACE, 218
-	defb	C_SPACE, 12
+	defb	C_SPACE, 11
 	defb	UDG_BENTO_L, 1
 	defb	UDG_BENTO_R, 1
 	defb	UDG_BEER_B, 1
-	defb	C_SPACE, 113
+	defb	C_SPACE, 114
 	defb	UDG_DITHER_4, 32
 	defb	UDG_DITHER_3, 32
-	defb	UDG_DITHER_4, 32
+	defb	UDG_DITHER_2, 32
 	defb	C_SPACE, 32
 	defb	0
 
@@ -75,10 +75,10 @@ SCENE_ATTRS:
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 9	
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 4
+	defb	ATTR_RED_PAP, 3
 	defb	ATTR_RPWI, 2
 	defb	ATTR_RPYI, 1
-	defb	ATTR_RED_PAP, 14
+	defb	ATTR_RED_PAP, 15
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 9
 	defb	ATTR_ALL_BLK, 1

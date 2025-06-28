@@ -27,7 +27,7 @@ EXTRA_ATTR_BUF:
 	INCLUDE "print_char_y_x.asm"
 	INCLUDE "print_char_row.asm"
 	INCLUDE "train_scene.asm"
-	INCLUDE "train_window.asm"
+	INCLUDE "train_window_main.asm"
 	
 START:
 	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
@@ -35,7 +35,6 @@ START:
 	call	SETUP_WINDOW
 
 ANIMATE_ROW:
-	call	BUF_CHAR_ROWS			; buffer things row-by-row
 	halt							; wait for vsync
 	call	PRINT_CHAR_ROW			; draw row-by-row
 	call	ANIMATE_WINDOW			; update what needs updating in buffers
