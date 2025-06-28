@@ -1,9 +1,11 @@
 SCENE_CHARACTERS:
 	; RLE char, numTimes (max 255 - b is 8bit!), 0 terminated
-	; total 32*22=704 (ignoring channel 1 lower area for now)
-	defb	'*', 32
-	defb	'-', 32
-	defb	C_SPACE, 104
+	; total 32*24 = 768
+	defb	UDG_DITHER_4, 32
+	defb	UDG_DITHER_3, 32
+	defb	UDG_DITHER_4, 32
+	defb	UDG_MIDLINE, 32
+	defb	C_SPACE, 40
 	defb	UDG_BORDER_TL, 1
 	defb	UDG_BORDER_T, 19
 	defb	UDG_BORDER_TR, 1
@@ -22,14 +24,24 @@ SCENE_CHARACTERS:
 	defb	UDG_BORDER_B, 3
 	defb	UDG_BORDER_BR, 1
 	defb	C_SPACE, 218
-	defb	C_UDG_1, 192
-	defb	C_SPACE, 64
+	defb	C_SPACE, 12
+	defb	UDG_BENTO_L, 1
+	defb	UDG_BENTO_R, 1
+	defb	UDG_BEER_B, 1
+	defb	C_SPACE, 113
+	defb	UDG_DITHER_4, 32
+	defb	UDG_DITHER_3, 32
+	defb	UDG_DITHER_4, 32
+	defb	C_SPACE, 32
 	defb	0
 
 SCENE_ATTRS:
 	; RLE attr, numTime (max 255 - b is lower bit!), 0 terminated
 	; total 32*24=768 
-	defb	ATTR_RED_PAP, 168
+	defb	%00001000, 32
+	defb	%00001010, 32
+	defb	%00010000, 32
+	defb	ATTR_RED_PAP, 72
 	defb	ATTR_RPBI,    21
 	defb	ATTR_RED_PAP, 12
 	defb	ATTR_CYN_PAP, 19
@@ -63,7 +75,10 @@ SCENE_ATTRS:
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 9	
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 21
+	defb	ATTR_RED_PAP, 4
+	defb	ATTR_RPWI, 2
+	defb	ATTR_RPYI, 1
+	defb	ATTR_RED_PAP, 14
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 9
 	defb	ATTR_ALL_BLK, 1
@@ -91,37 +106,31 @@ SCENE_ATTRS:
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_RED_PAP, 19
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 3
-
-
-	defb	ATTR_ALL_BLK, 64
+	defb	ATTR_RED_PAP, 35
+	defb	ATTR_ALL_BLK, 32
 	defb	0
 
 ; UDGs
-NUM_SCENE_UDGS		= 9			; max 19, $A2, due to top-RAM interrupts (plus 128k only has 19)
+NUM_SCENE_UDGS		= 15			; max 19, $A2, due to top-RAM interrupts (plus 128k only has 19)
 
-UDG_DITHER			= $90
+UDG_BORDER_TL		= $90
+UDG_BORDER_T		= $91
+UDG_BORDER_TR		= $92
+UDG_BORDER_R		= $93
+UDG_BORDER_BR		= $94
+UDG_BORDER_B		= $95
+UDG_BORDER_BL		= $96
+UDG_BORDER_L		= $97
+UDG_MIDLINE			= $98
+UDG_DITHER_2		= $99
+UDG_DITHER_3		= $9A
+UDG_DITHER_4		= $9B
+UDG_BENTO_L			= $9C
+UDG_BENTO_R			= $9D
+UDG_BEER_B			= $9E
 
-UDG_BORDER_TL		= $91
-UDG_BORDER_T		= $92
-UDG_BORDER_TR		= $93
-UDG_BORDER_R		= $94
-UDG_BORDER_BR		= $95
-UDG_BORDER_B		= $96
-UDG_BORDER_BL		= $97
-UDG_BORDER_L		= $98
 
 UDGS_SCENE_PIXELS:
-UDG_DITHER_PIXELS:
-	defb	%10101010
-	defb	%01010101
-	defb	%10101010
-	defb	%01010101
-	defb	%10101010
-	defb	%01010101
-	defb	%10101010
-	defb	%01010101
-
 UDG_BORDER_TL_PIXELS
 	defb	%00000000
 	defb	%00000000
@@ -202,5 +211,74 @@ UDG_BORDER_L_PIXELS
 	defb	%00000011
 	defb	%00000011
 
+UDG_MIDLINE_PIXELS
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%11111111
+	defb	%11111111
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+
+UDG_DITHER_2_PIXELS:
+	defb	%10101010
+	defb	%01010101
+	defb	%10101010
+	defb	%01010101
+	defb	%10101010
+	defb	%01010101
+	defb	%10101010
+	defb	%01010101
+
+UDG_DITHER_3_PIXELS:
+	defb	%10010010
+	defb	%01001001
+	defb	%00100100
+	defb	%10010010
+	defb	%01001001
+	defb	%00100100
+	defb	%10010010
+	defb	%01001001
+
+UDG_DITHER_4_PIXELS:
+	defb	%10001000
+	defb	%00100010
+	defb	%10001000
+	defb	%00100010
+	defb	%10001000
+	defb	%00100010
+	defb	%10001000
+	defb	%00100010
+
+UDG_BENTO_L_PIXELS:
+	defb	%00000000
+	defb	%01001000
+	defb	%00101000
+	defb	%00010100
+	defb	%00001100
+	defb	%00111111
+	defb	%00111111
+	defb	%00111111
+
+UDG_BENTO_R_PIXELS:
+	defb	%00000000
+	defb	%00000000
+	defb	%00000000
+	defb	%00100000
+	defb	%01110000
+	defb	%11111100
+	defb	%11111100
+	defb	%11111100
+
+UDG_BEER_B_PIXELS:
+	defb	%00000000
+	defb	%00000000
+	defb	%01111110
+	defb	%01111110
+	defb	%01111110
+	defb	%01111110
+	defb	%00111100
+	defb	%00111100
 
 

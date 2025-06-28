@@ -3,7 +3,7 @@
 	org $8000
 	
 ; re-use the scene buffers for the building buffer too
-CHAR_BUF:								; needs 768 bytes total
+CHAR_BUF:							; needs 768 bytes total
 CLOUD_CHAR_BUF:							
 	defs	WIN_CLOUD_ROWS * WIN_COL_TOTAL	
 BUILDING_CHAR_BUF:						
@@ -11,9 +11,9 @@ BUILDING_CHAR_BUF:
 FG_CHAR_BUF:							
 	defs	WIN_FG_ROWS * WIN_COL_TOTAL
 EXTRA_CHAR_BUF:
-	defs	538							; top up to 768 for scene buf
+	defs	538						; top up to 768 for scene buf
 	
-ATTR_BUF:								; needs 768 bytes total
+ATTR_BUF:							; needs 768 bytes total
 CLOUD_ATTR_BUF:							
 	defs	WIN_CLOUD_ROWS * WIN_COL_TOTAL	
 BUILDING_ATTR_BUF:						
@@ -21,16 +21,16 @@ BUILDING_ATTR_BUF:
 FG_ATTR_BUF:							
 	defs	WIN_FG_ROWS * WIN_COL_TOTAL
 EXTRA_ATTR_BUF:
-	defs	538							; top up to 768 for scene buf
+	defs	538						; top up to 768 for scene buf
 
-	INCLUDE "speccy_defs.asm"			; must be indented
+	INCLUDE "speccy_defs.asm"		; must be indented
 	INCLUDE "print_char_y_x.asm"
 	INCLUDE "print_char_row.asm"
 	INCLUDE "train_scene.asm"
 	INCLUDE "train_window.asm"
 	
 START:
-	call	INITIALISE_INTERRUPT		; IM2 with ROM trick
+	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
 	call	DRAW_SCENE
 	call	SETUP_WINDOW
 
@@ -59,11 +59,11 @@ INITIALISE_INTERRUPT:
 	ret								; Initialise_Interrupt
  
 INTERRUPT:              
-	; di                                      ; disable interrupts 
-	; push af                                 ; save all the registers on the stack
-	; push bc                                 ; this is probably not necessary unless
-	; push de                                 ; we're looking at returning cleanly
-	; push hl                                 ; back to basic at some point
+	; di                            ; disable interrupts 
+	; push af                       ; save all the registers on the stack
+	; push bc                       ; this is probably not necessary unless
+	; push de                       ; we're looking at returning cleanly
+	; push hl                       ; back to basic at some point
 	; push ix
 	; exx
 	; ex af,af'
@@ -78,7 +78,7 @@ INTERRUPT:
 ; But I don't need any, just need to resume from halt
 ; Also means can not bother DI/EI, push/popping, etc, so commented out
 ; 
-	; pop iy                                  ; restore all the registers
+	; pop iy                        ; restore all the registers
 	; pop hl
 	; pop de
 	; pop bc
@@ -90,8 +90,8 @@ INTERRUPT:
 	; pop de
 	; pop bc
 	; pop af
-	ei                                      ; Enable interrupts
-	ret                                     ; And return
+	ei                               ; Enable interrupts
+	ret                              ; INTERRUPT
 
 
 ; Deployment: Snapshot
