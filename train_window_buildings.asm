@@ -7,7 +7,8 @@ ANIMATE_BUILDINGS:
 	ld		a, (NEXT_BUILDING_COL)	; check if extra buff empty
 	cp		WIN_COL_VIS+1			
 	call	m, SETUP_BUILDINGS		; call BUFFER_BUILDINGS if need to
-	call	BUF_BUILDING_CHAR_ROWS	; draw to pixel buffer
+	call	LOAD_SHIFT_B_LAYER_BUF	
+;	call 	BUF_BUILDING_CHAR_ROWS	; old
 	ret								; ANIMATE_BUILDINGS
 
 SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
@@ -75,6 +76,7 @@ SETUP_BUILDINGS:
 	cp		(hl)
 	call	p, SETUP_BUILDINGS		; branch if positive
 									; something in buffer 
+;	call	BUF_BUILDING_CHAR_ROWS	; draw to pixel buffer
 	ret								; BUFFER_BUILDINGS
 
 BLANK_BUILDING_WIN_COL:				; whole column blank (space)
@@ -193,8 +195,291 @@ BUF_ROW_READY:						; hl is common offset
 	
 	pop		de					
 	ret								; BUF_ROW_AT_COL
-	
-	
+
+
+
+
+
+
+LOAD_SHIFT_B_LAYER_BUF:
+; load row 0 offscreen char
+	ld		a, (CHAR_BUF_ROW_3 + WIN_COL_VIS)
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
+	ld		ix, BUILDINGS_LAYER_PIXEL_BUF + WIN_COL_VIS
+	call	BUF_CHAR_PIXELS
+
+; load row 1 offscreen char
+	ld		a, (CHAR_BUF_ROW_4 + WIN_COL_VIS)
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
+	ld		ix, BUILDINGS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 8)
+	call	BUF_CHAR_PIXELS
+
+; load row 2 offscreen char
+	ld		a, (CHAR_BUF_ROW_5 + WIN_COL_VIS)
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
+	ld		ix, BUILDINGS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 2 * 8)
+	call	BUF_CHAR_PIXELS
+
+; load row 3 offscreen char
+	ld		a, (CHAR_BUF_ROW_6 + WIN_COL_VIS)
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
+	ld		ix, BUILDINGS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 3 * 8)
+	call	BUF_CHAR_PIXELS
+
+; load row 4 offscreen char
+	ld		a, (CHAR_BUF_ROW_7 + WIN_COL_VIS)
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
+	ld		ix, BUILDINGS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 4 * 8)
+	call	BUF_CHAR_PIXELS
+
+; ldir 5 x 8 rows on win_col_vis at super speed!
+	ld		de, BUILDINGS_LAYER_PIXEL_BUF
+	ld		hl, BUILDINGS_LAYER_PIXEL_BUF + 1
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x0
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x1
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x2
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x3
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x4
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x5
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x6
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x7
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x0
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x1
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x2
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x3
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x4
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x5
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x6
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x7
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x0
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x1
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x2
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x3
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x4
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x5
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x6
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x7
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 3x0
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 3x1
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 3x2
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 3x3
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 3x4
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 3x5
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 3x6
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 3x7
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 4x0
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 4x1
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 4x2
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 4x3
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 4x4
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 4x5
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 4x6
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 4x7
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 5x0
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 5x1
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 5x2
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 5x3
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 5x4
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 5x5
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 5x6
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 5x7
+
+	ret											; LOAD_SHIFT_B_LAYER_BUF
+
 BUF_BUILDING_CHAR_ROWS:
 	ld		hl, BUILDING_CHAR_BUF			; points to next char
 	ld		ix, BUILDINGS_LAYER_PIXEL_BUF	; points to row pixel buf

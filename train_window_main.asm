@@ -9,6 +9,12 @@ SETUP_WINDOW:
 	call	LOAD_WINDOW_UDGS
 	call	SETUP_CLOUDS
 	call	SETUP_BUILDINGS		
+
+
+	call 	BUF_BUILDING_CHAR_ROWS	
+
+
+
 	call	SETUP_FG
 	ret								; SETUP_BUILDINGS
 
