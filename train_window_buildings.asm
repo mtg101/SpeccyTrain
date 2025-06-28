@@ -195,7 +195,6 @@ BUF_ROW_READY:						; hl is common offset
 	ret								; BUF_ROW_AT_COL
 	
 	
-; uses iy, so need to fuck around with ei/di and iy to protect things from 
 BUF_BUILDING_CHAR_ROWS:
 	ld		hl, BUILDING_CHAR_BUF			; points to next char
 	ld		ix, BUILDINGS_LAYER_PIXEL_BUF	; points to row pixel buf
