@@ -38,7 +38,7 @@ ANIMATE_ROW:
 	call	ANIMATE_WINDOW			; update what needs updating in buffers
 	jr		ANIMATE_ROW
 
-; set up IM2 - so can use iy and don't wate time scanning keyboard and so on
+; set up IM2 - so we don't wate time scanning keyboard and so on
 ; use ROM trick for interrupt table
 ; from http://www.breakintoprogram.co.uk/hardware/computers/zx-spectrum/interrupts 
 INITIALISE_INTERRUPT:   			
