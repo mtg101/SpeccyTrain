@@ -75,8 +75,8 @@ SETUP_BUILDINGS:
 	cp		(hl)
 	call	p, SETUP_BUILDINGS		; branch if positive
 									; something in buffer 
-;	call	BUF_BUILDING_CHAR_ROWS	; draw to pixel buffer
-	ret								; BUFFER_BUILDINGS
+	call	BUF_BUILDING_CHAR_ROWS	; draw to pixel buffer
+	ret								; SETUP_BUILDINGS
 
 BLANK_BUILDING_WIN_COL:				; whole column blank (space)
 	ld		a, C_SPACE				; we're printing spaces
@@ -489,7 +489,7 @@ BUF_BUILDING_CHAR_ROW_LOOP:
 
 ; for each column / char
 	push	bc							; outer loop
-	ld		b, WIN_COL_VIS
+	ld		b, WIN_COL_VIS				
 BUF_BUILDING_CHAR_COL_LOOP:
 ; get char pixels
 ; iy points to next char
