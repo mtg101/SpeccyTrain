@@ -112,17 +112,27 @@ ADD_CLOUD:
 
 	jr		z, ADD_CLOUD_1x1
 	cp		1								; case 1:
-	jr		z, ADD_CLOUD_1x2
+	jp		z, ADD_CLOUD_1x2
 	cp		2								; case 2:
 	jp		z, ADD_CLOUD_TREE_TOP
 
 ; falls through to last case to save a cp
 ADD_CLOUD_2x2:
+; height is 50/50 high or low
+	ld		a, d
+	ld		d, WIN_CLOUD_ROWS - 1			; bottom row
+	and		a, %00000001
+	cp		%00000001
+	jr		z, POS_2x2_DONE
+	ld		d, WIN_CLOUD_ROWS - 2			; one up from bottom
+
+POS_2x2_DONE:
+; now buf the cloud where it should be
 	call	BLANK_CLOUD_WIN_COL				; clear first
 	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
 	ld		(CLOUD_ATTR_TO_BUF), a
 
-	ld		b, WIN_CLOUD_ROWS - 1			; bottom row
+	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_2x2_BL		; BL udg in a
 	ld		(CLOUD_CHAR_TO_BUF), a
 	call	BUF_CLOUD_ROW_AT_COL			; buf it
@@ -140,7 +150,7 @@ ADD_CLOUD_2x2:
 	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
 	ld		(CLOUD_ATTR_TO_BUF), a
 
-	ld		b, WIN_CLOUD_ROWS - 1			; bottom row 
+	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_2x2_BR		; BR udg in a
 	ld		(CLOUD_CHAR_TO_BUF), a
 	call	BUF_CLOUD_ROW_AT_COL			; buf it
@@ -157,11 +167,21 @@ ADD_CLOUD_2x2:
 	ret										; ADD_CLOUD (saved extra jump before return)
 
 ADD_CLOUD_1x1:
+; height is 50/50 high or low (looks weird in row 0)
+	ld		a, d
+	ld		d, WIN_CLOUD_ROWS - 1			; bottom row
+	and		a, %00000001
+	cp		%00000001
+	jr		z, POS_1x1_DONE
+	ld		d, WIN_CLOUD_ROWS - 2			; one up from bottom
+
+POS_1x1_DONE:
+; now buf the cloud where it should be
 	call	BLANK_CLOUD_WIN_COL				; clear first
 	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
 	ld		(CLOUD_ATTR_TO_BUF), a
 
-	ld		b, WIN_CLOUD_ROWS - 1			; bottom row 
+	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_1x1			; hedge udg in a
 	ld		(CLOUD_CHAR_TO_BUF), a
 
@@ -174,11 +194,21 @@ ADD_CLOUD_1x1:
 	ret										; ADD_CLOUD (saved extra jump before return)
 
 ADD_CLOUD_1x2:
+; height is 50/50 high or low (looks weird in row 0)
+	ld		a, d
+	ld		d, WIN_CLOUD_ROWS - 1			; bottom row
+	and		a, %00000001
+	cp		%00000001
+	jr		z, POS_1x2_DONE
+	ld		d, WIN_CLOUD_ROWS - 2			; one up from bottom
+
+POS_1x2_DONE:
+; now buf the cloud where it should be
 	call	BLANK_CLOUD_WIN_COL				; clear first
 	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
 	ld		(CLOUD_ATTR_TO_BUF), a
 
-	ld		b, WIN_CLOUD_ROWS - 1			; bottom row
+	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_1x2_L		; hedge udg in a
 	ld		(CLOUD_CHAR_TO_BUF), a
 
@@ -192,7 +222,7 @@ ADD_CLOUD_1x2:
 	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
 	ld		(CLOUD_ATTR_TO_BUF), a
 
-	ld		b, WIN_CLOUD_ROWS - 1			; bottom row
+	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_1x2_R		; hedge udg in a
 	ld		(CLOUD_CHAR_TO_BUF), a
 
@@ -205,11 +235,21 @@ ADD_CLOUD_1x2:
 	ret										; ADD_CLOUD (saved extra jump before return)
 
 ADD_CLOUD_TREE_TOP:							; tree shape cumulo nimbus would be odd, so just use top as 1x1
+; height is 50/50 high or low (looks weird in row 0)
+	ld		a, d
+	ld		d, WIN_CLOUD_ROWS - 1			; bottom row
+	and		a, %00000001
+	cp		%00000001
+	jr		z, POS_TREE_TOP_DONE
+	ld		d, WIN_CLOUD_ROWS - 2			; one up from bottom
+
+POS_TREE_TOP_DONE:
+; now buf the cloud where it should be
 	call	BLANK_CLOUD_WIN_COL				; clear first
 	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
 	ld		(CLOUD_ATTR_TO_BUF), a
 
-	ld		b, WIN_CLOUD_ROWS - 1			; bottom row
+	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_2x1_T		; tree top udg in a
 	ld		(CLOUD_CHAR_TO_BUF), a
 	call	BUF_CLOUD_ROW_AT_COL			; buf it
