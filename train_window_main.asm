@@ -10,7 +10,8 @@ SETUP_WINDOW:
 	call	SETUP_CLOUDS
 	call	SETUP_BUILDINGS		
 	call	SETUP_FG
-	call	BUF_BUILDING_CHAR_ROWS	; draw initisl scene to pixel buffer
+	call	BUF_CLOUD_CHAR_ROWS		; draw initisl clouds to pixel buffer
+	call	BUF_BUILDING_CHAR_ROWS	; draw initisl buildings to pixel buffer
 	ret								; SETUP_WINDOW
 
 ANIMATE_WINDOW:

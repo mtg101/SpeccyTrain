@@ -64,7 +64,7 @@ ADD_FENCE_COL_LOOP:
 	ld		a, UDG_FENCE			; fence udg in a
 	ld		(CHAR_TO_BUF), a
 
-	call	BUF_ROW_AT_COL			; buf it
+	call	BUF_BULDING_ROW_AT_COL	; buf it
 
 	ld		bc, (NEXT_BUILDING_COL)	; move to next column
 	inc		bc
@@ -111,12 +111,12 @@ ADD_HEDGE_2x2:
 	ld		b, WIN_BUILDING_ROWS - 1		; bottom row
 	ld		a, UDG_HEDGE_CLOUD_2x2_BL		; BL udg in a
 	ld		(CHAR_TO_BUF), a
-	call	BUF_ROW_AT_COL					; buf it
+	call	BUF_BULDING_ROW_AT_COL			; buf it
 
 	ld		a, UDG_HEDGE_CLOUD_2x2_TL		; TL udg in a
 	ld		(CHAR_TO_BUF), a
 	dec		b								; above trunk
-	call	BUF_ROW_AT_COL					; buf it
+	call	BUF_BULDING_ROW_AT_COL			; buf it
 
 	ld		bc, (NEXT_BUILDING_COL)			; move to next column
 	inc		bc
@@ -129,12 +129,12 @@ ADD_HEDGE_2x2:
 	ld		b, WIN_BUILDING_ROWS - 1		; bottom row 
 	ld		a, UDG_HEDGE_CLOUD_2x2_BR		; BR udg in a
 	ld		(CHAR_TO_BUF), a
-	call	BUF_ROW_AT_COL					; buf it
+	call	BUF_BULDING_ROW_AT_COL			; buf it
 
 	ld		a, UDG_HEDGE_CLOUD_2x2_TR		; TR udg in a
 	ld		(CHAR_TO_BUF), a
 	dec		b								; above trunk
-	call	BUF_ROW_AT_COL					; buf it
+	call	BUF_BULDING_ROW_AT_COL			; buf it
 
 	ld		bc, (NEXT_BUILDING_COL)			; move to next column
 	inc		bc
@@ -150,7 +150,7 @@ ADD_HEDGE_1x1:
 	ld		a, UDG_HEDGE_CLOUD_1x1			; hedge udg in a
 	ld		(CHAR_TO_BUF), a
 
-	call	BUF_ROW_AT_COL					; buf it
+	call	BUF_BULDING_ROW_AT_COL			; buf it
 
 	ld		bc, (NEXT_BUILDING_COL)			; move to next column
 	inc		bc
@@ -166,7 +166,7 @@ ADD_HEDGE_1x2:
 	ld		a, UDG_HEDGE_CLOUD_1x2_L		; hedge udg in a
 	ld		(CHAR_TO_BUF), a
 
-	call	BUF_ROW_AT_COL					; buf it
+	call	BUF_BULDING_ROW_AT_COL			; buf it
 
 	ld		bc, (NEXT_BUILDING_COL)			; move to next column
 	inc		bc
@@ -180,7 +180,7 @@ ADD_HEDGE_1x2:
 	ld		a, UDG_HEDGE_CLOUD_1x2_R		; hedge udg in a
 	ld		(CHAR_TO_BUF), a
 
-	call	BUF_ROW_AT_COL					; buf it
+	call	BUF_BULDING_ROW_AT_COL			; buf it
 
 	ld		bc, (NEXT_BUILDING_COL)			; move to next column
 	inc		bc
@@ -195,12 +195,12 @@ ADD_HEDGE_2x1:
 	ld		b, WIN_BUILDING_ROWS - 1		; bottom row
 	ld		a, UDG_HEDGE_CLOUD_2x1_B		; tree trunk udg in a
 	ld		(CHAR_TO_BUF), a
-	call	BUF_ROW_AT_COL					; buf it
+	call	BUF_BULDING_ROW_AT_COL			; buf it
 
 	ld		a, UDG_HEDGE_CLOUD_2x1_T		; tree top udg in a
 	ld		(CHAR_TO_BUF), a
 	dec		b								; above trunk
-	call	BUF_ROW_AT_COL					; buf it
+	call	BUF_BULDING_ROW_AT_COL			; buf it
 
 	ld		bc, (NEXT_BUILDING_COL)			; move to next column
 	inc		bc

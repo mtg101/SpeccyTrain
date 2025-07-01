@@ -37,6 +37,7 @@ SHIFT_CLOUDS_LEFT:				; unrolled for speed, honest!
 	ld		de, ATTR_BUF_ROW_2		; target
 	ld		hl, ATTR_BUF_ROW_2 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
+	ldir
 	
 	ret								; SHIFT_CLOUDS_LEFT
 
@@ -93,9 +94,7 @@ ADD_CLOUD:
 	ld		hl, NEXT_RNG
 	and		(hl)					; now a is 0000 - 0300
 	rra								; shift right twice
-	rra
-	inc		a						; inc twice so 2-5
-	inc		a
+	rra								; and it's 0-3
 	ld		d, a					; d=height
 	ld		a, %00000011
 	and		(hl)					; now a is 0-3 
@@ -103,58 +102,124 @@ ADD_CLOUD:
 	ld		e, a					; e=width
 
 ; ink color attr
-	ld		a, UDG_CLOUD_ATTR_ALT	; assume yello alt colour
-	ld		(CLOUD_ATTR_TO_BUF_BAK), a
+	ld		a, UDG_CLOUD_ATTR		; single colour, avoids attr clash, and yellow clouds look shit
+	ld		(CLOUD_ATTR_TO_BUF_BAK), a	
 
-	ld		a, %11000000			; color in top 1 bit - blue or black
-	and		(hl)
-	cp		%11000000				; 1 in 4 chance of yellow
-	jr		z, ADD_CLOUD_STICK_WITH_YELLOW
-	ld		a, UDG_CLOUD_ATTR
-	ld		(CLOUD_ATTR_TO_BUF_BAK), a	; change to default white
-ADD_CLOUD_STICK_WITH_YELLOW:
+; which shape hedge? from width as height used to fence v hedge
+	ld		a, e							; width for which cloud
 
+	cp		0								; case 0:
 
-; decide which cloud, actual width based on that...
-; maybe use hedge code below?
+	jr		z, ADD_CLOUD_1x1
+	cp		1								; case 1:
+	jr		z, ADD_CLOUD_1x2
+	cp		2								; case 2:
+	jp		z, ADD_CLOUD_TREE_TOP
 
+; falls through to last case to save a cp
+ADD_CLOUD_2x2:
+	call	BLANK_CLOUD_WIN_COL				; clear first
+	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
+	ld		(CLOUD_ATTR_TO_BUF), a
 
+	ld		b, WIN_CLOUD_ROWS - 1			; bottom row
+	ld		a, UDG_HEDGE_CLOUD_2x2_BL		; BL udg in a
+	ld		(CLOUD_CHAR_TO_BUF), a
+	call	BUF_CLOUD_ROW_AT_COL			; buf it
 
+	ld		a, UDG_HEDGE_CLOUD_2x2_TL		; TL udg in a
+	ld		(CLOUD_CHAR_TO_BUF), a
+	dec		b								; above trunk
+	call	BUF_CLOUD_ROW_AT_COL			; buf it
 
+	ld		bc, (NEXT_CLOUD_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_CLOUD_COL), bc
 
+	call	BLANK_CLOUD_WIN_COL				; clear first
+	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
+	ld		(CLOUD_ATTR_TO_BUF), a
 
+	ld		b, WIN_CLOUD_ROWS - 1			; bottom row 
+	ld		a, UDG_HEDGE_CLOUD_2x2_BR		; BR udg in a
+	ld		(CLOUD_CHAR_TO_BUF), a
+	call	BUF_CLOUD_ROW_AT_COL			; buf it
 
-;	ld		b, e					; for each column...
+	ld		a, UDG_HEDGE_CLOUD_2x2_TR		; TR udg in a
+	ld		(CLOUD_CHAR_TO_BUF), a
+	dec		b								; above trunk
+	call	BUF_CLOUD_ROW_AT_COL			; buf it
 
-; ADD_CLOUD_COL_LOOP:
-; 	push	bc
-; 	call	BLANK_CLOUD_WIN_COL	; clear first
-; 	ld      a, (CLOUD_ATTR_TO_BUF_BAK)	; BLANK_WIN_COL trashes attrs
-; 	ld		(CLOUD_ATTR_TO_BUF), a
-; 	pop		bc						; loops...
-; 	push	bc
+	ld		bc, (NEXT_CLOUD_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_CLOUD_COL), bc
 
-; 	ld		b, d					; add cloud?? UDGs to height
-; ADD_CLOUD_ROW_LOOP:
-; 	push	bc						; preserve bc
+	ret										; ADD_CLOUD (saved extra jump before return)
 
-; 	ld		a, WIN_CLOUD_ROWS 	; base row
-; 	sub		b						; then height
-; 	ld		b, a					; into b for call
-; 	ld		a, UDG_???			; cloud udg in a
-; 	ld		(CLOUD_CHAR_TO_BUF), a
+ADD_CLOUD_1x1:
+	call	BLANK_CLOUD_WIN_COL				; clear first
+	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
+	ld		(CLOUD_ATTR_TO_BUF), a
 
-; 	call	BUF_CLOUD_ROW_AT_COL			; buf it
-; 	pop		bc						; restore bc
-; 	djnz	ADD_CLOUD_ROW_LOOP
-	
-; 	ld		bc, (NEXT_CLOUD_COL)	; move to next column
-; 	inc		bc
-; 	ld		(NEXT_CLOUD_COL), bc
-; 	pop		bc
-; 	djnz	ADD_CLOUD_COL_LOOP
-	
-	ret								; ADD_CLOUD
+	ld		b, WIN_CLOUD_ROWS - 1			; bottom row 
+	ld		a, UDG_HEDGE_CLOUD_1x1			; hedge udg in a
+	ld		(CLOUD_CHAR_TO_BUF), a
+
+	call	BUF_CLOUD_ROW_AT_COL			; buf it
+
+	ld		bc, (NEXT_CLOUD_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_CLOUD_COL), bc
+
+	ret										; ADD_CLOUD (saved extra jump before return)
+
+ADD_CLOUD_1x2:
+	call	BLANK_CLOUD_WIN_COL				; clear first
+	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
+	ld		(CLOUD_ATTR_TO_BUF), a
+
+	ld		b, WIN_CLOUD_ROWS - 1			; bottom row
+	ld		a, UDG_HEDGE_CLOUD_1x2_L		; hedge udg in a
+	ld		(CLOUD_CHAR_TO_BUF), a
+
+	call	BUF_CLOUD_ROW_AT_COL			; buf it
+
+	ld		bc, (NEXT_CLOUD_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_CLOUD_COL), bc
+
+	call	BLANK_CLOUD_WIN_COL				; clear first
+	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
+	ld		(CLOUD_ATTR_TO_BUF), a
+
+	ld		b, WIN_CLOUD_ROWS - 1			; bottom row
+	ld		a, UDG_HEDGE_CLOUD_1x2_R		; hedge udg in a
+	ld		(CLOUD_CHAR_TO_BUF), a
+
+	call	BUF_CLOUD_ROW_AT_COL			; buf it
+
+	ld		bc, (NEXT_CLOUD_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_CLOUD_COL), bc
+
+	ret										; ADD_CLOUD (saved extra jump before return)
+
+ADD_CLOUD_TREE_TOP:							; tree shape cumulo nimbus would be odd, so just use top as 1x1
+	call	BLANK_CLOUD_WIN_COL				; clear first
+	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
+	ld		(CLOUD_ATTR_TO_BUF), a
+
+	ld		b, WIN_CLOUD_ROWS - 1			; bottom row
+	ld		a, UDG_HEDGE_CLOUD_2x1_T		; tree top udg in a
+	ld		(CLOUD_CHAR_TO_BUF), a
+	call	BUF_CLOUD_ROW_AT_COL			; buf it
+
+	ld		bc, (NEXT_CLOUD_COL)			; move to next column
+	inc		bc
+	ld		(NEXT_CLOUD_COL), bc
+
+	ret										; ADD_CLOUD (saved extra jump before return)
+
 
 BUF_CLOUD_ROW_AT_COL:				; b cloud row 0-3
 	push	de						; don't trash de
@@ -365,7 +430,7 @@ BUF_CLOUD_CHAR_COL_LOOP:
 	pop		bc							; for outer loop
 	
 ; next row
-	ld		de, WIN_COL_BUF				; iy needs to skip over extra chars
+	ld		de, WIN_COL_BUF				; de needs to skip over extra chars
 	add		hl, de
 	ld		de, ((WIN_COL_VIS+1) * 7) + 1	; ix needs to skip to top-left of the next block row, +1 for the extra col
 	add		ix, de

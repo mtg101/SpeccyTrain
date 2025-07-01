@@ -64,8 +64,7 @@ UDG_BUILDING		= $91
 UDG_BUILDING_ATTR	= %00111000	
 
 UDG_HEDGE_ATTR		= %00101100		; default green on cyan	
-UDG_CLOUD_ATTR		= %00101111		; default white on cyan
-UDG_CLOUD_ATTR_ALT	= %00101110		; alternative yellow on cyan
+UDG_CLOUD_ATTR		= %00101111		; always white on cyan
 
 UDG_HEDGE_CLOUD_1x1		= $92
 UDG_HEDGE_CLOUD_1x2_L	= $93

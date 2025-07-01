@@ -84,19 +84,19 @@ BLANK_BUILDING_WIN_COL:				; whole column blank (space)
 	ld		(ATTR_TO_BUF), a
 
 	ld		b, 0
-	call	BUF_ROW_AT_COL			
+	call	BUF_BULDING_ROW_AT_COL			
 
 	ld		b, 1
-	call	BUF_ROW_AT_COL			
+	call	BUF_BULDING_ROW_AT_COL			
 
 	ld		b, 2
-	call	BUF_ROW_AT_COL			
+	call	BUF_BULDING_ROW_AT_COL			
 
 	ld		b, 3
-	call	BUF_ROW_AT_COL			
+	call	BUF_BULDING_ROW_AT_COL			
 
 	ld		b, 4
-	call	BUF_ROW_AT_COL			
+	call	BUF_BULDING_ROW_AT_COL			
 
 	ret								; BLANK_WIN_COL
 
@@ -150,7 +150,7 @@ ADD_BULDING_ROW_LOOP:
 	ld		a, UDG_BUILDING			; building udg in a
 	ld		(CHAR_TO_BUF), a
 
-	call	BUF_ROW_AT_COL			; buf it
+	call	BUF_BULDING_ROW_AT_COL	; buf it
 	pop		bc						; restore bc
 	djnz	ADD_BULDING_ROW_LOOP
 	
@@ -162,19 +162,19 @@ ADD_BULDING_ROW_LOOP:
 	
 	ret								; ADD_BUILDING
 
-BUF_ROW_AT_COL:						; b building row 0-4 
+BUF_BULDING_ROW_AT_COL:						; b building row 0-4 
 	push	de						; don't trash de
 	push	bc						; looping again so preserve bc
 
 	ld		hl, (NEXT_BUILDING_COL)
 	ld		a, b
 	cp 		0
-	jr		z, BUF_ROW_READY
+	jr		z, BUF_BUILDING_ROW_READY
 	ld		de, WIN_COL_TOTAL
-BUF_ROW_AT_COL_LOOP:
+BUF_BUILDING_ROW_AT_COL_LOOP:
 	add		hl, de					; move down a row
-	djnz	BUF_ROW_AT_COL_LOOP		; until correct row
-BUF_ROW_READY:						; hl is common offset
+	djnz	BUF_BUILDING_ROW_AT_COL_LOOP	; until correct row
+BUF_BUILDING_ROW_READY:						; hl is common offset
 	pop		bc						; loop done restore
 
 	ld		de, hl					; de is common offset
