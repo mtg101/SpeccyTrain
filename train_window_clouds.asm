@@ -1,59 +1,381 @@
 
+ANIMATE_CLOUDS:
+	call	LOAD_SHIFT_C_LAYER_BUF	
+	call	SHIFT_CLOUDS_LEFT								
+	ld		de, (NEXT_CLOUD_COL)	; move col left
+	dec		de
+	ld		(NEXT_CLOUD_COL), de
+	ld		a, (NEXT_CLOUD_COL)		; check if extra buff empty
+	cp		WIN_COL_VIS+1			
+	call	m, SETUP_CLOUDS			; load more if needed
+	ret								; ANIMATE_CLOUDS
+
+SHIFT_CLOUDS_LEFT:				; unrolled for speed, honest!
+	; chars
+	ld		de, CHAR_BUF_OFF_ROW_0		; target
+	ld		hl, CHAR_BUF_OFF_ROW_0 + 1	; source is one to the right
+	ld		bc, WIN_COL_BUF - 1			; move whole buffer
+	ldir
+	ld		de, CHAR_BUF_OFF_ROW_1		; target
+	ld		hl, CHAR_BUF_OFF_ROW_1 + 1	; source is one to the right
+	ld		bc, WIN_COL_BUF - 1			; move whole buffer
+	ldir
+	ld		de, CHAR_BUF_OFF_ROW_2		; target
+	ld		hl, CHAR_BUF_OFF_ROW_2 + 1	; source is one to the right
+	ld		bc, WIN_COL_BUF - 1			; move whole buffer
+	ldir
+	
+	; attrs
+	ld		de, ATTR_BUF_ROW_0		; target
+	ld		hl, ATTR_BUF_ROW_0 + 1	; source is one to the right
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
+	ldir
+	ld		de, ATTR_BUF_ROW_1		; target
+	ld		hl, ATTR_BUF_ROW_1 + 1	; source is one to the right
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
+	ldir
+	ld		de, ATTR_BUF_ROW_2		; target
+	ld		hl, ATTR_BUF_ROW_2 + 1	; source is one to the right
+	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
+	
+	ret								; SHIFT_CLOUDS_LEFT
+
 SETUP_CLOUDS:
-	ld		b, WIN_CLOUD_ROWS * WIN_COL_TOTAL
-	ld		a, %00101111			; everything cyan pap, white ink
-	ld		de, CLOUD_ATTR_BUF
-SETUP_CLOUD_ATTR_LOOP:
-	ld		(de), a
-	inc		hl
-	inc		de
-	djnz	SETUP_CLOUD_ATTR_LOOP
+	call	RNG						; rng in a (diff to builds, in case of weird repeats)
+	ld		(NEXT_RNG), a			; NEXT_RNG is now rng
 
-; chars
-	ld		a, %00000000			; blank
-	ld		hl, SINGLE_CHAR_PIXEL_BUF	; 8 byte buf
-	ld		(hl), a					; 0
-	inc		hl
-	ld		(hl), a					; 1
-	inc		hl
-	ld		(hl), a					; 2
-	inc		hl
-	ld		(hl), a					; 3
-	inc		hl
-	ld		(hl), a					; 4
-	inc		hl
-	ld		(hl), a					; 5
-	inc		hl
-	ld		(hl), a					; 6
-	inc		hl
-	ld		(hl), a					; 7
+	ld		a, %00010000			; mask for type, only need one bit
+	and		(hl)					; get type from generated next cloud
 
-	ld		b, (WIN_COL_VIS+1) 		
-	ld		ix, CLOUD_LAYER_PIXEL_BUF		; first row
-SETUP_CLOUD_CHAR_LOOP_1:
-	ld		hl, SINGLE_CHAR_PIXEL_BUF	; call trashes it so have to reload every loop
-	call	BUF_CHAR_PIXELS
-	inc		ix
-	djnz	SETUP_CLOUD_CHAR_LOOP_1
-
-	ld		b, (WIN_COL_VIS+1) 		
-	ld		ix, CLOUD_LAYER_PIXEL_BUF + ((WIN_COL_VIS+1) * 8)		; second row
-SETUP_CLOUD_CHAR_LOOP_2:
-	ld		hl, SINGLE_CHAR_PIXEL_BUF	; call trashes it so have to reload every loop
-	call	BUF_CHAR_PIXELS
-	inc		ix
-	djnz	SETUP_CLOUD_CHAR_LOOP_2
-
-	ld		b, (WIN_COL_VIS+1) 		
-	ld		ix, CLOUD_LAYER_PIXEL_BUF + ((WIN_COL_VIS+1) * 8 * 2)		; third row
-SETUP_CLOUD_CHAR_LOOP_3:
-	ld		hl, SINGLE_CHAR_PIXEL_BUF	; call trashes it so have to reload every loop
-	call	BUF_CHAR_PIXELS
-	inc		ix
-	djnz	SETUP_CLOUD_CHAR_LOOP_3
-
+	cp		%00000000				; 50/50
+	call	z, ADD_CLOUD_GAP		; bit not set, gap, 50/50
+	call	nz, ADD_CLOUD			; bit set, cloud, 50/50
+	
+	ld		a, WIN_COL_VIS			; have we filled the buffer? 
+									; +1 as needed or pixel-by-pixel shift
+									; so make consistent
+	ld		hl, NEXT_CLOUD_COL
+	cp		(hl)
+	call	p, SETUP_CLOUDS			; branch if positive
+									; something in buffer 
 	ret								; SETUP_CLOUDS
 
-ANIMATE_CLOUDS:
-	ret								; ANIMATE_CLOUDS
+BLANK_CLOUD_WIN_COL:				; whole column blank (space)
+	ld		a, C_SPACE				; we're printing spaces
+	ld		(CHAR_TO_BUF), a
+	ld		a, ATTR_CYN_PAP			; sky is cyan
+	ld		(ATTR_TO_BUF), a
+
+	ld		b, 0
+	call	BUF_CLOUD_ROW_AT_COL			
+
+	ld		b, 1
+	call	BUF_CLOUD_ROW_AT_COL			
+
+	ld		b, 2
+	call	BUF_CLOUD_ROW_AT_COL			
+
+	ret								; BLANK_CLOUD_WIN_COL
+
+ADD_CLOUD_GAP:
+	push	af						; preserve for outer logic
+	call	BLANK_CLOUD_WIN_COL		; clear gap
+	ld		de, (NEXT_CLOUD_COL)	; move to next column
+	inc		de
+	ld		(NEXT_CLOUD_COL), de
+	pop		af						; restore for outer logic
+	ret								; ADD_SIMPLE_GAP
+
+
+ADD_CLOUD:
+; ; load d height, e width
+; 	ld		a, %00001100
+; 	ld		hl, NEXT_RNG
+; 	and		(hl)					; now a is 0000 - 0300
+; 	rra								; shift right twice
+; 	rra
+; 	inc		a						; inc twice so 2-5
+; 	inc		a
+; 	ld		d, a					; d=height
+; 	ld		a, %00000011
+; 	and		(hl)					; now a is 0-3 
+; 	inc		a						; now a is 1-4
+; 	ld		e, a					; e=width
+
+; ; ink color attr
+; 	ld		a, %11000000			; color in top 1 bit - blue or black
+; 	and		(hl)
+; 	rra
+; 	rra
+; 	rra
+; 	rra
+; 	rra
+; 	rra								; now in lowest bits
+; 	and		%00000001				; clear others
+; 	or		UDG_CLOUD_ATTR		; add pap colour
+; 	ld		(CLOUD_ATTR_TO_BUF), a		
+
+; 	ld		b, e					; for each column...
+
+; ADD_CLOUD_COL_LOOP:
+; 	push	bc
+; 	call	BLANK_CLOUD_WIN_COL	; clear first
+; 	ld      a, (CLOUD_ATTR_TO_BUF_BAK)	; BLANK_WIN_COL trashes attrs
+; 	ld		(CLOUD_ATTR_TO_BUF), a
+; 	pop		bc						; loops...
+; 	push	bc
+
+; 	ld		b, d					; add cloud?? UDGs to height
+; ADD_BULDING_ROW_LOOP:
+; 	push	bc						; preserve bc
+
+; 	ld		a, WIN_CLOUD_ROWS 	; base row
+; 	sub		b						; then height
+; 	ld		b, a					; into b for call
+; 	ld		a, UDG_???			; cloud udg in a
+; 	ld		(CLOUD_CHAR_TO_BUF), a
+
+; 	call	BUF_CLOUD_ROW_AT_COL			; buf it
+; 	pop		bc						; restore bc
+; 	djnz	ADD_CLOUD_ROW_LOOP
+	
+; 	ld		bc, (NEXT_CLOUD_COL)	; move to next column
+; 	inc		bc
+; 	ld		(NEXT_CLOUD_COL), bc
+; 	pop		bc
+; 	djnz	ADD_CLOUD_COL_LOOP
+	
+	ret								; ADD_CLOUD
+
+BUF_CLOUD_ROW_AT_COL:				; b cloud row 0-3
+	push	de						; don't trash de
+	push	bc						; looping again so preserve bc
+
+	ld		hl, (NEXT_CLOUD_COL)
+	ld		a, b
+	cp 		0
+	jr		z, BUF_CLOUD_ROW_READY
+	ld		de, WIN_COL_TOTAL
+BUF_CLOUD_ROW_AT_COL_LOOP:
+	add		hl, de					; move down a row
+	djnz	BUF_CLOUD_ROW_AT_COL_LOOP	; until correct row
+BUF_CLOUD_ROW_READY:				; hl is common offset
+	pop		bc						; loop done restore
+
+	ld		de, hl					; de is common offset
+
+; char
+	ld		hl, CLOUD_CHAR_BUF
+	add		hl, de	
+	ld		a, (CLOUD_CHAR_TO_BUF)
+	ld		(hl), a					; buf char
+
+; attr	
+	ld		hl, CLOUD_ATTR_BUF	
+	add		hl, de	
+	ld		a, (CLOUD_ATTR_TO_BUF)
+	ld		(hl), a					; buf attr
+	
+	pop		de					
+	ret								; BUF_ROW_AT_COL
+
+
+
+
+LOAD_SHIFT_C_LAYER_BUF:
+; load row 0 offscreen char
+	ld		a, (CHAR_BUF_OFF_ROW_3)
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
+	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS
+	call	BUF_CHAR_PIXELS
+; load row 1 offscreen char
+	ld		a, (CHAR_BUF_OFF_ROW_4)
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
+	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 8)
+	call	BUF_CHAR_PIXELS
+
+; load row 2 offscreen char
+	ld		a, (CHAR_BUF_OFF_ROW_5)
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
+	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 2 * 8)
+	call	BUF_CHAR_PIXELS
+
+; ldir 3 x 8 rows on win_col_vis at super speed!
+	ld		de, CLOUDS_LAYER_PIXEL_BUF
+	ld		hl, CLOUDS_LAYER_PIXEL_BUF + 1
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x0
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x1
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x2
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x3
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x4
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x5
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x6
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 0x7
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x0
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x1
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x2
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x3
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x4
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x5
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x6
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 1x7
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x0
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x1
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x2
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x3
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x4
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x5
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x6
+
+	inc		de									; extra col
+	inc		hl									; extra col
+	ld		bc, WIN_COL_VIS
+	ldir										; 2x7
+
+	ret											; LOAD_SHIFT_C_LAYER_BUF
+
+BUF_CLOUD_CHAR_ROWS:
+	ld		hl, CLOUD_CHAR_BUF			; points to next char
+	ld		ix, CLOUDS_LAYER_PIXEL_BUF	; points to row pixel buf
+
+; for each row
+	ld		b, WIN_CLOUD_ROWS
+BUF_CLOUD_CHAR_ROW_LOOP:
+
+; for each column / char
+	push	bc							; outer loop
+	ld		b, WIN_COL_VIS				
+BUF_CLOUD_CHAR_COL_LOOP:
+; get char pixels
+; iy points to next char
+	ld		a, (hl)
+	ld		(PRINT_CHAR), a
+	push	hl							; used for pixels
+	push	bc
+	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
+	pop		bc
+
+	call	BUF_CHAR_PIXELS
+	pop		hl			
+
+; next column / char
+	inc		hl							; next char
+	inc		ix							; step to next column, for that char to draw its pixel rows
+	
+	djnz	BUF_CLOUD_CHAR_COL_LOOP
+	pop		bc							; for outer loop
+	
+; next row
+	ld		de, WIN_COL_BUF				; iy needs to skip over extra chars
+	add		hl, de
+	ld		de, ((WIN_COL_VIS+1) * 7) + 1	; ix needs to skip to top-left of the next block row, +1 for the extra col
+	add		ix, de
+	djnz	BUF_CLOUD_CHAR_ROW_LOOP
+
+    ret									; BUF_CLOUD_CHAR_ROWS
+
+
+NEXT_CLOUD_COL:
+	defw	0
+	
+CLOUD_CHAR_TO_BUF:
+	defb	0
+	
+CLOUD_ATTR_TO_BUF:
+	defb	0
+
+CLOUD_CLOUD_ATTR_TO_BUF:
+	defb	0
 
