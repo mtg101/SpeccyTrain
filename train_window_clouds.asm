@@ -88,34 +88,43 @@ ADD_CLOUD_GAP:
 
 
 ADD_CLOUD:
-; ; load d height, e width
-; 	ld		a, %00001100
-; 	ld		hl, NEXT_RNG
-; 	and		(hl)					; now a is 0000 - 0300
-; 	rra								; shift right twice
-; 	rra
-; 	inc		a						; inc twice so 2-5
-; 	inc		a
-; 	ld		d, a					; d=height
-; 	ld		a, %00000011
-; 	and		(hl)					; now a is 0-3 
-; 	inc		a						; now a is 1-4
-; 	ld		e, a					; e=width
+; load d height, e width
+	ld		a, %00001100
+	ld		hl, NEXT_RNG
+	and		(hl)					; now a is 0000 - 0300
+	rra								; shift right twice
+	rra
+	inc		a						; inc twice so 2-5
+	inc		a
+	ld		d, a					; d=height
+	ld		a, %00000011
+	and		(hl)					; now a is 0-3 
+	inc		a						; now a is 1-4
+	ld		e, a					; e=width
 
-; ; ink color attr
-; 	ld		a, %11000000			; color in top 1 bit - blue or black
-; 	and		(hl)
-; 	rra
-; 	rra
-; 	rra
-; 	rra
-; 	rra
-; 	rra								; now in lowest bits
-; 	and		%00000001				; clear others
-; 	or		UDG_CLOUD_ATTR		; add pap colour
-; 	ld		(CLOUD_ATTR_TO_BUF), a		
+; ink color attr
+	ld		a, UDG_CLOUD_ATTR_ALT	; assume yello alt colour
+	ld		(CLOUD_ATTR_TO_BUF_BAK), a
 
-; 	ld		b, e					; for each column...
+	ld		a, %11000000			; color in top 1 bit - blue or black
+	and		(hl)
+	cp		%11000000				; 1 in 4 chance of yellow
+	jr		z, ADD_CLOUD_STICK_WITH_YELLOW
+	ld		a, UDG_CLOUD_ATTR
+	ld		(CLOUD_ATTR_TO_BUF_BAK), a	; change to default white
+ADD_CLOUD_STICK_WITH_YELLOW:
+
+
+; decide which cloud, actual width based on that...
+; maybe use hedge code below?
+
+
+
+
+
+
+
+;	ld		b, e					; for each column...
 
 ; ADD_CLOUD_COL_LOOP:
 ; 	push	bc
@@ -126,7 +135,7 @@ ADD_CLOUD:
 ; 	push	bc
 
 ; 	ld		b, d					; add cloud?? UDGs to height
-; ADD_BULDING_ROW_LOOP:
+; ADD_CLOUD_ROW_LOOP:
 ; 	push	bc						; preserve bc
 
 ; 	ld		a, WIN_CLOUD_ROWS 	; base row
@@ -178,8 +187,6 @@ BUF_CLOUD_ROW_READY:				; hl is common offset
 	
 	pop		de					
 	ret								; BUF_ROW_AT_COL
-
-
 
 
 LOAD_SHIFT_C_LAYER_BUF:
@@ -376,6 +383,6 @@ CLOUD_CHAR_TO_BUF:
 CLOUD_ATTR_TO_BUF:
 	defb	0
 
-CLOUD_CLOUD_ATTR_TO_BUF:
+CLOUD_ATTR_TO_BUF_BAK:
 	defb	0
 
