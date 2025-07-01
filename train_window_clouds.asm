@@ -62,9 +62,9 @@ SETUP_CLOUDS:
 
 BLANK_CLOUD_WIN_COL:				; whole column blank (space)
 	ld		a, C_SPACE				; we're printing spaces
-	ld		(CHAR_TO_BUF), a
+	ld		(CLOUD_CHAR_TO_BUF), a
 	ld		a, ATTR_CYN_PAP			; sky is cyan
-	ld		(ATTR_TO_BUF), a
+	ld		(CLOUD_ATTR_TO_BUF), a
 
 	ld		b, 0
 	call	BUF_CLOUD_ROW_AT_COL			
@@ -184,20 +184,20 @@ BUF_CLOUD_ROW_READY:				; hl is common offset
 
 LOAD_SHIFT_C_LAYER_BUF:
 ; load row 0 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_3)
+	ld		a, (CHAR_BUF_OFF_ROW_0)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS
 	call	BUF_CHAR_PIXELS
 ; load row 1 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_4)
+	ld		a, (CHAR_BUF_OFF_ROW_1)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 8)
 	call	BUF_CHAR_PIXELS
 
 ; load row 2 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_5)
+	ld		a, (CHAR_BUF_OFF_ROW_2)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 2 * 8)
