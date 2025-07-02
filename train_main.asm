@@ -32,11 +32,27 @@ START:
 	call	DRAW_SCENE
 	call	SETUP_WINDOW
 
-ANIMATE_ROW:
+;	jr		ANIMATE_MAIN_BORDER		; use the border version, normally commented out
+
+ANIMATE_MAIN:
 	halt							; wait for vsync
 	call	DRAW_WINDOW				; draw row-by-row
 	call	ANIMATE_WINDOW			; update what needs updating in buffers
-	jr		ANIMATE_ROW
+	jr		ANIMATE_MAIN
+
+ANIMATE_MAIN_BORDER:				; this will break every time timings change... but fun to play with
+	halt							; wait for vsync
+	ld		a, COL_RED
+	out		($FE), a
+	call	DRAW_WINDOW				; draw row-by-row
+	.4 nop							; timing desu!
+	ld		a, COL_BLK
+	out		($FE), a
+	call	ANIMATE_WINDOW			; commented out to show the static border working
+									; can also make animate_window do less and fit in under 1 frame
+									; at time of writing, clouds&fg work, but buildings on own don't
+	jr		ANIMATE_MAIN_BORDER
+
 
 ; set up IM2 - so we don't wate time scanning keyboard and so on
 ; use ROM trick for interrupt table

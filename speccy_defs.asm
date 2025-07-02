@@ -47,8 +47,10 @@ ATTR_P			= $5C8D					; current ATTRs
 ROM_TOP			= $3FFF
 ROM_CHARS		= $3D00					; pixels
 MAX_ROM_CHAR	= $8F
-BORDER          = $5C48                 ; Border colour * 8; (currently using ROM_BORDER call)
+BORDCR          = $5C48                 ; Border colour * 8; (currently using ROM_BORDER call)
                                         ; also contains the attributes normally used for the lower half of the screen.
+                                        ; only useful for reading, actually setting the border requires OUT (254, a) 
+                                        ; where a is the colour (not * 8)
 
 ; screen sizes
 NUM_SCREEN_PIXELS	= $C000
