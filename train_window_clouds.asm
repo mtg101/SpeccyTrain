@@ -1,9 +1,10 @@
 
 ANIMATE_CLOUDS:
+	call	CLOUD_PIXEL_SHIFT			; shift everything 1 pix over
 	ld		a, (CLOUD_FRAME_COUNTER)	; inc frame counter
 	inc		a
 	ld		(CLOUD_FRAME_COUNTER), a
-	cp		8							; 0-7 shifts, at 8 we move a whole block
+	cp		8							; if we've done 8 shifts, we need a new block loaded to offscreen col
 	jr		nz, ANIMATE_CLOUDS_DONE
 	ld		a, 0
 	ld		(CLOUD_FRAME_COUNTER), a	; counter reset
@@ -12,20 +13,94 @@ ANIMATE_CLOUDS:
 ANIMATE_CLOUDS_DONE:
 	ret									; ANIMATE_CLOUDS
 
+CLOUD_PIXEL_SHIFT:
+	ld		b, WIN_CLOUD_ROWS * 8		; total rows to shift (liner as it's offscreen buf not the weird screen)
+	cp		a							; reset the carry bit
+
+	; CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS is where we start
+	ld		hl, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS
+CLOUD_PIXEL_SHIFT_LOOP:
+	; rotate, move left, for entire row - manually counting WIN_COL_VIS
+	rl		(hl)						; 19
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 18
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 17
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 16
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 15
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 14
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 13
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 12
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 11
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 10
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 9
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 8
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 7
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 6
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 5
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 4
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 3
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 2
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 1
+	dec		hl							; move left to next byte
+
+	rl		(hl)						; 0
+
+	ld		d, 0						; move back to end of row, then move down a row
+	ld		e, (WIN_COL_VIS * 2) + 1	; we dec'd hl back to start, so move back (WIN_COL_VIS)
+	add		hl, de						; then next row (WIN_COL_VIS+1)
+
+	djnz	CLOUD_PIXEL_SHIFT_LOOP		; next row
+
+	ret									; CLOUD_PIXEL_SHIFT
 
 ANIMATE_CLOUDS_MOVE_BLOCK:
-	call	LOAD_BLOCK_SHIFT_CLOUD_LAYER_BUF	
-	call	SHIFT_CLOUDS_LEFT								
-	ld		de, (NEXT_CLOUD_COL)	; move col left
+	call	SHIFT_CLOUDS_BLOCK_LEFT								
+	ld		de, (NEXT_CLOUD_COL)		; move col left
 	dec		de
 	ld		(NEXT_CLOUD_COL), de
-	ld		a, (NEXT_CLOUD_COL)		; check if extra buff empty
+	ld		a, (NEXT_CLOUD_COL)			; check if extra buff empty
 	cp		WIN_COL_VIS+1			
-	call	m, SETUP_CLOUDS			; load more if needed
-	ret								; ANIMATE_CLOUDS
+	call	m, ADD_CLOUDS				; load more if needed
+	call	LOAD_BLOCK_CLOUD_LAYER_BUF	
+	ret									; ANIMATE_CLOUDS
 
-SHIFT_CLOUDS_LEFT:				; unrolled for speed, honest!
-	; chars
+SHIFT_CLOUDS_BLOCK_LEFT:				; unrolled for speed, honest!
+	; chars only (attrs static)
 	ld		de, CHAR_BUF_OFF_ROW_0		; target
 	ld		hl, CHAR_BUF_OFF_ROW_0 + 1	; source is one to the right
 	ld		bc, WIN_COL_BUF - 1			; move whole buffer
@@ -39,23 +114,24 @@ SHIFT_CLOUDS_LEFT:				; unrolled for speed, honest!
 	ld		bc, WIN_COL_BUF - 1			; move whole buffer
 	ldir
 	
-	; attrs
-	ld		de, ATTR_BUF_ROW_0		; target
-	ld		hl, ATTR_BUF_ROW_0 + 1	; source is one to the right
-	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
-	ldir
-	ld		de, ATTR_BUF_ROW_1		; target
-	ld		hl, ATTR_BUF_ROW_1 + 1	; source is one to the right
-	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
-	ldir
-	ld		de, ATTR_BUF_ROW_2		; target
-	ld		hl, ATTR_BUF_ROW_2 + 1	; source is one to the right
-	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
-	ldir
-	
-	ret								; SHIFT_CLOUDS_LEFT
+	ret								; SHIFT_CLOUDS_BLOCK_LEFT
 
 SETUP_CLOUDS:
+; static attrs
+	ld		b, WIN_CLOUD_ROWS * WIN_COL_TOTAL
+	ld		a, %00101111			; everything white on cyan
+	ld		de, CLOUD_ATTR_BUF
+SETUP_CLOUD_ATTRS_LOOP:
+	ld		(de), a
+	inc		hl
+	inc		de
+	djnz	SETUP_CLOUD_ATTRS_LOOP
+; and the udgs
+	call	ADD_CLOUDS
+	call	LOAD_BLOCK_CLOUD_LAYER_BUF
+	ret								; SETUP_CLOUDS
+
+ADD_CLOUDS:
 	call	RNG						; rng in a (diff to builds, in case of weird repeats)
 	ld		(NEXT_RNG), a			; NEXT_RNG is now rng
 
@@ -73,13 +149,11 @@ SETUP_CLOUDS:
 	cp		(hl)
 	call	p, SETUP_CLOUDS			; branch if positive
 									; something in buffer 
-	ret								; SETUP_CLOUDS
+	ret								; ADD_CLOUDS
 
 BLANK_CLOUD_WIN_COL:				; whole column blank (space)
 	ld		a, C_SPACE				; we're printing spaces
 	ld		(CLOUD_CHAR_TO_BUF), a
-	ld		a, ATTR_CYN_PAP			; sky is cyan
-	ld		(CLOUD_ATTR_TO_BUF), a
 
 	ld		b, 0
 	call	BUF_CLOUD_ROW_AT_COL			
@@ -115,10 +189,6 @@ ADD_CLOUD:
 	inc		a						; now a is 1-4
 	ld		e, a					; e=width
 
-; ink color attr
-	ld		a, UDG_CLOUD_ATTR		; single colour, avoids attr clash, and yellow clouds look shit
-	ld		(CLOUD_ATTR_TO_BUF_BAK), a	
-
 ; which shape hedge? from width as height used to fence v hedge
 	ld		a, e							; width for which cloud
 
@@ -143,9 +213,6 @@ ADD_CLOUD_2x2:
 POS_2x2_DONE:
 ; now buf the cloud where it should be
 	call	BLANK_CLOUD_WIN_COL				; clear first
-	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
-	ld		(CLOUD_ATTR_TO_BUF), a
-
 	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_2x2_BL		; BL udg in a
 	ld		(CLOUD_CHAR_TO_BUF), a
@@ -161,8 +228,6 @@ POS_2x2_DONE:
 	ld		(NEXT_CLOUD_COL), bc
 
 	call	BLANK_CLOUD_WIN_COL				; clear first
-	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
-	ld		(CLOUD_ATTR_TO_BUF), a
 
 	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_2x2_BR		; BR udg in a
@@ -192,8 +257,6 @@ ADD_CLOUD_1x1:
 POS_1x1_DONE:
 ; now buf the cloud where it should be
 	call	BLANK_CLOUD_WIN_COL				; clear first
-	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
-	ld		(CLOUD_ATTR_TO_BUF), a
 
 	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_1x1			; hedge udg in a
@@ -219,8 +282,6 @@ ADD_CLOUD_1x2:
 POS_1x2_DONE:
 ; now buf the cloud where it should be
 	call	BLANK_CLOUD_WIN_COL				; clear first
-	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
-	ld		(CLOUD_ATTR_TO_BUF), a
 
 	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_1x2_L		; hedge udg in a
@@ -233,8 +294,6 @@ POS_1x2_DONE:
 	ld		(NEXT_CLOUD_COL), bc
 
 	call	BLANK_CLOUD_WIN_COL				; clear first
-	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
-	ld		(CLOUD_ATTR_TO_BUF), a
 
 	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_1x2_R		; hedge udg in a
@@ -260,8 +319,6 @@ ADD_CLOUD_TREE_TOP:							; tree shape cumulo nimbus would be odd, so just use t
 POS_TREE_TOP_DONE:
 ; now buf the cloud where it should be
 	call	BLANK_CLOUD_WIN_COL				; clear first
-	ld      a, (CLOUD_ATTR_TO_BUF_BAK)		; BLANK_WIN_COL trashes attrs
-	ld		(CLOUD_ATTR_TO_BUF), a
 
 	ld		b, d							; correct row
 	ld		a, UDG_HEDGE_CLOUD_2x1_T		; tree top udg in a
@@ -301,14 +358,12 @@ BUF_CLOUD_ROW_READY:				; hl is common offset
 ; attr	
 	ld		hl, CLOUD_ATTR_BUF	
 	add		hl, de	
-	ld		a, (CLOUD_ATTR_TO_BUF)
-	ld		(hl), a					; buf attr
 	
 	pop		de					
 	ret								; BUF_ROW_AT_COL
 
 
-LOAD_BLOCK_SHIFT_CLOUD_LAYER_BUF:
+LOAD_BLOCK_CLOUD_LAYER_BUF:
 ; load row 0 offscreen char
 	ld		a, (CHAR_BUF_OFF_ROW_0)
 	ld		(PRINT_CHAR), a
@@ -329,130 +384,9 @@ LOAD_BLOCK_SHIFT_CLOUD_LAYER_BUF:
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 2 * 8)
 	call	BUF_CHAR_PIXELS
 
-; ldir 3 x 8 rows on win_col_vis at super speed!
-	ld		de, CLOUDS_LAYER_PIXEL_BUF
-	ld		hl, CLOUDS_LAYER_PIXEL_BUF + 1
-	ld		bc, WIN_COL_VIS
-	ldir										; 0x0
+	ret											; LOAD_BLOCK_CLOUD_LAYER_BUF
 
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 0x1
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 0x2
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 0x3
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 0x4
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 0x5
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 0x6
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 0x7
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 1x0
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 1x1
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 1x2
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 1x3
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 1x4
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 1x5
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 1x6
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 1x7
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 2x0
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 2x1
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 2x2
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 2x3
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 2x4
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 2x5
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 2x6
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 2x7
-
-	ret											; LOAD_SHIFT_C_LAYER_BUF
-
-BUF_CLOUD_CHAR_ROWS:
+BUF_CLOUD_CHAR_ROWS:					; only called during setup, not animate
 	ld		hl, CLOUD_CHAR_BUF			; points to next char
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF	; points to row pixel buf
 
@@ -499,11 +433,5 @@ NEXT_CLOUD_COL:
 CLOUD_CHAR_TO_BUF:
 	defb	0
 	
-CLOUD_ATTR_TO_BUF:
-	defb	0
-
-CLOUD_ATTR_TO_BUF_BAK:
-	defb	0
-
 CLOUD_FRAME_COUNTER:
 	defb	0
