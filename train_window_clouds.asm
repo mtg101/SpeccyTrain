@@ -1,6 +1,20 @@
 
 ANIMATE_CLOUDS:
-	call	LOAD_SHIFT_C_LAYER_BUF	
+	ld		a, (CLOUD_FRAME_COUNTER)	; inc frame counter
+	inc		a
+	ld		(CLOUD_FRAME_COUNTER), a
+	cp		8							; 0-7 shifts, at 8 we move a whole block
+	jr		nz, ANIMATE_CLOUDS_DONE
+	ld		a, 0
+	ld		(CLOUD_FRAME_COUNTER), a	; counter reset
+	call	ANIMATE_CLOUDS_MOVE_BLOCK
+
+ANIMATE_CLOUDS_DONE:
+	ret									; ANIMATE_CLOUDS
+
+
+ANIMATE_CLOUDS_MOVE_BLOCK:
+	call	LOAD_BLOCK_SHIFT_CLOUD_LAYER_BUF	
 	call	SHIFT_CLOUDS_LEFT								
 	ld		de, (NEXT_CLOUD_COL)	; move col left
 	dec		de
@@ -294,7 +308,7 @@ BUF_CLOUD_ROW_READY:				; hl is common offset
 	ret								; BUF_ROW_AT_COL
 
 
-LOAD_SHIFT_C_LAYER_BUF:
+LOAD_BLOCK_SHIFT_CLOUD_LAYER_BUF:
 ; load row 0 offscreen char
 	ld		a, (CHAR_BUF_OFF_ROW_0)
 	ld		(PRINT_CHAR), a
@@ -491,3 +505,5 @@ CLOUD_ATTR_TO_BUF:
 CLOUD_ATTR_TO_BUF_BAK:
 	defb	0
 
+CLOUD_FRAME_COUNTER:
+	defb	0

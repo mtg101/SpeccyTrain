@@ -3,7 +3,7 @@
 
 ; print row from buf
 ; buf is pixel row at a time, precalc'd for draw speed
-PRINT_CHAR_ROW
+DRAW_WINDOW:
 ; ldir attrs for all rows
 	ld		de, ATTR_SCR_ROW_0			; destination
 	ld		hl, ATTR_BUF_ROW_0			; source, attr buf

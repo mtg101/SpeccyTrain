@@ -23,7 +23,7 @@ EXTRA_ATTR_BUF:
 
 	INCLUDE "speccy_defs.asm"		; must be indented
 	INCLUDE "print_char_y_x.asm"
-	INCLUDE "print_window_row.asm"
+	INCLUDE "draw_window.asm"
 	INCLUDE "train_scene.asm"
 	INCLUDE "train_window_main.asm"
 	
@@ -34,7 +34,7 @@ START:
 
 ANIMATE_ROW:
 	halt							; wait for vsync
-	call	PRINT_CHAR_ROW			; draw row-by-row
+	call	DRAW_WINDOW				; draw row-by-row
 	call	ANIMATE_WINDOW			; update what needs updating in buffers
 	jr		ANIMATE_ROW
 
