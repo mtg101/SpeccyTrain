@@ -21,6 +21,9 @@ FG_ATTR_BUF:
 EXTRA_ATTR_BUF:
 	defs	538						; top up to 768 for scene buf
 
+FRAME_COUNTER:
+	defb	0
+
 	INCLUDE "speccy_defs.asm"		; must be indented
 	INCLUDE "print_char_y_x.asm"
 	INCLUDE "draw_window.asm"
@@ -35,23 +38,48 @@ START:
 ;	jr		ANIMATE_MAIN_BORDER		; use the border version, normally commented out
 
 ANIMATE_MAIN:
-	halt							; wait for vsync
-	call	DRAW_WINDOW				; draw row-by-row
-	call	ANIMATE_WINDOW			; update what needs updating in buffers
+	ld		a, (FRAME_COUNTER)		; load frame counter
+	bit		0, a					; z is now ready for after vsync
+	call	z, ANIMATE_FLIP
+	call	nz, ANIMATE_FLOP
+	inc		a
+	ld		(FRAME_COUNTER), a
+
 	jr		ANIMATE_MAIN
 
-ANIMATE_MAIN_BORDER:				; this will break every time timings change... but fun to play with
-	halt							; wait for vsync
-	ld		a, COL_RED
-	out		($FE), a
-	call	DRAW_WINDOW				; draw row-by-row
-	.4 nop							; timing desu!
-	ld		a, COL_BLK
-	out		($FE), a
-	call	ANIMATE_WINDOW			; commented out to show the static border working
-									; can also make animate_window do less and fit in under 1 frame
-									; at time of writing, clouds&fg work, but buildings on own don't
-	jr		ANIMATE_MAIN_BORDER
+ANIMATE_FLIP:
+	push	af						; for other conditional jumps
+	call	ANIMATE_CLOUDS
+	call	ANIMATE_FG
+	halt							; wait for vsync before draw
+	call	DRAW_WINDOW_FG_CLOUDS				
+	pop		af						; for other conditional jumps
+	ret								; ANIMATE_FLIP
+
+ANIMATE_FLOP:
+	push	af						; for other conditional jumps
+	call	ANIMATE_BUILDINGS
+	halt							; wait for vsync before draw
+	call	DRAW_WINDOW_BUILDINGS
+	pop		af						; for other conditional jumps
+	ret								; ANIMATE_FLOP
+
+
+
+
+; ANIMATE_MAIN_BORDER:				; this will break every time timings change... but fun to play with
+; 									; and TODO needs the flip/flop animation doing to work again now...
+; 	halt							; wait for vsync
+; 	ld		a, COL_RED
+; 	out		($FE), a
+; 	call	DRAW_WINDOW				; draw row-by-row
+; 	.4 nop							; timing desu!
+; 	ld		a, COL_BLK
+; 	out		($FE), a
+; 	call	ANIMATE_WINDOW			; commented out to show the static border working
+; 									; can also make animate_window do less and fit in under 1 frame
+; 									; at time of writing, clouds&fg work, but buildings on own don't
+; 	jr		ANIMATE_MAIN_BORDER
 
 
 ; set up IM2 - so we don't wate time scanning keyboard and so on

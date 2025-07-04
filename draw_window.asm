@@ -3,7 +3,7 @@
 
 ; print row from buf
 ; buf is pixel row at a time, precalc'd for draw speed
-DRAW_WINDOW:
+DRAW_WINDOW_FG_CLOUDS:
 ; ldir attrs for all rows
 	ld		de, ATTR_SCR_ROW_0			; destination
 	ld		hl, ATTR_BUF_ROW_0			; source, attr buf
@@ -20,31 +20,6 @@ DRAW_WINDOW:
 	ld		bc, WIN_COL_VIS				; count
 	ldir								; move
 
-	ld		de, ATTR_SCR_ROW_3			; destination
-	ld		hl, ATTR_BUF_ROW_3			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-
-	ld		de, ATTR_SCR_ROW_4			; destination
-	ld		hl, ATTR_BUF_ROW_4			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-
-	ld		de, ATTR_SCR_ROW_5			; destination
-	ld		hl, ATTR_BUF_ROW_5			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-
-	ld		de, ATTR_SCR_ROW_6			; destination
-	ld		hl, ATTR_BUF_ROW_6			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-
-	ld		de, ATTR_SCR_ROW_7			; destination
-	ld		hl, ATTR_BUF_ROW_7			; source, attr buf
-	ld		bc, WIN_COL_VIS				; count
-	ldir								; move
-
 	ld		de, ATTR_SCR_ROW_8			; destination
 	ld		hl, ATTR_BUF_ROW_8			; source, attr buf
 	ld		bc, WIN_COL_VIS				; count
@@ -56,10 +31,8 @@ DRAW_WINDOW:
 	ldir								; move
 
 
-
-
 ; now blit the pixel rows... 
-	ld		hl, PRINT_ROW_PIXEL_BUF		; start of pixel buffer, row-by-row for ldir
+	ld		hl, CLOUDS_LAYER_PIXEL_BUF	; start of pixel buffer, row-by-row for ldir
 										; ldir incs it, but we also need to step over extra column used for shifts
 	
 	ld		de, ROW_0_LINE_0			; pixel row in memory
@@ -182,7 +155,128 @@ DRAW_WINDOW:
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
 	inc		hl							; stop over extra column
+
+
+	ld		hl, FG_LAYER_PIXEL_BUF		; now the fg
+
+
+	ld		de, ROW_8_LINE_0			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy
+	ldir
+	inc		hl							; stop over extra column
 	
+	ld		de, ROW_8_LINE_1			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_8_LINE_2			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_8_LINE_3			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_8_LINE_4			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_8_LINE_5			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_8_LINE_6			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_8_LINE_7			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_9_LINE_0			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_9_LINE_1			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_9_LINE_2			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_9_LINE_3			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_9_LINE_4			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_9_LINE_5			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_9_LINE_6			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+	inc		hl							; stop over extra column
+	
+	ld		de, ROW_9_LINE_7			; pixel row in memory
+	ld		bc, WIN_COL_VIS				; num to copy again
+	ldir
+										; don't skip for new row
+	
+    ret									; PRINT_CHAR_ROW
+
+
+DRAW_WINDOW_BUILDINGS:
+; ldir attrs for all rows
+	ld		de, ATTR_SCR_ROW_3			; destination
+	ld		hl, ATTR_BUF_ROW_3			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_4			; destination
+	ld		hl, ATTR_BUF_ROW_4			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_5			; destination
+	ld		hl, ATTR_BUF_ROW_5			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_6			; destination
+	ld		hl, ATTR_BUF_ROW_6			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+	ld		de, ATTR_SCR_ROW_7			; destination
+	ld		hl, ATTR_BUF_ROW_7			; source, attr buf
+	ld		bc, WIN_COL_VIS				; count
+	ldir								; move
+
+
+; now blit the pixel rows... 
+
+	ld		hl, BUILDINGS_LAYER_PIXEL_BUF
+										; start of pixel buffer, skipping over clouds
+										; ldir incs it, but we also need to step over extra column used for shifts
+
 	ld		de, ROW_3_LINE_0			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy
 	ldir
@@ -379,86 +473,6 @@ DRAW_WINDOW:
 	inc		hl							; stop over extra column
 	
 	ld		de, ROW_7_LINE_7			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_8_LINE_0			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_8_LINE_1			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_8_LINE_2			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_8_LINE_3			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_8_LINE_4			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_8_LINE_5			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_8_LINE_6			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_8_LINE_7			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_9_LINE_0			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_9_LINE_1			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_9_LINE_2			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_9_LINE_3			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_9_LINE_4			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_9_LINE_5			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_9_LINE_6			; pixel row in memory
-	ld		bc, WIN_COL_VIS				; num to copy again
-	ldir
-	inc		hl							; stop over extra column
-	
-	ld		de, ROW_9_LINE_7			; pixel row in memory
 	ld		bc, WIN_COL_VIS				; num to copy again
 	ldir
 										; don't skip for new row

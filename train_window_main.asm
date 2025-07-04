@@ -14,12 +14,6 @@ SETUP_WINDOW:
 	call	BUF_BUILDING_CHAR_ROWS	; draw initisl buildings to pixel buffer
 	ret								; SETUP_WINDOW
 
-ANIMATE_WINDOW:
-	call	ANIMATE_CLOUDS
-	call	ANIMATE_BUILDINGS
-	call	ANIMATE_FG
-	ret								; ANIMATE_WINDOW
-
 LOAD_WINDOW_UDGS:
 	ld		de, UDG_START			; first UDG addr
 	ld		hl, UDGS_WINDOW_PIXELS	; my UDGs
