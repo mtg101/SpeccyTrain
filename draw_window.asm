@@ -463,7 +463,7 @@ DRAW_WINDOW:
 	ldir
 										; don't skip for new row
 	
-    ret									; PRINT_CHAR_ROW:
+    ret									; PRINT_CHAR_ROW
 
 
 
@@ -515,15 +515,15 @@ BUF_CHAR_PIXELS:
 
 PRINT_ROW_PIXEL_BUF: 				
 CLOUDS_LAYER_PIXEL_BUF:
-	defs		(WIN_COL_VIS+1) * WIN_CLOUD_ROWS * 8, %10101010
+	defs		(WIN_COL_VIS+1) * WIN_CLOUD_ROWS * 8
 BUILDINGS_LAYER_PIXEL_BUF:
-	defs		(WIN_COL_VIS+1) * WIN_BUILDING_ROWS * 8, %10010010
+	defs		(WIN_COL_VIS+1) * WIN_BUILDING_ROWS * 8
 FG_LAYER_PIXEL_BUF:
-	defs		(WIN_COL_VIS+1) * WIN_FG_ROWS * 8, %00011100
+	defs		(WIN_COL_VIS+1) * WIN_FG_ROWS * 8
 
 
 SINGLE_CHAR_PIXEL_BUF:
-	defs	8, 0						; 8 byte buf for a single char
+	defs	8						; 8 byte buf for a single char
 
 
 ; mem address of line

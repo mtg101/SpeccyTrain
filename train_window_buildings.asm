@@ -58,8 +58,7 @@ SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
 	ret								; SHIFT_BUILDINGS_LEFT
 
 SETUP_BUILDINGS:
-	call	RNG						; rng in a
-	ld		(NEXT_RNG), a			; NEXT_BUILDING is now rng
+	call	RNG						; change (NEXT_RNG)
 
 	ld		a, %00010000			; mask for type, only need one bit
 	and		(hl)					; get type from generated next building
@@ -435,46 +434,6 @@ LOAD_SHIFT_B_LAYER_BUF:
 	inc		hl									; extra col
 	ld		bc, WIN_COL_VIS
 	ldir										; 4x7
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 5x0
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 5x1
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 5x2
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 5x3
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 5x4
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 5x5
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 5x6
-
-	inc		de									; extra col
-	inc		hl									; extra col
-	ld		bc, WIN_COL_VIS
-	ldir										; 5x7
 
 	ret											; LOAD_SHIFT_B_LAYER_BUF
 

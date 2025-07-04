@@ -27,7 +27,7 @@ LOAD_WINDOW_UDGS:
 	ldir
 	ret								; LOAD_UDGS
 
-; uses first 8KiB ROM for pseudo, retuns in a
+; uses first 8KiB ROM for pseudo, stores in (NEXT_RNG)
 RNG: 								
 	ld		hl,(SEED)        		 
     ld		a,h
@@ -36,11 +36,12 @@ RNG:
     ld		a,(hl)           		; Get "random" number from location.
     inc		hl              		; Increment pointer.
     ld		(SEED),hl
+	ld		(NEXT_RNG), a			; store in (NEXT_RNG)
     ret								; RNG
 
 ; data
 SEED:
-	defw	23						; seed 23 fnord
+	defw	23						; I seed the fnords!
 	
 NEXT_RNG:							; ic bt bh bw 
 									; ic = ink colour (blk, blue, red, mag)

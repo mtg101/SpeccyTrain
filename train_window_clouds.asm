@@ -132,8 +132,7 @@ SETUP_CLOUD_ATTRS_LOOP:
 	ret								; SETUP_CLOUDS
 
 ADD_CLOUDS:
-	call	RNG						; rng in a (diff to builds, in case of weird repeats)
-	ld		(NEXT_RNG), a			; NEXT_RNG is now rng
+	call	RNG						; change (NEXT_RNG) - diff to builds, in case of weird repeats
 
 	ld		a, %00010000			; mask for type, only need one bit
 	and		(hl)					; get type from generated next cloud
