@@ -536,9 +536,11 @@ FG_LAYER_PIXEL_BUF:
 	defs		(WIN_COL_VIS+1) * WIN_FG_ROWS * 8
 
 
-SINGLE_CHAR_PIXEL_BUF:
+SINGLE_CHAR_PIXEL_BUF_1:
 	defs	8						; 8 byte buf for a single char
 
+SINGLE_CHAR_PIXEL_BUF_2:
+	defs	8						; 8 byte buf for a single char
 
 ; mem address of line
 

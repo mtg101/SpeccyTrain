@@ -56,9 +56,29 @@ ANIMATE_FG_ATTR_GOT:
 	ld		d, 0
 	ld		e, a						; into de
 
-	; make pole pixels
+	; make high pole pixels
 	ld		a, %00011000				; vertical pole 
-	ld		hl, SINGLE_CHAR_PIXEL_BUF	; 8 byte buf
+	ld		b, %00111100				; crossbar
+	ld		c, %01111110				; crossbar
+	ld		hl, SINGLE_CHAR_PIXEL_BUF_1	; 8 byte buf
+	ld		(hl), a						; 0
+	inc		hl
+	ld		(hl), a						; 1
+	inc		hl
+	ld		(hl), b						; 2
+	inc		hl
+	ld		(hl), a						; 3
+	inc		hl
+	ld		(hl), a						; 4
+	inc		hl
+	ld		(hl), c						; 5
+	inc		hl
+	ld		(hl), a						; 6
+	inc		hl
+	ld		(hl), a						; 7
+
+	; make high pole pixels
+	ld		hl, SINGLE_CHAR_PIXEL_BUF_2	; 8 byte buf
 	ld		(hl), a						; 0
 	inc		hl
 	ld		(hl), a						; 1
@@ -86,13 +106,13 @@ ANIMATE_FG_ATTR_GOT:
 	jr		z, DRAW_POLE_DONE			; if it's 255, don't draw
 
 	; draw pole high
-	ld		hl, SINGLE_CHAR_PIXEL_BUF	; call trashes it so have to reload every time
+	ld		hl, SINGLE_CHAR_PIXEL_BUF_1	; call trashes it so have to reload every time
 	ld		ix, FG_LAYER_PIXEL_BUF 		; first row
 	add		ix, bc						; add column offset
 	call	BUF_CHAR_PIXELS				; buf it
 
 	; draw pole low
-	ld		hl, SINGLE_CHAR_PIXEL_BUF	; call trashes it so have to reload every loop
+	ld		hl, SINGLE_CHAR_PIXEL_BUF_2	; call trashes it so have to reload every loop
 	ld		ix, FG_LAYER_PIXEL_BUF + ((WIN_COL_VIS+1) * 8)		; second row
 	add		ix, bc						; add column offset
 	call	BUF_CHAR_PIXELS				; buf it
@@ -100,7 +120,7 @@ ANIMATE_FG_ATTR_GOT:
 DRAW_POLE_DONE:
 	; make blank pixels
 	ld		a, %00000000				; blank
-	ld		hl, SINGLE_CHAR_PIXEL_BUF	; 8 byte buf
+	ld		hl, SINGLE_CHAR_PIXEL_BUF_1	; 8 byte buf
 	ld		(hl), a						; 0
 	inc		hl
 	ld		(hl), a						; 1
@@ -127,13 +147,13 @@ DRAW_POLE_DONE:
 	jr		z, UNDRAW_POLE_DONE			; if it's 255, don't undraw
 
 	; undraw draw pole high
-	ld		hl, SINGLE_CHAR_PIXEL_BUF	; call trashes it so have to reload every time
+	ld		hl, SINGLE_CHAR_PIXEL_BUF_1	; call trashes it so have to reload every time
 	ld		ix, FG_LAYER_PIXEL_BUF 		; first row
 	add		ix, bc						; add column offset
 	call	BUF_CHAR_PIXELS				; buf it
 
 	; undraw draw pole low
-	ld		hl, SINGLE_CHAR_PIXEL_BUF	; call trashes it so have to reload every loop
+	ld		hl, SINGLE_CHAR_PIXEL_BUF_1	; call trashes it so have to reload every loop
 	ld		ix, FG_LAYER_PIXEL_BUF + ((WIN_COL_VIS+1) * 8)		; second row
 	add		ix, bc						; add column offset
 	call	BUF_CHAR_PIXELS				; buf it
