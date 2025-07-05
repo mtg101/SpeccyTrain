@@ -18,6 +18,11 @@ ANIMATE_COPTER:
 DRAW_COPTER:
     push    af                                      ; needed for don't draw check
 
+    ; hl the udg pixels
+    ; ix into cloud buffer
+    ; need XOR_CHAR_PIXELS in draw_window
+
+    ; repeat for right
 
 
     ; update status
@@ -34,10 +39,6 @@ DONE_DRAW_COPTER:
 
 
 DONT_DRAW_COPTER:
-
-
-
-
     ; update status
     ld      a, (NEXT_RNG)
     cp      %11111111                           
@@ -50,6 +51,10 @@ DONT_DRAW_COPTER:
 
 
 UNDRAW_COPTER:
+
+    ; copy and paste from above
+
+
     ret                                             ; UNDRAW_COPTER
 
 
