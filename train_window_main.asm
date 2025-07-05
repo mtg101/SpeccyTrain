@@ -8,6 +8,7 @@
 SETUP_WINDOW:
 	call	LOAD_WINDOW_UDGS
 	call	SETUP_CLOUDS
+	call 	SETUP_COPTER
 	call	SETUP_BUILDINGS		
 	call	SETUP_FG
 	call	BUF_CLOUD_CHAR_ROWS		; draw initisl clouds to pixel buffer

@@ -29,6 +29,7 @@ FRAME_COUNTER:
 	INCLUDE "draw_window.asm"
 	INCLUDE "train_scene.asm"
 	INCLUDE "train_window_main.asm"
+	INCLUDE "train_window_copter.asm"
 	
 START:
 	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
@@ -50,9 +51,11 @@ ANIMATE_MAIN:
 ANIMATE_FLIP:
 	push	af						; for other conditional jumps
 	call	ANIMATE_CLOUDS
+	call	ANIMATE_COPTER
 	call	ANIMATE_FG
 	halt							; wait for vsync before draw
 	call	DRAW_WINDOW_FG_CLOUDS				
+	call	UNDRAW_COPTER
 	pop		af						; for other conditional jumps
 	ret								; ANIMATE_FLIP
 
