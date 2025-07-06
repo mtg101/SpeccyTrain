@@ -82,10 +82,10 @@ ADD_HEDGE_GAP:
 
 	ld		a, %11000000			; color bits
 	and		(hl)					; next building rng
-	cp		0						; 1 in 4 change it's magenta
-	jr		nz, GOT_HEDGE_COLOUR	; it's not magenta, stick with green
+	cp		0						; 1 in 4 change it's red
+	jr		nz, GOT_HEDGE_COLOUR	; it's not red, stick with green
 	ld		a, UDG_HEDGE_ATTR		; default green on cyan
-	or		a, %00000011			; make magenta
+	or		a, %00000010			; make red
 	and		a, %11111011
 	ld		(BUILD_ATTR_TO_BUF), a
 
