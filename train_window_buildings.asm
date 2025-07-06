@@ -108,8 +108,11 @@ ADD_BUILDING:
 	and		(hl)					; now a is 0000 - 0300
 	rra								; shift right twice
 	rra
-	inc		a						; inc twice so 2-5
-	inc		a
+	inc		a						; inc twice so 1-5
+	bit		5, (hl)					; random (fnord) bit test
+	jr		z, STAY_SMALL			; 50/50 small
+	inc		a						; make it 2-5 
+STAY_SMALL:
 	ld		d, a					; d=height
 	ld		a, %00000011
 	and		(hl)					; now a is 0-3 
