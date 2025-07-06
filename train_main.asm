@@ -55,7 +55,7 @@ ANIMATE_FLIP:
 	call	ANIMATE_FG
 	halt							; wait for vsync before draw
 	call	DRAW_WINDOW_FG_CLOUDS				
-	call	UNDRAW_COPTER
+	call	UNDRAW_COPTER_UPDATE_STATUS
 	pop		af						; for other conditional jumps
 	ret								; ANIMATE_FLIP
 

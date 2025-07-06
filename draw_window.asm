@@ -486,45 +486,102 @@ DRAW_WINDOW_BUILDINGS:
 ; blits all 8 bytes into correct offsets
 ; trashes hl, de and a
 BUF_CHAR_PIXELS:
-; copy each pixel row, 0-7
-; iy is base buffer pixel offset, 2nd row is WIN_COL_VIS bytes away...
-	ld		a, (hl)						; byte of pixel data
-	ld		(ix), a						; into buffer
+	ld		a, (hl)							; byte of pixel data
+	ld		(ix), a							; into buffer
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
-	ld		(ix + (WIN_COL_VIS+1)), a	; into buffer with row offset
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(ix + (WIN_COL_VIS+1)), a		; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
 	ld		(ix + ((WIN_COL_VIS+1) * 2)), a	; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
 	ld		(ix + ((WIN_COL_VIS+1) * 3)), a	; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
 	ld		(ix + ((WIN_COL_VIS+1) * 4)), a	; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
 	ld		(ix + ((WIN_COL_VIS+1) * 5)), a	; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
 	ld		(ix + ((WIN_COL_VIS+1) * 6)), a	; into buffer with row offset
 	
-	inc		hl							; next byte of char pixel data
-	ld		a, (hl)						; byte of pixel data
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
 ; can't index (WIN_COL_VIS * 7) as it's > 127 8bitty things
 	ld		de, (WIN_COL_VIS+1) * 7			; the oversized offset
-	ld		hl, ix						; the base
-	add		hl, de						; add 'em
-	ld		(hl), a						; into buffer
+	ld		hl, ix							; the base
+	add		hl, de							; add 'em
+	ld		(hl), a							; into buffer
 
-	ret									; BUF_CHAR_PIXELS
+	ret										; BUF_CHAR_PIXELS
 
+
+; hl points to char pixels: 8 bytes
+; ix points to first byte of buffer
+; XORs all 8 bytes into correct offsets
+; trashes hl, de and a
+XOR_CHAR_PIXELS:
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix)							; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix), a							; into buffer
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + (WIN_COL_VIS+1))		; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + (WIN_COL_VIS+1)), a		; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + ((WIN_COL_VIS+1) * 2))	; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + ((WIN_COL_VIS+1) * 2)), a	; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + ((WIN_COL_VIS+1) * 3))	; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + ((WIN_COL_VIS+1) * 3)), a	; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + ((WIN_COL_VIS+1) * 4))	; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + ((WIN_COL_VIS+1) * 4)), a	; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + ((WIN_COL_VIS+1) * 5))	; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + ((WIN_COL_VIS+1) * 5)), a	; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + ((WIN_COL_VIS+1) * 6))	; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + ((WIN_COL_VIS+1) * 6)), a	; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+; can't index (WIN_COL_VIS * 7) as it's > 127 8bitty things
+	ld		de, (WIN_COL_VIS+1) * 7			; the oversized offset
+	ld		hl, ix							; the base
+	add		hl, de							; add 'em
+	
+	ld		d, (hl)							; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(hl), a							; into buffer
+
+	ret										; XOR_CHAR_PIXELS
 
 
 PRINT_ROW_PIXEL_BUF: 				
