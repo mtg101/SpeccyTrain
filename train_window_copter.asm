@@ -25,7 +25,7 @@ ANIMATE_COPTER:
     jr      ANIMATE_DRAW_COPTER                     ; ready to draw now
 
 ANIMATE_NOT_0:
-    cp      %00000010
+    cp      %00000001
     jr      nz, ANIMATE_NOT_1
 
     ; left off (redundant first time but works)
@@ -36,7 +36,7 @@ ANIMATE_NOT_0:
     jr      ANIMATE_DRAW_COPTER                     ; ready to draw now
 
 ANIMATE_NOT_1:
-    cp      %00000100
+    cp      %00000010
     jr      nz, ANIMATE_NOT_2
 
     ; left on (redundant first time but works)
@@ -51,6 +51,11 @@ ANIMATE_NOT_2:                                      ; it's %000001100
     ld      hl, COPTER_RIGHT_PIXELS + 1             ; second row
     ld      a, %11000000                            ; still pillar
     ld      (hl), a                                 ; hack the udg
+
+    ; sound once per loop
+    ld      hl, C_1_PITCH
+    ld      de, C_1_DUR_1S / 64
+    call    BEEP
 
     ; fall through
 
@@ -67,7 +72,7 @@ ANIMATE_DRAW_COPTER:
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + 11 + ((WIN_COL_VIS + 1) * 8)
 	call	XOR_CHAR_PIXELS
 
-DONE_ANIMATE_COPTER:    
+DONE_ANIMATE_COPTER:
     ret                                             ; ANIMATE_COPTER
 
 UNDRAW_COPTER_UPDATE_STATUS:          

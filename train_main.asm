@@ -30,6 +30,7 @@ FRAME_COUNTER:
 	INCLUDE "train_scene.asm"
 	INCLUDE "train_window_main.asm"
 	INCLUDE "train_window_copter.asm"
+	INCLUDE "sound.asm"
 	
 START:
 	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
@@ -39,8 +40,6 @@ START:
 ;	jr		ANIMATE_MAIN_BORDER		; use the border version, normally commented out
 
 ANIMATE_MAIN:
-	ld		a, (FRAME_COUNTER)		; load frame counter
-
 	call	ANIMATE_CLOUDS
 	call	ANIMATE_COPTER
 	call	ANIMATE_BUILDINGS
@@ -49,9 +48,10 @@ ANIMATE_MAIN:
 	call	DRAW_WINDOW
 	call	UNDRAW_COPTER_UPDATE_STATUS
 
-
+	ld		a, (FRAME_COUNTER)		
 	inc		a						; next frame
 	ld		(FRAME_COUNTER), a
+	call	BADUM_BADUM	
 
 	jr		ANIMATE_MAIN
 
