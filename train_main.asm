@@ -31,6 +31,7 @@ FRAME_COUNTER:
 	INCLUDE "train_window_main.asm"
 	INCLUDE "train_window_copter.asm"
 	INCLUDE "sound.asm"
+	INCLUDE "maths.asm"
 	
 START:
 	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
@@ -51,13 +52,13 @@ ANIMATE_MAIN:
 	ld		a, (FRAME_COUNTER)		
 	inc		a						; next frame
 	ld		(FRAME_COUNTER), a
-	call	BADUM_BADUM	
+	call	BADUM_BADUM				; track sound
 
 	jr		ANIMATE_MAIN
 
 
 ; ANIMATE_MAIN_BORDER:				; this will break every time timings change... but fun to play with
-; 									; and TODO needs the flip/flop animation doing to work again now...
+; 									; and TODO it's way out of date with ANIMATE_MAIN
 ; 	halt							; wait for vsync
 ; 	ld		a, COL_RED
 ; 	out		($FE), a

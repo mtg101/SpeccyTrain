@@ -22,28 +22,12 @@ LOAD_WINDOW_UDGS:
 	ldir
 	ret								; LOAD_UDGS
 
-; uses first 8KiB ROM for pseudo, stores in (NEXT_RNG)
-RNG: 								
-	ld		hl,(SEED)        		 
-    ld		a,h
-    and		$1F              		; keep it within first 8k of ROM.
-    ld		h,a
-    ld		a,(hl)           		; Get "random" number from location.
-    inc		hl              		; Increment pointer.
-    ld		(SEED),hl
-	ld		(NEXT_RNG), a			; store in (NEXT_RNG)
-    ret								; RNG
-
-; data
-SEED:
-	defw	23						; I seed the fnords!
-	
-NEXT_RNG:							; ic bt bh bw 
-									; ic = ink colour (blk, blue, red, mag)
-									; bt - building type (50/50 gap/building)
-									; bh - building height 2-5 - single UDG for now
-									; bw - building width 1-4
-	defb	0
+	; NEXT_RNG low byte used for window procgen, buildings are:
+		; ic bt bh bw 
+		; ic = ink colour (blk, blue, red, mag)
+		; bt - building type (50/50 gap/building)
+		; bh - building height 2-5 - single UDG for now
+		; bw - building width 1-4
 	
 
 

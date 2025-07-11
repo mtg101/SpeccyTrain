@@ -6,9 +6,9 @@ SETUP_COPTER:
 
 
 ANIMATE_COPTER:
-    ld      a, (COPTER_STATUS)                      
-    cp      1                                       
-    jr      nz, DONE_ANIMATE_COPTER                 ; only draw if we should
+    ld      a, (COPTER_COL) 
+    cp      0
+    jr      z, DONE_ANIMATE_COPTER                 ; only draw if we should
 
     ; animate udgs by hand
     ld      a, (FRAME_COUNTER)                      
@@ -61,15 +61,17 @@ ANIMATE_NOT_2:                                      ; it's %000001100
 
 ANIMATE_DRAW_COPTER:
     ; draw left copter
-	ld		hl, COPTER_LEFT_PIXELS              ; don't need udgs
-    ; fixed position in second row
-	ld		ix, CLOUDS_LAYER_PIXEL_BUF + 10 + ((WIN_COL_VIS + 1) * 8)
+	ld		hl, COPTER_LEFT_PIXELS                  ; don't need udgs
+	ld		ix, CLOUDS_LAYER_PIXEL_BUF + ((WIN_COL_VIS + 1) * 8)
+    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
+    add     ix, bc
 	call	XOR_CHAR_PIXELS
 
     ; draw right copter
 	ld		hl, COPTER_RIGHT_PIXELS                 ; don't need udgs
-    ; fixed position in second row
-	ld		ix, CLOUDS_LAYER_PIXEL_BUF + 11 + ((WIN_COL_VIS + 1) * 8)
+	ld		ix, CLOUDS_LAYER_PIXEL_BUF + 1 + ((WIN_COL_VIS + 1) * 8)
+    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL+1
+    add     ix, bc
 	call	XOR_CHAR_PIXELS
 
 DONE_ANIMATE_COPTER:
@@ -78,45 +80,51 @@ DONE_ANIMATE_COPTER:
 UNDRAW_COPTER_UPDATE_STATUS:          
     call    RNG                                     ; own rng
 
-    ld      a, (COPTER_STATUS)                      ; check if we're supposed to undraw
-    cp      1
-    jr      nz, UNDRAW_DONT_DRAW                    ; don't need to undraw
+    ld      a, (COPTER_COL)                         ; check if we're supposed to undraw
+    cp      0
+    jr      z, UNDRAW_DONT_DRAW                    ; don't need to undraw
 
     ; left copter
 	ld		hl, COPTER_LEFT_PIXELS                  ; dot need udgs
-    ; fixed position in second row
-	ld		ix, CLOUDS_LAYER_PIXEL_BUF + 10 + ((WIN_COL_VIS + 1) * 8)
+	ld		ix, CLOUDS_LAYER_PIXEL_BUF + ((WIN_COL_VIS + 1) * 8)
+    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
+    add     ix, bc
 	call	XOR_CHAR_PIXELS
 
     ; right copter
 	ld		hl, COPTER_RIGHT_PIXELS              ; don't; need udgs
-    ; fixed position in second row
-	ld		ix, CLOUDS_LAYER_PIXEL_BUF + 11 + ((WIN_COL_VIS + 1) * 8)
+	ld		ix, CLOUDS_LAYER_PIXEL_BUF + 1 + ((WIN_COL_VIS + 1) * 8)
+    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
+    add     ix, bc
 	call	XOR_CHAR_PIXELS
 
     ; should we stop showing?
     ld      a, (NEXT_RNG)
     and     %01111111
-    cp      %01111111                           
-    jr      nz, DONE_STATUS_COPTER                  ; 1 in 128 stop showing
+    cp      %01111111                               ; 1 in 128 stop showing
+    jr      nz, DONE_STATUS_COPTER                  
     ld      a, 0
-    ld      (COPTER_STATUS), a                      
+    ld      (COPTER_COL), a                      
     jr      DONE_STATUS_COPTER                      ; extra jump over the status update for didn't draw
 
 UNDRAW_DONT_DRAW:
     ; should we start showing?
-    ld      a, (NEXT_RNG)
-    cp      1
-    jr      nz, DONE_STATUS_COPTER                  ; 1 in 256 start showing
-    ld      a, 1
-    ld      (COPTER_STATUS), a                      
+    ld      a, (NEXT_RNG)                           ; 1 in 256 start showing
+    cp      %11111111                               
+    jr      nz, DONE_STATUS_COPTER                  
 
+    ; random col 1-16
+    call    RNG                                     ; new one to avoid always %11010111 for row
+    ld      a, (NEXT_RNG)
+    and     %00001111                               ; 0-15
+    inc     a                                       ; 1-16
+    ld      (COPTER_COL), a                         ; save to status
 
 DONE_STATUS_COPTER:
     ret                                             ; UNDRAW_COPTER_UPDATE_STATUS
 
 
-COPTER_STATUS:                                      ; on / off for now, but can get more complicated
+COPTER_COL:                                         ; 0 is off, 2-17 col (from 0-15 + 2 rng)
     defb    0   
 
 COPTER_LEFT_PIXELS:
