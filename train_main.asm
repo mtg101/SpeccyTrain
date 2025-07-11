@@ -18,7 +18,7 @@ ATTR_SCENE_BUF:							; needs 768 bytes total
 ATTR_WINDOW_BUF:
 CLOUD_ATTR_BUF:							
 	defs	(WIN_CLOUD_ROWS-1) * WIN_COL_TOTAL	
-MOUNTAIN_ATTR_BUF:							
+MOUNTAINS_ATTR_BUF:							
 	defs	WIN_COL_TOTAL	
 BUILDING_ATTR_BUF:						
 	defs	WIN_BUILDING_ROWS * WIN_COL_TOTAL
@@ -35,7 +35,6 @@ FRAME_COUNTER:
 	INCLUDE "draw_window.asm"
 	INCLUDE "train_scene.asm"
 	INCLUDE "train_window_main.asm"
-	INCLUDE "train_window_copter.asm"
 	INCLUDE "sound.asm"
 	INCLUDE "maths.asm"
 	
@@ -49,6 +48,7 @@ START:
 ANIMATE_MAIN:
 	call	ANIMATE_CLOUDS
 	call	ANIMATE_COPTER
+	call	ANIMATE_MOUNTAINS
 	call	ANIMATE_BUILDINGS
 	call	ANIMATE_FG
 	halt							; wait for vsync before draw

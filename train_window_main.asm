@@ -4,11 +4,15 @@
 	INCLUDE "train_window_building_gaps.asm"
 	INCLUDE "train_window_clouds.asm"
 	INCLUDE "train_window_fg.asm"
+	INCLUDE "train_window_copter.asm"
+	INCLUDE "train_window_mountains.asm"
+
 	
 SETUP_WINDOW:
 	call	LOAD_WINDOW_UDGS
 	call	SETUP_CLOUDS
 	call 	SETUP_COPTER
+	call 	SETUP_MOUNTAINS
 	call	SETUP_BUILDINGS		
 	call	SETUP_FG
 	call	BUF_CLOUD_CHAR_ROWS		; draw initisl clouds to pixel buffer

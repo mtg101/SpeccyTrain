@@ -268,7 +268,6 @@ SETUP_CLOUDS:
 	ld		de, CLOUD_ATTR_BUF
 SETUP_CLOUD_ATTRS_LOOP:
 	ld		(de), a
-	inc		hl
 	inc		de
 	djnz	SETUP_CLOUD_ATTRS_LOOP
 ; and the udgs
