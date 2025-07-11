@@ -86,7 +86,135 @@ CLOUD_PIXEL_SHIFT_LOOP:
 
 	djnz	CLOUD_PIXEL_SHIFT_LOOP		; next row
 
+	call	CLOUD_LAYER_TO_RENDER
+
 	ret									; CLOUD_PIXEL_SHIFT
+
+
+CLOUD_LAYER_TO_RENDER:
+	ld		de, WINDOW_RENDER_PIXEL_BUF_CLOUDS	; start of pixel render buf: 0_0
+	ld		hl, CLOUDS_LAYER_PIXEL_BUF	; start of layer buf
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir								; copy over
+
+										; de correctly inc'd already: 0_1
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 0_2
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 0_3
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 0_4
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 0_5
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 0_6
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 0_7
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 1_0
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 1_1
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 1_2
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 1_3
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 1_4
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 1_5
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 1_6
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 1_7
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 2_0
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 2_1
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 2_2
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 2_3
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 2_4
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 2_5
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 2_6
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+										; de correctly inc'd already: 2_7
+	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	ld		bc, WIN_COL_VIS				; only copy visible
+	ldir	
+
+	ret									; CLOUDS_LAYER_TO_RENDER
+
+
 
 ANIMATE_CLOUDS_MOVE_BLOCK:
 	call	SHIFT_CLOUDS_BLOCK_LEFT								
@@ -368,22 +496,22 @@ LOAD_BLOCK_CLOUD_LAYER_BUF:
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS
-	call	BUF_CHAR_PIXELS
+	call	BUF_CHAR_PIXELS_VIS_1
 ; load row 1 offscreen char
 	ld		a, (CHAR_BUF_OFF_ROW_1)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 8)
-	call	BUF_CHAR_PIXELS
+	call	BUF_CHAR_PIXELS_VIS_1
 
 ; load row 2 offscreen char
 	ld		a, (CHAR_BUF_OFF_ROW_2)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 2 * 8)
-	call	BUF_CHAR_PIXELS
+	call	BUF_CHAR_PIXELS_VIS_1
 
-	ret											; LOAD_BLOCK_CLOUD_LAYER_BUF
+	ret									; LOAD_BLOCK_CLOUD_LAYER_BUF
 
 BUF_CLOUD_CHAR_ROWS:					; only called during setup, not animate
 	ld		hl, CLOUD_CHAR_BUF			; points to next char
@@ -406,7 +534,7 @@ BUF_CLOUD_CHAR_COL_LOOP:
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	pop		bc
 
-	call	BUF_CHAR_PIXELS
+	call	BUF_CHAR_PIXELS_VIS_1
 	pop		hl			
 
 ; next column / char
@@ -425,6 +553,8 @@ BUF_CLOUD_CHAR_COL_LOOP:
 
     ret									; BUF_CLOUD_CHAR_ROWS
 
+CLOUDS_LAYER_PIXEL_BUF:
+	defs		(WIN_COL_VIS+1) * WIN_CLOUD_ROWS * 8
 
 NEXT_CLOUD_COL:
 	defw	0

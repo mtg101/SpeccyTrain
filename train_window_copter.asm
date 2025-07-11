@@ -62,17 +62,17 @@ ANIMATE_NOT_2:                                      ; it's %000001100
 ANIMATE_DRAW_COPTER:
     ; draw left copter
 	ld		hl, COPTER_LEFT_PIXELS                  ; don't need udgs
-	ld		ix, CLOUDS_LAYER_PIXEL_BUF + ((WIN_COL_VIS + 1) * 8)
+	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS + (WIN_COL_VIS * 8)
     ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
     add     ix, bc
-	call	XOR_CHAR_PIXELS
+	call	XOR_CHAR_PIXELS_VIS
 
     ; draw right copter
 	ld		hl, COPTER_RIGHT_PIXELS                 ; don't need udgs
-	ld		ix, CLOUDS_LAYER_PIXEL_BUF + 1 + ((WIN_COL_VIS + 1) * 8)
+	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS + 1 + (WIN_COL_VIS * 8)
     ld      bc, (COPTER_COL)                        ; show at COPTOR_COL+1
     add     ix, bc
-	call	XOR_CHAR_PIXELS
+	call	XOR_CHAR_PIXELS_VIS
 
 DONE_ANIMATE_COPTER:
     ret                                             ; ANIMATE_COPTER
@@ -86,17 +86,17 @@ UNDRAW_COPTER_UPDATE_STATUS:
 
     ; left copter
 	ld		hl, COPTER_LEFT_PIXELS                  ; dot need udgs
-	ld		ix, CLOUDS_LAYER_PIXEL_BUF + ((WIN_COL_VIS + 1) * 8)
+	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS + (WIN_COL_VIS * 8)
     ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
     add     ix, bc
-	call	XOR_CHAR_PIXELS
+	call	XOR_CHAR_PIXELS_VIS
 
     ; right copter
 	ld		hl, COPTER_RIGHT_PIXELS              ; don't; need udgs
-	ld		ix, CLOUDS_LAYER_PIXEL_BUF + 1 + ((WIN_COL_VIS + 1) * 8)
+	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS + 1 + (WIN_COL_VIS * 8)
     ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
     add     ix, bc
-	call	XOR_CHAR_PIXELS
+	call	XOR_CHAR_PIXELS_VIS
 
     ; should we stop showing?
     ld      a, (NEXT_RNG)

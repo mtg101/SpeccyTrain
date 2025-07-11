@@ -47,329 +47,248 @@ DRAW_WINDOW:
 
 
 ; now blit the pixel rows... 
-	ld		hl, PRINT_ROW_PIXEL_BUF		; start of pixel buffer, row-by-row for ldi
+	ld		hl, WINDOW_RENDER_PIXEL_BUF	; start of pixel buffer, row-by-row for ldi
 										; ldi incs it, but we also need to step over extra column used for shifts
 	
 	ld		de, ROW_0_LINE_0			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_0_LINE_1			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_0_LINE_2			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_0_LINE_3			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 		
 	ld		de, ROW_0_LINE_4			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_0_LINE_5			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_0_LINE_6			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_0_LINE_7			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
-
 
 	ld		de, ROW_1_LINE_0			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_1_LINE_1			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_1_LINE_2			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_1_LINE_3			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_1_LINE_4			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_1_LINE_5			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_1_LINE_6			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_1_LINE_7			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_2_LINE_0			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_2_LINE_1			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_2_LINE_2			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_2_LINE_3			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_2_LINE_4			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_2_LINE_5			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_2_LINE_6			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_2_LINE_7			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 
 	ld		de, ROW_3_LINE_0			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_3_LINE_1			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_3_LINE_2			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_3_LINE_3			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_3_LINE_4			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_3_LINE_5			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_3_LINE_6			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_3_LINE_7			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_4_LINE_0			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_4_LINE_1			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_4_LINE_2			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_4_LINE_3			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_4_LINE_4			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_4_LINE_5			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_4_LINE_6			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_4_LINE_7			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_5_LINE_0			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_5_LINE_1			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_5_LINE_2			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_5_LINE_3			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_5_LINE_4			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_5_LINE_5			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_5_LINE_6			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_5_LINE_7			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_6_LINE_0			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_6_LINE_1			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_6_LINE_2			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_6_LINE_3			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_6_LINE_4			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_6_LINE_5			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_6_LINE_6			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_6_LINE_7			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_7_LINE_0			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_7_LINE_1			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_7_LINE_2			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_7_LINE_3			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_7_LINE_4			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_7_LINE_5			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
-	
+
 	ld		de, ROW_7_LINE_6			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_7_LINE_7			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 
 	ld		de, ROW_8_LINE_0			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_8_LINE_1			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_8_LINE_2			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_8_LINE_3			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_8_LINE_4			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_8_LINE_5			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_8_LINE_6			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_8_LINE_7			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_9_LINE_0			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_9_LINE_1			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_9_LINE_2			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_9_LINE_3			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_9_LINE_4			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_9_LINE_5			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_9_LINE_6			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-	inc		hl							; stop over extra column
 	
 	ld		de, ROW_9_LINE_7			; pixel row in memory
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
-										; don't skip for new row
 	
     ret									; PRINT_CHAR_ROW
 
@@ -379,7 +298,50 @@ DRAW_WINDOW:
 ; ix points to first byte of buffer
 ; blits all 8 bytes into correct offsets
 ; trashes hl, de and a
-BUF_CHAR_PIXELS:
+BUF_CHAR_PIXELS_VIS:
+	ld		a, (hl)							; byte of pixel data
+	ld		(ix), a							; into buffer
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(ix + WIN_COL_VIS), a		; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(ix + (WIN_COL_VIS * 2)), a	; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(ix + (WIN_COL_VIS * 3)), a	; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(ix + (WIN_COL_VIS * 4)), a	; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(ix + (WIN_COL_VIS * 5)), a	; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		(ix + (WIN_COL_VIS * 6)), a	; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+; can't index (WIN_COL_VIS * 7) as it's > 127 8bitty things
+	ld		de, WIN_COL_VIS * 7			; the oversized offset
+	ld		hl, ix							; the base
+	add		hl, de							; add 'em
+	ld		(hl), a							; into buffer
+
+	ret										; BUF_CHAR_PIXELS_VIS
+
+
+; hl points to char pixels: 8 bytes
+; ix points to first byte of buffer
+; blits all 8 bytes into correct offsets
+; trashes hl, de and a
+BUF_CHAR_PIXELS_VIS_1:
 	ld		a, (hl)							; byte of pixel data
 	ld		(ix), a							; into buffer
 	
@@ -415,14 +377,75 @@ BUF_CHAR_PIXELS:
 	add		hl, de							; add 'em
 	ld		(hl), a							; into buffer
 
-	ret										; BUF_CHAR_PIXELS
+	ret										; BUF_CHAR_PIXELS_VIS_1
+
 
 
 ; hl points to char pixels: 8 bytes
 ; ix points to first byte of buffer
 ; XORs all 8 bytes into correct offsets
 ; trashes hl, de and a
-XOR_CHAR_PIXELS:
+XOR_CHAR_PIXELS_VIS:
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix)							; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix), a							; into buffer
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + WIN_COL_VIS)			; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + WIN_COL_VIS), a			; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + (WIN_COL_VIS * 2))		; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + (WIN_COL_VIS * 2)), a		; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + (WIN_COL_VIS * 3))		; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + (WIN_COL_VIS * 3)), a		; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + (WIN_COL_VIS * 4))		; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + (WIN_COL_VIS * 4)), a		; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + (WIN_COL_VIS * 5))		; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + (WIN_COL_VIS * 5)), a		; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+	ld		d, (ix + (WIN_COL_VIS * 6))		; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(ix + (WIN_COL_VIS * 6)), a		; into buffer with row offset
+	
+	inc		hl								; next byte of char pixel data
+	ld		a, (hl)							; byte of pixel data
+; can't index (WIN_COL_VIS * 7) as it's > 127 8bitty things
+	ld		de, WIN_COL_VIS * 7				; the oversized offset
+	ld		hl, ix							; the base
+	add		hl, de							; add 'em
+	
+	ld		d, (hl)							; get existing buffer data
+	xor 	d								; xor in the pixels
+	ld		(hl), a							; into buffer
+
+	ret										; XOR_CHAR_PIXELS_VIS
+
+
+; hl points to char pixels: 8 bytes
+; ix points to first byte of buffer
+; XORs all 8 bytes into correct offsets
+; trashes hl, de and a
+XOR_CHAR_PIXELS_VIS_1:
 	ld		a, (hl)							; byte of pixel data
 	ld		d, (ix)							; get existing buffer data
 	xor 	d								; xor in the pixels
@@ -475,16 +498,18 @@ XOR_CHAR_PIXELS:
 	xor 	d								; xor in the pixels
 	ld		(hl), a							; into buffer
 
-	ret										; XOR_CHAR_PIXELS
+	ret										; XOR_CHAR_PIXELS_VIS_1
 
 
-PRINT_ROW_PIXEL_BUF: 				
-CLOUDS_LAYER_PIXEL_BUF:
-	defs		(WIN_COL_VIS+1) * WIN_CLOUD_ROWS * 8
-BUILDINGS_LAYER_PIXEL_BUF:
-	defs		(WIN_COL_VIS+1) * WIN_BUILDING_ROWS * 8
-FG_LAYER_PIXEL_BUF:
-	defs		(WIN_COL_VIS+1) * WIN_FG_ROWS * 8
+WINDOW_RENDER_PIXEL_BUF: 
+WINDOW_RENDER_PIXEL_BUF_CLOUDS:
+	defs		WIN_COL_VIS * (WIN_CLOUD_ROWS-1) * 8
+WINDOW_RENDER_PIXEL_BUF_MOUNTAINS:
+	defs		WIN_COL_VIS * 8
+WINDOW_RENDER_PIXEL_BUF_BUILDINGS:
+	defs		WIN_COL_VIS * WIN_BUILDING_ROWS * 8
+WINDOW_RENDER_PIXEL_BUF_FG:
+	defs		WIN_COL_VIS * WIN_FG_ROWS * 8
 
 
 SINGLE_CHAR_PIXEL_BUF_1:

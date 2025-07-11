@@ -109,13 +109,13 @@ ANIMATE_FG_ATTR_GOT:
 	ld		hl, SINGLE_CHAR_PIXEL_BUF_1	; call trashes it so have to reload every time
 	ld		ix, FG_LAYER_PIXEL_BUF 		; first row
 	add		ix, bc						; add column offset
-	call	BUF_CHAR_PIXELS				; buf it
+	call	BUF_CHAR_PIXELS_VIS			; buf it
 
 	; draw pole low
 	ld		hl, SINGLE_CHAR_PIXEL_BUF_2	; call trashes it so have to reload every loop
-	ld		ix, FG_LAYER_PIXEL_BUF + ((WIN_COL_VIS+1) * 8)		; second row
+	ld		ix, FG_LAYER_PIXEL_BUF + (WIN_COL_VIS * 8)		; second row
 	add		ix, bc						; add column offset
-	call	BUF_CHAR_PIXELS				; buf it
+	call	BUF_CHAR_PIXELS_VIS			; buf it
 
 DRAW_POLE_DONE:
 	; make blank pixels
@@ -150,13 +150,13 @@ DRAW_POLE_DONE:
 	ld		hl, SINGLE_CHAR_PIXEL_BUF_1	; call trashes it so have to reload every time
 	ld		ix, FG_LAYER_PIXEL_BUF 		; first row
 	add		ix, bc						; add column offset
-	call	BUF_CHAR_PIXELS				; buf it
+	call	BUF_CHAR_PIXELS_VIS			; buf it
 
 	; undraw draw pole low
 	ld		hl, SINGLE_CHAR_PIXEL_BUF_1	; call trashes it so have to reload every loop
-	ld		ix, FG_LAYER_PIXEL_BUF + ((WIN_COL_VIS+1) * 8)		; second row
+	ld		ix, FG_LAYER_PIXEL_BUF + (WIN_COL_VIS * 8)		; second row
 	add		ix, bc						; add column offset
-	call	BUF_CHAR_PIXELS				; buf it
+	call	BUF_CHAR_PIXELS_VIS			; buf it
 
 UNDRAW_POLE_DONE:
 ; inc counter
@@ -167,8 +167,22 @@ UNDRAW_POLE_DONE:
 	xor		a							; quicker and smaller than ld a, 0 :)
 ANIMATE_FG_INC_DONE:
 	ld		(FG_COUNTER), a				; store counter back to memory
+	call	FG_LAYER_TO_RENDER			; copy to render buf
+
 	ret									; ANIMATE_FG
 
+
+FG_LAYER_TO_RENDER:
+	ld		de, WINDOW_RENDER_PIXEL_BUF_FG		; start of pixel render buf
+	ld		hl, FG_LAYER_PIXEL_BUF				; start of layer buf
+	ld		bc, WIN_COL_VIS * WIN_FG_ROWS * 8	; copy all at once
+	ldir										; copy over
+
+	ret									; FG_LAYER_TO_RENDER
+
+
+FG_LAYER_PIXEL_BUF:
+	defs		WIN_COL_VIS * WIN_FG_ROWS * 8
 	
 FG_COUNTER:
 	defb	0
