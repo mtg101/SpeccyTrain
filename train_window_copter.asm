@@ -11,8 +11,8 @@ ANIMATE_COPTER:
     jr      nz, DONE_ANIMATE_COPTER                 ; only draw if we should
 
     ; animate udgs by hand
-    ld      a, (FRAME_COUNTER)                      ; but we only get called every other frame
-    and     %00000110                               ; so we look at next bits, act like base bits to us
+    ld      a, (FRAME_COUNTER)                      
+    and     %00000011                               ; 0-3
 
     cp      %00000000
     jr      nz, ANIMATE_NOT_0

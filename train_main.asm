@@ -40,34 +40,20 @@ START:
 
 ANIMATE_MAIN:
 	ld		a, (FRAME_COUNTER)		; load frame counter
-	bit		0, a					; z is now ready for after vsync
-	call	z, ANIMATE_FLIP
-	call	nz, ANIMATE_FLOP
-	inc		a
+
+	call	ANIMATE_CLOUDS
+	call	ANIMATE_COPTER
+	call	ANIMATE_BUILDINGS
+	call	ANIMATE_FG
+	halt							; wait for vsync before draw
+	call	DRAW_WINDOW
+	call	UNDRAW_COPTER_UPDATE_STATUS
+
+
+	inc		a						; next frame
 	ld		(FRAME_COUNTER), a
 
 	jr		ANIMATE_MAIN
-
-ANIMATE_FLIP:
-	push	af						; for other conditional jumps
-	call	ANIMATE_CLOUDS
-	call	ANIMATE_COPTER
-	call	ANIMATE_FG
-	halt							; wait for vsync before draw
-	call	DRAW_WINDOW_FG_CLOUDS				
-	call	UNDRAW_COPTER_UPDATE_STATUS
-	pop		af						; for other conditional jumps
-	ret								; ANIMATE_FLIP
-
-ANIMATE_FLOP:
-	push	af						; for other conditional jumps
-	call	ANIMATE_BUILDINGS
-	halt							; wait for vsync before draw
-	call	DRAW_WINDOW_BUILDINGS
-	pop		af						; for other conditional jumps
-	ret								; ANIMATE_FLOP
-
-
 
 
 ; ANIMATE_MAIN_BORDER:				; this will break every time timings change... but fun to play with
