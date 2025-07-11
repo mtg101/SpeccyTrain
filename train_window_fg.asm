@@ -173,6 +173,18 @@ ANIMATE_FG_INC_DONE:
 
 
 FG_LAYER_TO_RENDER:
+	; attrs
+	ld		de, RENDER_ATTR_BUF_ROW_8
+	ld		hl, FG_ATTR_BUF
+	ld		bc, WIN_COL_VIS
+	ldir
+
+	ld		de, RENDER_ATTR_BUF_ROW_9
+	ld		hl, FG_ATTR_BUF + WIN_COL_TOTAL
+	ld		bc, WIN_COL_VIS
+	ldir
+
+	; pixels
 	ld		de, WINDOW_RENDER_PIXEL_BUF_FG		; start of pixel render buf
 	ld		hl, FG_LAYER_PIXEL_BUF				; start of layer buf
 	ld		bc, WIN_COL_VIS * WIN_FG_ROWS * 8	; copy all at once

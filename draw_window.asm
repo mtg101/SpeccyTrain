@@ -6,43 +6,43 @@
 DRAW_WINDOW:
 ; ldi attrs for all rows
 	ld		de, ATTR_SCR_ROW_0			; destination
-	ld		hl, ATTR_BUF_ROW_0			; source, attr buf
+	ld		hl, RENDER_ATTR_BUF_ROW_0			; source, attr buf
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
 
 	ld		de, ATTR_SCR_ROW_1			; destination
-	ld		hl, ATTR_BUF_ROW_1			; source, attr buf
+	ld		hl, RENDER_ATTR_BUF_ROW_1			; source, attr buf
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
 
 	ld		de, ATTR_SCR_ROW_2			; destination
-	ld		hl, ATTR_BUF_ROW_2			; source, attr buf
+	ld		hl, RENDER_ATTR_BUF_ROW_2			; source, attr buf
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
 
 	ld		de, ATTR_SCR_ROW_3			; destination
-	ld		hl, ATTR_BUF_ROW_3			; source, attr buf
+	ld		hl, RENDER_ATTR_BUF_ROW_3			; source, attr buf
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
 
 	ld		de, ATTR_SCR_ROW_4			; destination
-	ld		hl, ATTR_BUF_ROW_4			; source, attr buf
+	ld		hl, RENDER_ATTR_BUF_ROW_4			; source, attr buf
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
 
 	ld		de, ATTR_SCR_ROW_5			; destination
-	ld		hl, ATTR_BUF_ROW_5			; source, attr buf
+	ld		hl, RENDER_ATTR_BUF_ROW_5			; source, attr buf
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
 
 	ld		de, ATTR_SCR_ROW_6			; destination
-	ld		hl, ATTR_BUF_ROW_6			; source, attr buf
+	ld		hl, RENDER_ATTR_BUF_ROW_6			; source, attr buf
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
 
 	ld		de, ATTR_SCR_ROW_7			; destination
-	ld		hl, ATTR_BUF_ROW_7			; source, attr buf
+	ld		hl, RENDER_ATTR_BUF_ROW_7			; source, attr buf
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
 
 	ld		de, ATTR_SCR_ROW_8			; destination
-	ld		hl, ATTR_BUF_ROW_8			; source, attr buf
+	ld		hl, RENDER_ATTR_BUF_ROW_8			; source, attr buf
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
 
 	ld		de, ATTR_SCR_ROW_9			; destination
-	ld		hl, ATTR_BUF_ROW_9			; source, attr buf
+	ld		hl, RENDER_ATTR_BUF_ROW_9			; source, attr buf
 	.19		ldi							; WIN_COL_VIS=19, unrolled 
 
 
@@ -510,6 +510,17 @@ WINDOW_RENDER_PIXEL_BUF_BUILDINGS:
 	defs		WIN_COL_VIS * WIN_BUILDING_ROWS * 8
 WINDOW_RENDER_PIXEL_BUF_FG:
 	defs		WIN_COL_VIS * WIN_FG_ROWS * 8
+
+WINDOW_RENDER_ATTR_BUF:
+WINDOW_RENDER_ATTR_BUF_CLOUDS:
+	defs		WIN_COL_VIS * (WIN_CLOUD_ROWS-1)
+WINDOW_RENDER_ATTR_BUF_MOUNTAINS:
+	defs		WIN_COL_VIS
+WINDOW_RENDER_ATTR_BUF_BUILDINGS:
+	defs		WIN_COL_VIS * WIN_BUILDING_ROWS
+WINDOW_RENDER_ATTR_BUF_FG:
+	defs		WIN_COL_VIS * WIN_FG_ROWS
+
 
 
 SINGLE_CHAR_PIXEL_BUF_1:

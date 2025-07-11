@@ -34,26 +34,28 @@ SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
 	ldir
 	
 	; attrs
-	ld		de, ATTR_BUF_ROW_3		; target
-	ld		hl, ATTR_BUF_ROW_3 + 1	; source is one to the right
+	ld		de, ATTR_WINDOW_BUF_ROW_3		; target
+	ld		hl, ATTR_WINDOW_BUF_ROW_3 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
-	ld		de, ATTR_BUF_ROW_4		; target
-	ld		hl, ATTR_BUF_ROW_4 + 1	; source is one to the right
+	ld		de, ATTR_WINDOW_BUF_ROW_4		; target
+	ld		hl, ATTR_WINDOW_BUF_ROW_4 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
-	ld		de, ATTR_BUF_ROW_5		; target
-	ld		hl, ATTR_BUF_ROW_5 + 1	; source is one to the right
+	ld		de, ATTR_WINDOW_BUF_ROW_5		; target
+	ld		hl, ATTR_WINDOW_BUF_ROW_5 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
-	ld		de, ATTR_BUF_ROW_6		; target
-	ld		hl, ATTR_BUF_ROW_6 + 1	; source is one to the right
+	ld		de, ATTR_WINDOW_BUF_ROW_6		; target
+	ld		hl, ATTR_WINDOW_BUF_ROW_6 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
-	ld		de, ATTR_BUF_ROW_7		; target
-	ld		hl, ATTR_BUF_ROW_7 + 1	; source is one to the right
+	ld		de, ATTR_WINDOW_BUF_ROW_7		; target
+	ld		hl, ATTR_WINDOW_BUF_ROW_7 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
+
+	call	BUILDINGS_LAYER_TO_RENDER	
 	
 	ret								; SHIFT_BUILDINGS_LEFT
 
@@ -438,8 +440,6 @@ LOAD_SHIFT_B_LAYER_BUF:
 	ld		bc, WIN_COL_VIS
 	ldir										; 4x7
 
-	call	BUILDINGS_LAYER_TO_RENDER
-
 	ret											; LOAD_SHIFT_B_LAYER_BUF
 
 BUF_BUILDING_CHAR_ROWS:
@@ -483,6 +483,33 @@ BUF_BUILDING_CHAR_COL_LOOP:
     ret									; BUF_BUILDING_CHAR_ROWS
 
 BUILDINGS_LAYER_TO_RENDER:
+	; attrs
+	ld		de, RENDER_ATTR_BUF_ROW_3
+	ld		hl, BUILDING_ATTR_BUF
+	ld		bc, WIN_COL_VIS
+	ldir
+
+	ld		de, RENDER_ATTR_BUF_ROW_4
+	ld		hl, BUILDING_ATTR_BUF + WIN_COL_TOTAL
+	ld		bc, WIN_COL_VIS
+	ldir
+
+	ld		de, RENDER_ATTR_BUF_ROW_5
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 2)
+	ld		bc, WIN_COL_VIS
+	ldir
+
+	ld		de, RENDER_ATTR_BUF_ROW_6
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 3)
+	ld		bc, WIN_COL_VIS
+	ldir
+
+	ld		de, RENDER_ATTR_BUF_ROW_7
+	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 4)
+	ld		bc, WIN_COL_VIS
+	ldir
+
+	; pixels
 	ld		de, WINDOW_RENDER_PIXEL_BUF_BUILDINGS	; start of pixel render buf: 3_0
 	ld		hl, BUILDINGS_LAYER_PIXEL_BUF	; start of layer buf
 	ld		bc, WIN_COL_VIS				; only copy visible

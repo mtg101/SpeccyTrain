@@ -92,6 +92,23 @@ CLOUD_PIXEL_SHIFT_LOOP:
 
 
 CLOUD_LAYER_TO_RENDER:
+	; attrs
+	ld		de, RENDER_ATTR_BUF_ROW_0
+	ld		hl, CLOUD_ATTR_BUF
+	ld		bc, WIN_COL_VIS
+	ldir
+
+	ld		de, RENDER_ATTR_BUF_ROW_1
+	ld		hl, CLOUD_ATTR_BUF + WIN_COL_TOTAL
+	ld		bc, WIN_COL_VIS
+	ldir
+
+	ld		de, RENDER_ATTR_BUF_ROW_2
+	ld		hl, CLOUD_ATTR_BUF + (WIN_COL_TOTAL * 2)
+	ld		bc, WIN_COL_VIS
+	ldir
+
+	; pixels
 	ld		de, WINDOW_RENDER_PIXEL_BUF_CLOUDS	; start of pixel render buf: 0_0
 	ld		hl, CLOUDS_LAYER_PIXEL_BUF	; start of layer buf
 	ld		bc, WIN_COL_VIS				; only copy visible

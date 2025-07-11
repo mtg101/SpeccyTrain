@@ -6,7 +6,7 @@ DRAW_SCENE:
 
 ; RLE characters to buffer
 	ld		hl, SCENE_CHARACTERS	; load addr of RLE characters 
-	ld		de, CHAR_BUF			; buffer pointer
+	ld		de, CHAR_SCENE_BUF		; buffer pointer
 									; set ink white so drawing is invisible until ready
 LOOP_CHAR:
 	ld		a, (hl)					; get char to display
@@ -26,7 +26,7 @@ CHAR_BUF_DONE:
 
 ; RLE attrs to buffer
 	ld		hl, SCENE_ATTRS			; load addr of RLE attrs
-	ld		de, ATTR_BUF			; de points to ATTR buffer
+	ld		de, ATTR_SCENE_BUF		; de points to ATTR buffer
 LOOP_ATTR:
 	ld		a, (hl)					; get attr to use
 	cp		a, 0					; check it's not null
@@ -61,7 +61,7 @@ SETUP_SCREEN:
 
 DRAW_SCENE_CHARS:					; invisible due to ink&paper white
 ; RST chars
-	ld		hl, CHAR_BUF			; point to start of buffer
+	ld		hl, CHAR_SCENE_BUF		; point to start of buffer
 	
 	ld		a, 0
 	ld		(PRINT_AT_X), a			; x is 0
@@ -94,7 +94,7 @@ DRAW_SCENE_CHARS_COl_LOOP:
 	
 ; ldir ATTRs 
 	ld		de, ATTR_START			; ATTR mem target
-	ld		hl, ATTR_BUF			; buffer source
+	ld		hl, ATTR_SCENE_BUF		; buffer source
 	ld		bc, NUM_SCREEN_ATTRS	; num attrs to blit
 	ldir
 
