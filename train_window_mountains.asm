@@ -3,7 +3,7 @@ SETUP_MOUNTAINS:
 	; attrs
 	ld		b, (WIN_MOUNTAIN_ROWS-1) * WIN_COL_TOTAL	; not the cloud row
 	ld		a, %00101000								; everything black ink (to show errors) over cyan pap
-	ld		de, BUILDING_ATTR_BUF						; not the cloud
+	ld		de, MOUNTAINS_ATTR_BUF						; not the cloud
 SETUP_MOUNTAIN_ATTRS_LOOP:
 	ld		(de), a
 	inc		hl

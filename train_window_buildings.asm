@@ -487,20 +487,82 @@ BUF_BUILDING_CHAR_COL_LOOP:
 
 BUILDINGS_LAYER_TO_RENDER:
 	; building attrs
-	ld		de, RENDER_ATTR_BUF_ROW_3
+	; takes paper from mountains, ink from self, and overwites buffer (overwriting existing mountains)
+
 	ld		hl, BUILDING_ATTR_BUF
-	ld		bc, WIN_COL_VIS
-	ldir
+	ld		ix, MOUNTAINS_ATTR_BUF
+	ld		de, RENDER_ATTR_BUF_ROW_3
 
-	ld		de, RENDER_ATTR_BUF_ROW_4
+	ld		b, WIN_COL_VIS
+RENDER_ATTR_BUF_ROW_3_LOOP:
+	ld		a, (ix)							; mountain attr for pap
+	and		%00111000						; just pap
+	ld		c, a							; put in c
+	ld		a, (hl)							; mountain attr for ink
+	and		%11000111						; clear pap
+	or		c								; add the mountain pap
+	ld		(de), a							; mountain pap, building ink, into render buf
+
+	inc		ix								; next block
+	inc		hl
+	inc		de
+
+	djnz	RENDER_ATTR_BUF_ROW_3_LOOP
+
 	ld		hl, BUILDING_ATTR_BUF + WIN_COL_TOTAL
-	ld		bc, WIN_COL_VIS
-	ldir
+	ld		ix, MOUNTAINS_ATTR_BUF + WIN_COL_TOTAL
+	ld		de, RENDER_ATTR_BUF_ROW_4
 
-	ld		de, RENDER_ATTR_BUF_ROW_5
+	ld		b, WIN_COL_VIS
+RENDER_ATTR_BUF_ROW_4_LOOP:
+	ld		a, (ix)							; mountain attr for pap
+	and		%00111000						; just pap
+	ld		c, a							; put in c
+	ld		a, (hl)							; mountain attr for ink
+	and		%11000111						; clear pap
+	or		c								; add the mountain pap
+	ld		(de), a							; mountain pap, building ink, into render buf
+
+	inc		ix								; next block
+	inc		hl
+	inc		de
+
+	djnz	RENDER_ATTR_BUF_ROW_4_LOOP
+
 	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 2)
-	ld		bc, WIN_COL_VIS
-	ldir
+	ld		ix, MOUNTAINS_ATTR_BUF + (WIN_COL_TOTAL * 2)
+	ld		de, RENDER_ATTR_BUF_ROW_5
+
+RENDER_ATTR_BUF_ROW_5_LOOP:
+	ld		a, (ix)							; mountain attr for pap
+	and		%00111000						; just pap
+	ld		c, a							; put in c
+	ld		a, (hl)							; mountain attr for ink
+	and		%11000111						; clear pap
+	or		c								; add the mountain pap
+	ld		(de), a							; mountain pap, building ink, into render buf
+
+	inc		ix								; next block
+	inc		hl
+	inc		de
+
+	djnz	RENDER_ATTR_BUF_ROW_5_LOOP
+
+
+	; ld		de, RENDER_ATTR_BUF_ROW_3
+	; ld		hl, BUILDING_ATTR_BUF
+	; ld		bc, WIN_COL_VIS
+	; ldir
+
+	; ld		de, RENDER_ATTR_BUF_ROW_4
+	; ld		hl, BUILDING_ATTR_BUF + WIN_COL_TOTAL
+	; ld		bc, WIN_COL_VIS
+	; ldir
+
+	; ld		de, RENDER_ATTR_BUF_ROW_5
+	; ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 2)
+	; ld		bc, WIN_COL_VIS
+	; ldir
 
 	; hedge attrs
 	ld		de, RENDER_ATTR_BUF_ROW_6
