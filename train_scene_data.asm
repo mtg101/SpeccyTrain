@@ -41,72 +41,72 @@ SCENE_ATTRS:
 	defb	%00001000, 32
 	defb	%00001010, 32
 	defb	%00010000, 32
-	defb	ATTR_RED_PAP, 72
+	defb	ATTR_BRED_PAP, 72
 	defb	ATTR_RPBI,    21
-	defb	ATTR_RED_PAP, 12
+	defb	ATTR_BRED_PAP, 12
 	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_RED_PAP, 13
+	defb	ATTR_BRED_PAP, 13
 	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_RED_PAP, 6
-	defb	ATTR_YPBI, 	  3
-	defb	ATTR_RED_PAP, 4
+	defb	ATTR_BRED_PAP, 6
+	defb	ATTR_BYPBI,	  3
+	defb	ATTR_BRED_PAP, 4
 	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_RED_PAP, 13
+	defb	ATTR_BRED_PAP, 13
 	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_RED_PAP, 13
+	defb	ATTR_BRED_PAP, 13
 	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_RED_PAP, 13
+	defb	ATTR_BRED_PAP, 13
 	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_RED_PAP, 13
+	defb	ATTR_BRED_PAP, 13
 	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_RED_PAP, 13
+	defb	ATTR_BRED_PAP, 13
 	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_RED_PAP, 11
+	defb	ATTR_BRED_PAP, 11
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 1
+	defb	ATTR_BRED_PAP, 1
 	defb	ATTR_BGRN_PAP, 19
-	defb	ATTR_RED_PAP, 1
+	defb	ATTR_BRED_PAP, 1
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 9
+	defb	ATTR_BRED_PAP, 9
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 1
+	defb	ATTR_BRED_PAP, 1
 	defb	ATTR_BGRN_PAP, 19
-	defb	ATTR_RED_PAP, 1
+	defb	ATTR_BRED_PAP, 1
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 9	
+	defb	ATTR_BRED_PAP, 9	
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 3
-	defb	ATTR_RPWI, 2
-	defb	ATTR_RPYI, 1
-	defb	ATTR_RED_PAP, 15
+	defb	ATTR_BRED_PAP, 3
+	defb	ATTR_BRPWI, 2
+	defb	ATTR_BRPYI, 1
+	defb	ATTR_BRED_PAP, 15
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 9
+	defb	ATTR_BRED_PAP, 9
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 2
+	defb	ATTR_BRED_PAP, 2
 	defb	ATTR_ALL_BLK, 17
-	defb	ATTR_RED_PAP, 2
+	defb	ATTR_BRED_PAP, 2
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 9
+	defb	ATTR_BRED_PAP, 9
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 4
+	defb	ATTR_BRED_PAP, 4
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 11
+	defb	ATTR_BRED_PAP, 11
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 4
+	defb	ATTR_BRED_PAP, 4
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 9
+	defb	ATTR_BRED_PAP, 9
 	defb	ATTR_ALL_BLK, 3
-	defb	ATTR_RED_PAP, 17
+	defb	ATTR_BRED_PAP, 17
 	defb	ATTR_ALL_BLK, 3
-	defb	ATTR_RED_PAP, 10
+	defb	ATTR_BRED_PAP, 10
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 19
+	defb	ATTR_BRED_PAP, 19
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 11
+	defb	ATTR_BRED_PAP, 11
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 19
+	defb	ATTR_BRED_PAP, 19
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_RED_PAP, 35
+	defb	ATTR_BRED_PAP, 35
 	defb	ATTR_ALL_BLK, 32
 	defb	0
 
