@@ -244,19 +244,21 @@ ANIMATE_CLOUDS_MOVE_BLOCK:
 	call	LOAD_BLOCK_CLOUD_LAYER_BUF	
 	ret									; ANIMATE_CLOUDS
 
-SHIFT_CLOUDS_BLOCK_LEFT:				; unrolled for speed, honest!
+SHIFT_CLOUDS_BLOCK_LEFT:				
 	; chars only (attrs static)
-	ld		de, CHAR_BUF_OFF_ROW_0		; target
-	ld		hl, CHAR_BUF_OFF_ROW_0 + 1	; source is one to the right
-	ld		bc, WIN_COL_BUF - 1			; move whole buffer
+	ld		de, CHAR_CLOUDS_BUF_OFF_ROW_0		; target
+	ld		hl, CHAR_CLOUDS_BUF_OFF_ROW_0 + 1	; source is one to the right
+	ld		bc, WIN_COL_BUF - 1					; move whole buffer
 	ldir
-	ld		de, CHAR_BUF_OFF_ROW_1		; target
-	ld		hl, CHAR_BUF_OFF_ROW_1 + 1	; source is one to the right
-	ld		bc, WIN_COL_BUF - 1			; move whole buffer
+
+	ld		de, CHAR_CLOUDS_BUF_OFF_ROW_1		; target
+	ld		hl, CHAR_CLOUDS_BUF_OFF_ROW_1 + 1	; source is one to the right
+	ld		bc, WIN_COL_BUF - 1					; move whole buffer
 	ldir
-	ld		de, CHAR_BUF_OFF_ROW_2		; target
-	ld		hl, CHAR_BUF_OFF_ROW_2 + 1	; source is one to the right
-	ld		bc, WIN_COL_BUF - 1			; move whole buffer
+	
+	ld		de, CHAR_CLOUDS_BUF_OFF_ROW_2		; target
+	ld		hl, CHAR_CLOUDS_BUF_OFF_ROW_2 + 1	; source is one to the right
+	ld		bc, WIN_COL_BUF - 1					; move whole buffer
 	ldir
 	
 	ret								; SHIFT_CLOUDS_BLOCK_LEFT
@@ -508,20 +510,20 @@ BUF_CLOUD_ROW_READY:				; hl is common offset
 
 LOAD_BLOCK_CLOUD_LAYER_BUF:
 ; load row 0 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_0)
+	ld		a, (CHAR_CLOUDS_BUF_OFF_ROW_0)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS
 	call	BUF_CHAR_PIXELS_VIS_1
 ; load row 1 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_1)
+	ld		a, (CHAR_CLOUDS_BUF_OFF_ROW_1)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 8)
 	call	BUF_CHAR_PIXELS_VIS_1
 
 ; load row 2 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_2)
+	ld		a, (CHAR_CLOUDS_BUF_OFF_ROW_2)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, CLOUDS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 2 * 8)

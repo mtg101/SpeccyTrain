@@ -12,46 +12,46 @@ ANIMATE_BUILDINGS:
 
 SHIFT_BUILDINGS_LEFT:				; unrolled for speed, honest!
 	; chars
-	ld		de, CHAR_BUF_OFF_ROW_3		; target
-	ld		hl, CHAR_BUF_OFF_ROW_3 + 1	; source is one to the right
+	ld		de, CHAR_BUILDING_BUF_OFF_ROW_0		; target
+	ld		hl, CHAR_BUILDING_BUF_OFF_ROW_0 + 1	; source is one to the right
 	ld		bc, WIN_COL_BUF - 1			; move whole buffer
 	ldir
-	ld		de, CHAR_BUF_OFF_ROW_4		; target
-	ld		hl, CHAR_BUF_OFF_ROW_4 + 1	; source is one to the right
+	ld		de, CHAR_BUILDING_BUF_OFF_ROW_1		; target
+	ld		hl, CHAR_BUILDING_BUF_OFF_ROW_1 + 1	; source is one to the right
 	ld		bc, WIN_COL_BUF - 1			; move whole buffer
 	ldir
-	ld		de, CHAR_BUF_OFF_ROW_5		; target
-	ld		hl, CHAR_BUF_OFF_ROW_5 + 1	; source is one to the right
+	ld		de, CHAR_BUILDING_BUF_OFF_ROW_2		; target
+	ld		hl, CHAR_BUILDING_BUF_OFF_ROW_2 + 1	; source is one to the right
 	ld		bc, WIN_COL_BUF - 1			; move whole buffer
 	ldir
-	ld		de, CHAR_BUF_OFF_ROW_6		; target
-	ld		hl, CHAR_BUF_OFF_ROW_6 + 1	; source is one to the right
+	ld		de, CHAR_BUILDING_BUF_OFF_ROW_3		; target
+	ld		hl, CHAR_BUILDING_BUF_OFF_ROW_3 + 1	; source is one to the right
 	ld		bc, WIN_COL_BUF - 1			; move whole buffer
 	ldir
-	ld		de, CHAR_BUF_OFF_ROW_7		; target
-	ld		hl, CHAR_BUF_OFF_ROW_7 + 1	; source is one to the right
+	ld		de, CHAR_BUILDING_BUF_OFF_ROW_4		; target
+	ld		hl, CHAR_BUILDING_BUF_OFF_ROW_4 + 1	; source is one to the right
 	ld		bc, WIN_COL_BUF - 1			; move whole buffer
 	ldir
 	
 	; attrs
-	ld		de, ATTR_WINDOW_BUF_ROW_3		; target
-	ld		hl, ATTR_WINDOW_BUF_ROW_3 + 1	; source is one to the right
+	ld		de, ATTR_BUILDING_BUF_ROW_0		; target
+	ld		hl, ATTR_BUILDING_BUF_ROW_0 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
-	ld		de, ATTR_WINDOW_BUF_ROW_4		; target
-	ld		hl, ATTR_WINDOW_BUF_ROW_4 + 1	; source is one to the right
+	ld		de, ATTR_BUILDING_BUF_ROW_1		; target
+	ld		hl, ATTR_BUILDING_BUF_ROW_1 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
-	ld		de, ATTR_WINDOW_BUF_ROW_5		; target
-	ld		hl, ATTR_WINDOW_BUF_ROW_5 + 1	; source is one to the right
+	ld		de, ATTR_BUILDING_BUF_ROW_2		; target
+	ld		hl, ATTR_BUILDING_BUF_ROW_2 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
-	ld		de, ATTR_WINDOW_BUF_ROW_6		; target
-	ld		hl, ATTR_WINDOW_BUF_ROW_6 + 1	; source is one to the right
+	ld		de, ATTR_BUILDING_BUF_ROW_3		; target
+	ld		hl, ATTR_BUILDING_BUF_ROW_3 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
-	ld		de, ATTR_WINDOW_BUF_ROW_7		; target
-	ld		hl, ATTR_WINDOW_BUF_ROW_7 + 1	; source is one to the right
+	ld		de, ATTR_BUILDING_BUF_ROW_4		; target
+	ld		hl, ATTR_BUILDING_BUF_ROW_4 + 1	; source is one to the right
 	ld		bc, WIN_COL_TOTAL-1		; move whole buffer
 	ldir
 
@@ -92,6 +92,9 @@ BLANK_BUILDING_WIN_COL:				; whole column blank (space)
 
 	ld		b, 2
 	call	BUF_BULDING_ROW_AT_COL			
+
+	ld		a, ATTR_GRN_PAP			; grass is green
+	ld		(ATTR_TO_BUF), a
 
 	ld		b, 3
 	call	BUF_BULDING_ROW_AT_COL			
@@ -205,35 +208,35 @@ BUF_BUILDING_ROW_READY:						; hl is common offset
 
 LOAD_SHIFT_B_LAYER_BUF:
 ; load row 0 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_3)
+	ld		a, (CHAR_BUILDING_BUF_OFF_ROW_0)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, BUILDINGS_LAYER_PIXEL_BUF + WIN_COL_VIS
 	call	BUF_CHAR_PIXELS_VIS_1
 
 ; load row 1 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_4)
+	ld		a, (CHAR_BUILDING_BUF_OFF_ROW_1)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, BUILDINGS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 8)
 	call	BUF_CHAR_PIXELS_VIS_1
 
 ; load row 2 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_5)
+	ld		a, (CHAR_BUILDING_BUF_OFF_ROW_2)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, BUILDINGS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 2 * 8)
 	call	BUF_CHAR_PIXELS_VIS_1
 
 ; load row 3 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_6)
+	ld		a, (CHAR_BUILDING_BUF_OFF_ROW_3)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, BUILDINGS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 3 * 8)
 	call	BUF_CHAR_PIXELS_VIS_1
 
 ; load row 4 offscreen char
-	ld		a, (CHAR_BUF_OFF_ROW_7)
+	ld		a, (CHAR_BUILDING_BUF_OFF_ROW_4)
 	ld		(PRINT_CHAR), a
 	call	PRINT_CHAR_PIXEL_MEM		; addr of pixels for char in hl
 	ld		ix, BUILDINGS_LAYER_PIXEL_BUF + WIN_COL_VIS + ((WIN_COL_VIS+1) * 4 * 8)
@@ -483,7 +486,7 @@ BUF_BUILDING_CHAR_COL_LOOP:
     ret									; BUF_BUILDING_CHAR_ROWS
 
 BUILDINGS_LAYER_TO_RENDER:
-	; attrs
+	; building attrs
 	ld		de, RENDER_ATTR_BUF_ROW_3
 	ld		hl, BUILDING_ATTR_BUF
 	ld		bc, WIN_COL_VIS
@@ -499,6 +502,7 @@ BUILDINGS_LAYER_TO_RENDER:
 	ld		bc, WIN_COL_VIS
 	ldir
 
+	; hedge attrs
 	ld		de, RENDER_ATTR_BUF_ROW_6
 	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 3)
 	ld		bc, WIN_COL_VIS
@@ -509,7 +513,7 @@ BUILDINGS_LAYER_TO_RENDER:
 	ld		bc, WIN_COL_VIS
 	ldir
 
-	; pixels
+	; building pixels
 	ld		de, WINDOW_RENDER_PIXEL_BUF_BUILDINGS	; start of pixel render buf: 3_0
 	ld		hl, BUILDINGS_LAYER_PIXEL_BUF	; start of layer buf
 	ld		bc, WIN_COL_VIS				; only copy visible
@@ -630,6 +634,8 @@ BUILDINGS_LAYER_TO_RENDER:
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
+
+	; hedge pixels
 										; de correctly inc'd already: 6_0
 	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
 	ld		bc, WIN_COL_VIS				; only copy visible

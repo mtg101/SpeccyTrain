@@ -44,9 +44,9 @@ ADD_FENCE_GAP:
 	ld		a, UDG_FENCE_ATTR		; base black
 	ld		(BUILD_ATTR_TO_BUF), a
 
-	ld		a, %11000000			; color bits
+	ld		a, %10000000			; color bits
 	and		(hl)					; next building rng
-	cp		0						; 1 in 4 change it's white
+	cp		0						; 50/50 change it's white
 	jr		nz, GOT_FENCE_COLOUR	; it's not white, stick with black
 	ld		a, UDG_FENCE_ATTR		; base black ink
 	or		a, %00000111			; make white
@@ -77,16 +77,16 @@ ADD_FENCE_COL_LOOP:
 
 ADD_HEDGE_GAP:
 ; ink color attr
-	ld		a, UDG_HEDGE_ATTR		; default green on cyan
+	ld		a, UDG_HEDGE_ATTR		; default mag on green
 	ld		(BUILD_ATTR_TO_BUF), a
 
-	ld		a, %11000000			; color bits
+	ld		a, %01000000			; color bits
 	and		(hl)					; next building rng
-	cp		0						; 1 in 4 change it's red
-	jr		nz, GOT_HEDGE_COLOUR	; it's not red, stick with green
-	ld		a, UDG_HEDGE_ATTR		; default green on cyan
+	cp		0						; 50/50 change it's red
+	jr		nz, GOT_HEDGE_COLOUR	; it's not red, stick with mag
+	ld		a, UDG_HEDGE_ATTR		; default mag on green
+	and		a, %11111000
 	or		a, %00000010			; make red
-	and		a, %11111011
 	ld		(BUILD_ATTR_TO_BUF), a
 
 GOT_HEDGE_COLOUR:
