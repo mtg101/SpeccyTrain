@@ -490,79 +490,66 @@ BUILDINGS_LAYER_TO_RENDER:
 	; takes paper from mountains, ink from self, and overwites buffer (overwriting existing mountains)
 
 	ld		hl, BUILDING_ATTR_BUF
-	ld		ix, MOUNTAINS_ATTR_BUF
 	ld		de, RENDER_ATTR_BUF_ROW_3
 
 	ld		b, WIN_COL_VIS
 RENDER_ATTR_BUF_ROW_3_LOOP:
-	ld		a, (ix)							; mountain attr for pap
+	ld		a, (de)							; mountain attr for pap
 	and		%00111000						; just pap
 	ld		c, a							; put in c
 	ld		a, (hl)							; mountain attr for ink
+	cp		ATTR_CYN_PAP					; if it's a gap...
+	jr		z, SKIP_GAP_3					; skip gap
 	and		%11000111						; clear pap
 	or		c								; add the mountain pap
 	ld		(de), a							; mountain pap, building ink, into render buf
 
-	inc		ix								; next block
-	inc		hl
+SKIP_GAP_3:
+	inc		hl								; next block
 	inc		de
 
 	djnz	RENDER_ATTR_BUF_ROW_3_LOOP
 
 	ld		hl, BUILDING_ATTR_BUF + WIN_COL_TOTAL
-	ld		ix, MOUNTAINS_ATTR_BUF + WIN_COL_TOTAL
 	ld		de, RENDER_ATTR_BUF_ROW_4
 
 	ld		b, WIN_COL_VIS
 RENDER_ATTR_BUF_ROW_4_LOOP:
-	ld		a, (ix)							; mountain attr for pap
+	ld		a, (de)							; mountain attr for pap
 	and		%00111000						; just pap
 	ld		c, a							; put in c
 	ld		a, (hl)							; mountain attr for ink
+	cp		ATTR_CYN_PAP					; if it's a gap...
+	jr		z, SKIP_GAP_4					; skip gap
 	and		%11000111						; clear pap
 	or		c								; add the mountain pap
 	ld		(de), a							; mountain pap, building ink, into render buf
 
-	inc		ix								; next block
-	inc		hl
+SKIP_GAP_4:
+	inc		hl								; next block
 	inc		de
 
 	djnz	RENDER_ATTR_BUF_ROW_4_LOOP
 
 	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 2)
-	ld		ix, MOUNTAINS_ATTR_BUF + (WIN_COL_TOTAL * 2)
 	ld		de, RENDER_ATTR_BUF_ROW_5
 
 RENDER_ATTR_BUF_ROW_5_LOOP:
-	ld		a, (ix)							; mountain attr for pap
+	ld		a, (de)							; mountain attr from render
 	and		%00111000						; just pap
 	ld		c, a							; put in c
 	ld		a, (hl)							; mountain attr for ink
+	cp		ATTR_CYN_PAP					; if it's a gap...
+	jr		z, SKIP_GAP_5					; skip gap
 	and		%11000111						; clear pap
 	or		c								; add the mountain pap
 	ld		(de), a							; mountain pap, building ink, into render buf
 
-	inc		ix								; next block
-	inc		hl
+SKIP_GAP_5:
+	inc		hl								; next block
 	inc		de
 
 	djnz	RENDER_ATTR_BUF_ROW_5_LOOP
-
-
-	; ld		de, RENDER_ATTR_BUF_ROW_3
-	; ld		hl, BUILDING_ATTR_BUF
-	; ld		bc, WIN_COL_VIS
-	; ldir
-
-	; ld		de, RENDER_ATTR_BUF_ROW_4
-	; ld		hl, BUILDING_ATTR_BUF + WIN_COL_TOTAL
-	; ld		bc, WIN_COL_VIS
-	; ldir
-
-	; ld		de, RENDER_ATTR_BUF_ROW_5
-	; ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 2)
-	; ld		bc, WIN_COL_VIS
-	; ldir
 
 	; hedge attrs
 	ld		de, RENDER_ATTR_BUF_ROW_6
@@ -576,204 +563,111 @@ RENDER_ATTR_BUF_ROW_5_LOOP:
 	ldir
 
 	; building pixels
-	ld		de, WINDOW_RENDER_PIXEL_BUF_BUILDINGS	; start of pixel render buf: 3_0
-	ld		hl, BUILDINGS_LAYER_PIXEL_BUF	; start of layer buf
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir								; copy over
 
-										; de correctly inc'd already: 3_1
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
+	ld		de, WINDOW_RENDER_PIXEL_BUF_BUILDINGS					; building pixel render buf
+	ld		hl, BUILDINGS_LAYER_PIXEL_BUF							; building pixel layer buf
 
-										; de correctly inc'd already: 3_2
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
+	ld		b, 3 * 8												; 3 building-only rows, 8 pixel row per block
 
-										; de correctly inc'd already: 3_3
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
+BUILDING_PIXEL_OR_LOOP:
+	push	bc											; outer loop
 
-										; de correctly inc'd already: 3_4
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
+	ld		b, WIN_COL_VIS
+BUIDLING_PIXEL_OR_ROW_LOOP:
+	ld		a, (de)										; existing mountain pixels from dender layer
+	ld		c, a										; save in c
+	ld		a, (hl)										; building pixels
+	or		c											; put them together
+	ld		(de), a										; save back to render pixels
 
-										; de correctly inc'd already: 3_5
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
+	inc		de											; next byte
+	inc		hl
 
-										; de correctly inc'd already: 3_6
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
+	djnz	BUIDLING_PIXEL_OR_ROW_LOOP
 
-										; de correctly inc'd already: 3_7
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 4_0
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 4_1
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 4_2
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 4_3
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 4_4
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 4_5
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 4_6
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 4_7
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 5_0
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 5_1
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 5_2
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 5_3
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 5_4
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 5_5
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 5_6
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
-
-										; de correctly inc'd already: 5_7
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
-	ld		bc, WIN_COL_VIS				; only copy visible
-	ldir	
+	inc		hl											; over the extra col
+	pop		bc											; outer loop
+	djnz	BUILDING_PIXEL_OR_LOOP
 
 
-	; hedge pixels
-										; de correctly inc'd already: 6_0
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	; hedge pixels - just ldir
+	ld		de, WINDOW_RENDER_PIXEL_BUF_HEDGE	; de render hedge bef
+	ld		hl, HEDGE_LAYER_PIXEL_BUF			; hl layer hedge buf
+
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 6_1
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 6_2
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 6_3
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 6_4
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 6_5
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 6_6
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 6_7
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 										; de correctly inc'd already: 7_0
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 7_1
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 7_2
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 7_3
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 7_4
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 7_5
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 7_6
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
 										; de correctly inc'd already: 7_7
-	inc		hl							; step over extra col from FG_LAYER_PIXEL_BUF
+	inc		hl							; step over extra col 
 	ld		bc, WIN_COL_VIS				; only copy visible
 	ldir	
 
@@ -783,7 +677,9 @@ RENDER_ATTR_BUF_ROW_5_LOOP:
 
 
 BUILDINGS_LAYER_PIXEL_BUF:
-	defs		(WIN_COL_VIS+1) * WIN_BUILDING_ROWS * 8
+	defs		(WIN_COL_VIS+1) * 3 * 8				; 3 of 5 WIN_BUILDING_ROWS are buildings
+HEDGE_LAYER_PIXEL_BUF:	
+	defs		(WIN_COL_VIS+1) * 2 * 8				; 2 of 5 WIN_BUILDING_ROWS are hedges
 
 NEXT_BUILDING_COL:
 	defw	0
