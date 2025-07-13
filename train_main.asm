@@ -14,7 +14,6 @@ BUILDING_CHAR_BUF:
 EXTRA_CHAR_BUF:
 	defs	492						; top up to 768 for scene buf
 	
-ATTR_SCENE_BUF:						; needs 768 bytes total
 ATTR_WINDOW_BUF:
 CLOUD_ATTR_BUF:							
 	defs	WIN_CLOUD_ROWS * WIN_COL_TOTAL	
@@ -24,8 +23,9 @@ BUILDING_ATTR_BUF:
 	defs	WIN_BUILDING_ROWS * WIN_COL_TOTAL
 FG_ATTR_BUF:							
 	defs	WIN_FG_ROWS * WIN_COL_TOTAL
-EXTRA_ATTR_BUF:
-	defs	446						; top up to 768 for scene buf
+
+ATTR_SCENE_BUF:						; needs 768 bytes total
+	defs	768						; separate so can flip attrs after setup... todo optimize						
 
 FRAME_COUNTER:
 	defb	0
@@ -42,6 +42,7 @@ START:
 	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
 	call	DRAW_SCENE
 	call	SETUP_WINDOW
+	call	SCENE_LOADS_ATTRS
 
 ;	jr		ANIMATE_MAIN_BORDER		; use the border version, normally commented out
 

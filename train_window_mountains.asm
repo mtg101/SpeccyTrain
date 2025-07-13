@@ -12,9 +12,8 @@ SETUP_MOUNTAIN_ATTRS_LOOP:
 	djnz	SETUP_MOUNTAIN_ATTRS_LOOP
 
 	; pixels
-
-	; procgen initial scene todo
-
+	; just run animation a bunch of times...
+	.60 call	ANIMATE_MOUNTAINS
 
 	ret									; SETUP_MOUNTAINSS
 
@@ -41,6 +40,7 @@ ANIMATE_MOUNTAINS_DONE:
 
 
 ANIMATE_MOUNTAINS_NEW_COL_BLOCK:
+	call	RNG							; make sure have new RNG
 	ld		a, (MOUNTAINS_SKY_HEIGHT)	; current sky height in a
 
 	; up or down?
@@ -48,9 +48,15 @@ ANIMATE_MOUNTAINS_NEW_COL_BLOCK:
 	jr		z, ANIMATE_MOUNTAINS_NEW_COL_BLOCK_DOWN
 
 	cp		4							; bottom?
-	jr		z, ANIMATE_MOUNTAINS_NEW_COL_BLOCK_UP
+	jr		nz, ANIMATE_MOUNTAINS_NEW_COL_BLOCK_OTHER
 
-	call	RNG
+	; it's on bottom - 50/50 gap or up
+	ld		a, (NEXT_RNG)				; rng
+	bit		5, a						; 50/50
+	jr		z, ANIMATE_MOUNTAINS_NEW_COL_BLOCK_UP
+	jr		nz, ANIMATE_MOUNTAINS_NEW_COL_BLOCK_GAP
+
+ANIMATE_MOUNTAINS_NEW_COL_BLOCK_OTHER:
 	ld		a, (NEXT_RNG)				; rng
 	bit		7, a						; 50/50
 	jr		z, ANIMATE_MOUNTAINS_NEW_COL_BLOCK_UP
@@ -159,6 +165,24 @@ ANIMATE_MOUNTAINS_NEW_COL_BLOCK_UP_DIAG_LOOP_DONE:
 	ld		(MOUNTAINS_SKY_HEIGHT), a		; save
 
 	ret										; ANIMATE_MOUNTAINS_NEW_BLOCK - UP
+
+ANIMATE_MOUNTAINS_NEW_COL_BLOCK_GAP:
+ 	ld		ix, MOUNTAINS_LAYER_PIXEL_BUF + WIN_COL_VIS		; into the offscreen bit
+	ld		b, WIN_MOUNTAIN_ROWS			; need to do all rows
+
+ANIMATE_MOUNTAINS_NEW_COL_BLOCK_GAP_LOOP:
+	ld		hl, MOUNTAIN_BLANK_PIXELS		; blank for sky
+ 	call	BUF_CHAR_PIXELS_VIS_1			; buf it
+
+ 	ld		de, (WIN_COL_VIS + 1) * 8		; pixel row offset per block
+ 	add		ix, de							; next block row
+
+	djnz	ANIMATE_MOUNTAINS_NEW_COL_BLOCK_GAP_LOOP
+
+	; height stays 4
+
+	ret										; ANIMATE_MOUNTAINS_NEW_BLOCK - GAP
+
 
 
 
