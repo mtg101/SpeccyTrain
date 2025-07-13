@@ -82,11 +82,11 @@ ADD_HEDGE_GAP:
 
 	ld		a, %01000000			; color bits
 	and		(hl)					; next building rng
-	cp		0						; 50/50 change it's red
-	jr		nz, GOT_HEDGE_COLOUR	; it's not red, stick with mag
+	cp		0						; 50/50 chance it's yellow
+	jr		nz, GOT_HEDGE_COLOUR	; it's not tellow, stick with mag
 	ld		a, UDG_HEDGE_ATTR		; default mag on green
 	and		a, %11111000
-	or		a, %00000010			; make red
+	or		a, %00000110			; make yellow
 	ld		(BUILD_ATTR_TO_BUF), a
 
 GOT_HEDGE_COLOUR:
