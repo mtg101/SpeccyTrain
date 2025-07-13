@@ -97,7 +97,6 @@ INITIALISE_INTERRUPT:
 	ret								; Initialise_Interrupt
  
 INTERRUPT:              
-	; di                            ; disable interrupts 
 	; push af                       ; save all the registers on the stack
 	; push bc                       ; this is probably not necessary unless
 	; push de                       ; we're looking at returning cleanly
