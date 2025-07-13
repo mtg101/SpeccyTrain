@@ -169,7 +169,7 @@ ADD_BULDING_ROW_LOOP:
 	
 	ret								; ADD_BUILDING
 
-BUF_BULDING_ROW_AT_COL:						; b building row 0-4 
+BUF_BULDING_ROW_AT_COL:				; b building row 0-4 
 	push	de						; don't trash de
 	push	bc						; looping again so preserve bc
 
@@ -497,7 +497,7 @@ RENDER_ATTR_BUF_ROW_3_LOOP:
 	ld		a, (de)							; mountain attr for pap
 	and		%00111000						; just pap
 	ld		c, a							; put in c
-	ld		a, (hl)							; mountain attr for ink
+	ld		a, (hl)							; building attr for ink
 	cp		ATTR_CYN_PAP					; if it's a gap...
 	jr		z, SKIP_GAP_3					; skip gap
 	and		%11000111						; clear pap
@@ -518,7 +518,7 @@ RENDER_ATTR_BUF_ROW_4_LOOP:
 	ld		a, (de)							; mountain attr for pap
 	and		%00111000						; just pap
 	ld		c, a							; put in c
-	ld		a, (hl)							; mountain attr for ink
+	ld		a, (hl)							; building attr for ink
 	cp		ATTR_CYN_PAP					; if it's a gap...
 	jr		z, SKIP_GAP_4					; skip gap
 	and		%11000111						; clear pap

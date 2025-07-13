@@ -1,6 +1,6 @@
 
 ANIMATE_CLOUDS:
-	call	CLOUD_PIXEL_SHIFT			; shift everything 1 pix over
+	call	CLOUD_PIXEL_SHIFT_LEFT			; shift everything 1 pix over
 	ld		a, (CLOUD_FRAME_COUNTER)	; inc frame counter
 	inc		a
 	ld		(CLOUD_FRAME_COUNTER), a
@@ -13,7 +13,7 @@ ANIMATE_CLOUDS:
 ANIMATE_CLOUDS_DONE:
 	ret									; ANIMATE_CLOUDS
 
-CLOUD_PIXEL_SHIFT:
+CLOUD_PIXEL_SHIFT_LEFT:
 	ld		b, WIN_CLOUD_ROWS * 8		; total rows to shift (liner as it's offscreen buf not the weird screen)
 	cp		a							; reset the carry bit
 
@@ -88,7 +88,7 @@ CLOUD_PIXEL_SHIFT_LOOP:
 
 	call	CLOUD_LAYER_TO_RENDER
 
-	ret									; CLOUD_PIXEL_SHIFT
+	ret									; CLOUD_PIXEL_SHIFT_LEFT
 
 
 CLOUD_LAYER_TO_RENDER:
