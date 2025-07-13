@@ -4,6 +4,10 @@
 DRAW_SCENE:
 	call	LOAD_SCENE_UDGS
 
+	ld		a, ATTR_ALL_BLU			; blank before we do stuff
+	ld		(ATTR_P), a				; blue like border for loading
+	call	ROM_CLS					; simple way to set all blue without ldir
+
 ; RLE characters to buffer
 	ld		hl, SCENE_CHARACTERS	; load addr of RLE characters 
 	ld		de, CHAR_SCENE_BUF		; buffer pointer
@@ -43,15 +47,6 @@ LOOP_RLE_ATTR:						; assume: num times not 0...
 	
 ATTR_BUF_DONE:
 
-SETUP_SCREEN:
-; blue loading screen, matching border
-	ld		a, ATTR_ALL_BLU			
-	ld		(ATTR_P), a				; blue like border for loading
-	call	ROM_CLS					; needed to set channel 2 for proper AT drawing (not just scrolling)
-
-; basic border
-	ld		a, COL_BLU
-	call	ROM_BORDER				; sets border to val in a
 	
 DRAW_SCENE_CHARS:					; invisible due to ink&paper white
 ; RST chars
@@ -82,16 +77,14 @@ DRAW_SCENE_CHARS_COl_LOOP:
 	pop		bc						; for outer row loop
 	djnz	DRAW_SCENE_CHARS_ROW_LOOP
 
-	ret								; DRAW_SCENE
-
-SCENE_LOADS_ATTRS:
 ; ldir ATTRs 
 	ld		de, ATTR_START			; ATTR mem target
 	ld		hl, ATTR_SCENE_BUF		; buffer source
 	ld		bc, NUM_SCREEN_ATTRS	; num attrs to blit
 	ldir
 
-	ret								;
+	ret								; DRAW_SCENE
+
 
 
 LOAD_SCENE_UDGS:

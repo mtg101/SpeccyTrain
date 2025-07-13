@@ -3,7 +3,6 @@
 	org $8000
 	
 ; re-use the scene buffers for the building buffer too
-CHAR_SCENE_BUF:						; needs 768 bytes total
 CHAR_WINDOW_BUF:
 CLOUD_CHAR_BUF:							
 	defs	WIN_CLOUD_ROWS * WIN_COL_TOTAL
@@ -11,8 +10,6 @@ MOUNTAIN_CHAR_BUF:
 	defs	WIN_MOUNTAIN_ROWS * WIN_COL_TOTAL
 BUILDING_CHAR_BUF:
 	defs	WIN_BUILDING_ROWS * WIN_COL_TOTAL
-EXTRA_CHAR_BUF:
-	defs	492						; top up to 768 for scene buf
 	
 ATTR_WINDOW_BUF:
 CLOUD_ATTR_BUF:							
@@ -23,6 +20,9 @@ BUILDING_ATTR_BUF:
 	defs	WIN_BUILDING_ROWS * WIN_COL_TOTAL
 FG_ATTR_BUF:							
 	defs	WIN_FG_ROWS * WIN_COL_TOTAL
+
+CHAR_SCENE_BUF:						; needs 768 bytes total
+	defs	768						; separate so can do loading screen... todo optimize
 
 ATTR_SCENE_BUF:						; needs 768 bytes total
 	defs	768						; separate so can flip attrs after setup... todo optimize						
@@ -37,12 +37,14 @@ FRAME_COUNTER:
 	INCLUDE "train_window_main.asm"
 	INCLUDE "sound.asm"
 	INCLUDE "maths.asm"
+	INCLUDE "train_boarding_screen.asm"
 	
 START:
 	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
-	call	DRAW_SCENE				; but ink/pap/border all blue while loading
+	call	LOAD_BOARDING_SCREEN	; show something while setup
 	call	SETUP_WINDOW			; loading...
-	call	SCENE_LOADS_ATTRS		; show scene ready to animate
+	call	DRAW_SCENE				; but ink/pap/border all blue while loading
+	call	LOAD_WINDOW_UDGS		; reload for animation
 
 ;	jr		ANIMATE_MAIN_BORDER		; use the border version, normally commented out
 
