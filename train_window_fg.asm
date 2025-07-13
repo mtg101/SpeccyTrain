@@ -43,13 +43,13 @@ ANIMATE_FG_ATTR_GOT:
 
 	; add those to attr buff...
 	ld		hl, FG_ATTR_BUF + WIN_COL_VIS - 2	; upper penultimate vis
-	ld		(hl), d
+	ld		(hl), d						
 	ld		hl, FG_ATTR_BUF + WIN_COL_VIS - 1	; upper last vis
 	ld		(hl), d
 	ld		hl, FG_ATTR_BUF + WIN_COL_TOTAL + WIN_COL_VIS - 2 ; lower penultimate vis
-	ld		(hl), d
+	ld		(hl), %01100000						
 	ld		hl, FG_ATTR_BUF + WIN_COL_TOTAL + WIN_COL_VIS -1 ; lower last
-	ld		(hl), d
+	ld		(hl), %01100000
 
 ; chars
 	ld		a, (FG_COUNTER)				; only a likes (defb) loads
