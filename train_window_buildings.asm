@@ -493,63 +493,226 @@ BUILDINGS_LAYER_TO_RENDER:
 	ld		de, RENDER_ATTR_BUF_ROW_3
 
 	ld		b, WIN_COL_VIS
+	ld		c, 0							; counts up for attr offset
 RENDER_ATTR_BUF_ROW_3_LOOP:
-	ld		a, (de)							; mountain attr for pap
-	and		%00111000						; just pap
-	ld		c, a							; put in c
 	ld		a, (hl)							; building attr for ink
 	cp		ATTR_CYN_PAP					; if it's a gap...
 	jr		z, SKIP_GAP_3					; skip gap
-	and		%11000111						; clear pap
-	or		c								; add the mountain pap
-	ld		(de), a							; mountain pap, building ink, into render buf
 
+	; it's a building...
+
+	; change pap to cyan (hedges are green, and ldir so have to flip here)
+	and		%11000111						; clear pap
+	or		%00101000						; set cyan pap
+	ld		(de), a							; cyan (mountain) pap, building ink, into render buf
+
+	; are we drawing building over full mountain? 
+	; if so xor means building outline is now pap
+	; so if top byte of pixels in render is $FF full, change attrs
+	; set pap (building outline) from builfingh ink (black/blue)
+	; set ink to red, as mountains
+	push	hl
+	push	de
+
+	ld		de, WINDOW_RENDER_PIXEL_BUF_BUILDINGS	; building pixel render buf
+	ld		h, 0
+	ld		l, c									; hl is col offset
+	add		hl, de									; hl points to first pixel byte
+
+	ld		a, (hl)									; top row pixels
+
+	pop		de
+	pop		hl
+
+	cp		%11111111								; if top row pixels are all on, it's a whole mountain block
+	jr		nz, RENDER_ATTR_BUF_ROW_3_LOOP_DONE_FLIP	; not all mountain, don't flip
+
+	; flip...
+	; pap becomes ink
+	ld		a, (hl)							; building attr for ink
+	and		%00000111						; get ink
+	cp		a								; clear carry
+	rl		a
+	rl 		a
+	rl 		a								; ink moved to pap position
+
+	push	bc								; c counts up in loop
+	ld		c, a							; c stores just pap
+
+	ld		a, (hl)							; building attr for ink again
+
+	; ink becomes mountain red
+	and		%11111000						; clear ink
+	or		%00000010						; set red ink
+
+	; pap from c
+	and		%11000111						; clear pap
+	or		c								; pap from c (old ink)
+	pop		bc								; c back to counting
+
+	ld		(de), a							; into render buf
+	
+
+
+RENDER_ATTR_BUF_ROW_3_LOOP_DONE_FLIP:
 SKIP_GAP_3:
 	inc		hl								; next block
 	inc		de
+	inc		c
 
 	djnz	RENDER_ATTR_BUF_ROW_3_LOOP
+
+
 
 	ld		hl, BUILDING_ATTR_BUF + WIN_COL_TOTAL
 	ld		de, RENDER_ATTR_BUF_ROW_4
 
 	ld		b, WIN_COL_VIS
+	ld		c, 0							; counts up for attr offset
 RENDER_ATTR_BUF_ROW_4_LOOP:
-	ld		a, (de)							; mountain attr for pap
-	and		%00111000						; just pap
-	ld		c, a							; put in c
 	ld		a, (hl)							; building attr for ink
 	cp		ATTR_CYN_PAP					; if it's a gap...
 	jr		z, SKIP_GAP_4					; skip gap
-	and		%11000111						; clear pap
-	or		c								; add the mountain pap
-	ld		(de), a							; mountain pap, building ink, into render buf
 
+	; it's a building...
+
+	; change pap to cyan (hedges are green, and ldir so have to flip here)
+	and		%11000111						; clear pap
+	or		%00101000						; set cyan pap
+	ld		(de), a							; cyan (mountain) pap, building ink, into render buf
+
+	; are we drawing building over full mountain? 
+	; if so xor means building outline is now pap
+	; so if top byte of pixels in render is $FF full, change attrs
+	; set pap (building outline) from builfingh ink (black/blue)
+	; set ink to red, as mountains
+	push	hl
+	push	de
+
+	ld		de, WINDOW_RENDER_PIXEL_BUF_BUILDINGS + (WIN_COL_VIS * 8)	; building pixel render buf, offset
+	ld		h, 0
+	ld		l, c									; hl is col offset
+	add		hl, de									; hl points to first pixel byte
+
+	ld		a, (hl)									; top row pixels
+
+	pop		de
+	pop		hl
+
+	cp		%11111111								; if top row pixels are all on, it's a whole mountain block
+	jr		nz, RENDER_ATTR_BUF_ROW_4_LOOP_DONE_FLIP	; not all mountain, don't flip
+
+	; flip...
+	; pap becomes ink
+	ld		a, (hl)							; building attr for ink
+	and		%00000111						; get ink
+	cp		a								; clear carry
+	rl		a
+	rl 		a
+	rl 		a								; ink moved to pap position
+
+	push	bc								; c counts up in loop
+	ld		c, a							; c stores just pap
+
+	ld		a, (hl)							; building attr for ink again
+
+	; ink becomes mountain red
+	and		%11111000						; clear ink
+	or		%00000010						; set red ink
+
+	; pap from c
+	and		%11000111						; clear pap
+	or		c								; pap from c (old ink)
+	pop		bc								; c back to counting
+
+	ld		(de), a							; into render buf
+	
+
+
+RENDER_ATTR_BUF_ROW_4_LOOP_DONE_FLIP:
 SKIP_GAP_4:
 	inc		hl								; next block
 	inc		de
+	inc		c
 
 	djnz	RENDER_ATTR_BUF_ROW_4_LOOP
+
+
 
 	ld		hl, BUILDING_ATTR_BUF + (WIN_COL_TOTAL * 2)
 	ld		de, RENDER_ATTR_BUF_ROW_5
 
+	ld		b, WIN_COL_VIS
+	ld		c, 0							; counts up for attr offset
 RENDER_ATTR_BUF_ROW_5_LOOP:
-	ld		a, (de)							; mountain attr from render
-	and		%00111000						; just pap
-	ld		c, a							; put in c
 	ld		a, (hl)							; mountain attr for ink
 	cp		ATTR_CYN_PAP					; if it's a gap...
 	jr		z, SKIP_GAP_5					; skip gap
-	and		%11000111						; clear pap
-	or		c								; add the mountain pap
-	ld		(de), a							; mountain pap, building ink, into render buf
 
+	; it's a building...
+
+	; change pap to cyan (hedges are green, and ldir so have to flip here)
+	and		%11000111						; clear pap
+	or		%00101000						; set cyan pap
+	ld		(de), a							; cyan (mountain) pap, building ink, into render buf
+
+	; are we drawing building over full mountain? 
+	; if so xor means building outline is now pap
+	; so if top byte of pixels in render is $FF full, change attrs
+	; set pap (building outline) from builfingh ink (black/blue)
+	; set ink to red, as mountains
+	push	hl
+	push	de
+
+	ld		de, WINDOW_RENDER_PIXEL_BUF_BUILDINGS + ((WIN_COL_VIS * 8) * 2)	; building pixel render buf, offset
+	ld		h, 0
+	ld		l, c									; hl is col offset
+	add		hl, de									; hl points to first pixel byte
+
+	ld		a, (hl)									; top row pixels
+
+	pop		de
+	pop		hl
+
+	cp		%11111111								; if top row pixels are all on, it's a whole mountain block
+	jr		nz, RENDER_ATTR_BUF_ROW_5_LOOP_DONE_FLIP	; not all mountain, don't flip
+
+	; flip...
+	; pap becomes ink
+	ld		a, (hl)							; building attr for ink
+	and		%00000111						; get ink
+	cp		a								; clear carry
+	rl		a
+	rl 		a
+	rl 		a								; ink moved to pap position
+
+	push	bc								; c counts up in loop
+	ld		c, a							; c stores just pap
+
+	ld		a, (hl)							; building attr for ink again
+
+	; ink becomes mountain red
+	and		%11111000						; clear ink
+	or		%00000010						; set red ink
+
+	; pap from c
+	and		%11000111						; clear pap
+	or		c								; pap from c (old ink)
+	pop		bc								; c back to counting
+
+	ld		(de), a							; into render buf
+	
+
+
+RENDER_ATTR_BUF_ROW_5_LOOP_DONE_FLIP:
 SKIP_GAP_5:
 	inc		hl								; next block
 	inc		de
+	inc		c
 
 	djnz	RENDER_ATTR_BUF_ROW_5_LOOP
+
+
 
 	; hedge attrs
 	ld		de, RENDER_ATTR_BUF_ROW_6
@@ -574,10 +737,10 @@ BUILDING_PIXEL_OR_LOOP:
 
 	ld		b, WIN_COL_VIS
 BUIDLING_PIXEL_OR_ROW_LOOP:
-	ld		a, (de)										; existing mountain pixels from dender layer
+	ld		a, (de)										; existing mountain pixels from render layer
 	ld		c, a										; save in c
 	ld		a, (hl)										; building pixels
-	or		c											; put them together
+	xor		c											; put them together XOR
 	ld		(de), a										; save back to render pixels
 
 	inc		de											; next byte
@@ -588,6 +751,8 @@ BUIDLING_PIXEL_OR_ROW_LOOP:
 	inc		hl											; over the extra col
 	pop		bc											; outer loop
 	djnz	BUILDING_PIXEL_OR_LOOP
+
+
 
 
 	; hedge pixels - just ldir
