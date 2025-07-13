@@ -40,9 +40,9 @@ FRAME_COUNTER:
 	
 START:
 	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
-	call	DRAW_SCENE
-	call	SETUP_WINDOW
-	call	SCENE_LOADS_ATTRS
+	call	DRAW_SCENE				; but ink/pap/border all blue while loading
+	call	SETUP_WINDOW			; loading...
+	call	SCENE_LOADS_ATTRS		; show scene ready to animate
 
 ;	jr		ANIMATE_MAIN_BORDER		; use the border version, normally commented out
 
