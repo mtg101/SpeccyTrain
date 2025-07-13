@@ -524,9 +524,24 @@ RENDER_ATTR_BUF_ROW_3_LOOP:
 	pop		de
 	pop		hl
 
-	cp		%11111111								; if top row pixels are all on, it's a whole mountain block
-	jr		nz, RENDER_ATTR_BUF_ROW_3_LOOP_DONE_FLIP	; not all mountain, don't flip
+	cp		%11111111								; if top row pixels are all on, it's a whole mountain, flip
+	jr		z, RENDER_ATTR_BUF_ROW_3_LOOP_DO_FLIP
+	cp		%01111111								; if top row pixels are nearly all on, flip
+	jr		z, RENDER_ATTR_BUF_ROW_3_LOOP_DO_FLIP
+	cp		%01111110								; if top row pixels are nearly all on, 
+	jr		z, RENDER_ATTR_BUF_ROW_3_LOOP_DO_FLIP
+	cp		%00111111								; if top row pixels are nearly all on, flip
+	jr		z, RENDER_ATTR_BUF_ROW_3_LOOP_DO_FLIP
+	cp		%11111100								; if top row pixels are nearly all on, 
+	jr		z, RENDER_ATTR_BUF_ROW_3_LOOP_DO_FLIP
+	cp		%00011111								; if top row pixels are nearly all on, flip
+	jr		z, RENDER_ATTR_BUF_ROW_3_LOOP_DO_FLIP
+	cp		%11111000								; if top row pixels are nearly all on, 
+	jr		z, RENDER_ATTR_BUF_ROW_3_LOOP_DO_FLIP
 
+	jr		RENDER_ATTR_BUF_ROW_3_LOOP_DONE_FLIP	; not enough mountain, don't flip
+
+RENDER_ATTR_BUF_ROW_3_LOOP_DO_FLIP
 	; flip...
 	; pap becomes ink
 	ld		a, (hl)							; building attr for ink
@@ -599,9 +614,24 @@ RENDER_ATTR_BUF_ROW_4_LOOP:
 	pop		de
 	pop		hl
 
-	cp		%11111111								; if top row pixels are all on, it's a whole mountain block
-	jr		nz, RENDER_ATTR_BUF_ROW_4_LOOP_DONE_FLIP	; not all mountain, don't flip
+	cp		%11111111								; if top row pixels are all on, it's a whole mountain, flip
+	jr		z, RENDER_ATTR_BUF_ROW_4_LOOP_DO_FLIP
+	cp		%01111111								; if top row pixels are nearly all on, flip
+	jr		z, RENDER_ATTR_BUF_ROW_4_LOOP_DO_FLIP
+	cp		%11111110								; if top row pixels are nearly all on, 
+	jr		z, RENDER_ATTR_BUF_ROW_4_LOOP_DO_FLIP
+	cp		%00111111								; if top row pixels are nearly all on, flip
+	jr		z, RENDER_ATTR_BUF_ROW_4_LOOP_DO_FLIP
+	cp		%11111100								; if top row pixels are nearly all on, 
+	jr		z, RENDER_ATTR_BUF_ROW_4_LOOP_DO_FLIP
+	cp		%00011111								; if top row pixels are nearly all on, flip
+	jr		z, RENDER_ATTR_BUF_ROW_4_LOOP_DO_FLIP
+	cp		%11111000								; if top row pixels are nearly all on, 
+	jr		z, RENDER_ATTR_BUF_ROW_4_LOOP_DO_FLIP
 
+	jr		RENDER_ATTR_BUF_ROW_4_LOOP_DONE_FLIP	; not enough mountain, don't flip
+
+RENDER_ATTR_BUF_ROW_4_LOOP_DO_FLIP
 	; flip...
 	; pap becomes ink
 	ld		a, (hl)							; building attr for ink
@@ -674,9 +704,24 @@ RENDER_ATTR_BUF_ROW_5_LOOP:
 	pop		de
 	pop		hl
 
-	cp		%11111111								; if top row pixels are all on, it's a whole mountain block
-	jr		nz, RENDER_ATTR_BUF_ROW_5_LOOP_DONE_FLIP	; not all mountain, don't flip
+	cp		%11111111								; if top row pixels are all on, it's a whole mountain, flip
+	jr		z, RENDER_ATTR_BUF_ROW_5_LOOP_DO_FLIP
+	cp		%01111111								; if top row pixels are nearly all on, flip
+	jr		z, RENDER_ATTR_BUF_ROW_5_LOOP_DO_FLIP
+	cp		%11111110								; if top row pixels are nearly all on, 
+	jr		z, RENDER_ATTR_BUF_ROW_5_LOOP_DO_FLIP
+	cp		%00111111								; if top row pixels are nearly all on, flip
+	jr		z, RENDER_ATTR_BUF_ROW_5_LOOP_DO_FLIP
+	cp		%11111100								; if top row pixels are nearly all on, 
+	jr		z, RENDER_ATTR_BUF_ROW_5_LOOP_DO_FLIP
+	cp		%00011111								; if top row pixels are nearly all on, flip
+	jr		z, RENDER_ATTR_BUF_ROW_5_LOOP_DO_FLIP
+	cp		%11111000								; if top row pixels are nearly all on, 
+	jr		z, RENDER_ATTR_BUF_ROW_5_LOOP_DO_FLIP
 
+	jr		RENDER_ATTR_BUF_ROW_5_LOOP_DONE_FLIP	; not enough mountain, don't flip
+
+RENDER_ATTR_BUF_ROW_5_LOOP_DO_FLIP
 	; flip...
 	; pap becomes ink
 	ld		a, (hl)							; building attr for ink
