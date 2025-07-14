@@ -61,7 +61,9 @@ ANIMATE_MAIN:
 	ld		a, (FRAME_COUNTER)		
 	inc		a						; next frame
 	ld		(FRAME_COUNTER), a
-	call	BADUM_BADUM				; track sound
+; badum needs timing based on speed of other things
+; and it's annoying whee debugging, so turned off 
+;	call	BADUM_BADUM				; track sound
 
 	jr		ANIMATE_MAIN
 

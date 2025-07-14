@@ -53,9 +53,11 @@ ANIMATE_NOT_2:                                      ; it's %000001100
     ld      (hl), a                                 ; hack the udg
 
     ; sound once per loop
-    ld      hl, C_1_PITCH
-    ld      de, C_1_DUR_1S / 64
-    call    BEEP
+    ; sounds crap if you don't tweak it based on other things going on
+    ; annoying as hell while debugging, so turned off
+    ; ld      hl, C_1_PITCH
+    ; ld      de, C_1_DUR_1S / 64
+    ; call    BEEP
 
     ; fall through
 
