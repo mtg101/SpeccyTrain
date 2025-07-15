@@ -38,6 +38,7 @@ FRAME_COUNTER:
 	INCLUDE "sound.asm"
 	INCLUDE "maths.asm"
 	INCLUDE "train_boarding_screen.asm"
+	INCLUDE "vector.asm"
 	
 START:
 	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
