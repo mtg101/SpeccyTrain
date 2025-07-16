@@ -105,19 +105,42 @@ FG_POLE_WIRE_LOOP_NOT_POLE:
 	; depending on distance
 
 	; 1-3 high
+	ld		a, c
+	cp		4							; start of next range
+	jr		c, FG_POLE_WIRE_HIGH
+
 	; 4-8 med
+	cp		9							; start of next range
+	jr		c, FG_POLE_WIRE_MED
+
 	; 9-16: low
+	cp		17							; start of next range
+	jr		c, FG_POLE_WIRE_LOW
+
 	; 17-21: med
+	cp		22							; start of next range
+	jr		c, FG_POLE_WIRE_MED
+
 	; 22-24: high
-
-	; high pixel matches long pole crossbar: offset 3
-	; mid is therefore offset 4,  low 5
-
-
-
+	; don't need compare/jump
+FG_POLE_WIRE_HIGH:						; high pixel one below pole crossbar: offset 4
+	ld		hl, FG_LAYER_PIXEL_BUF + (WIN_COL_VIS * 3)
+	jr		FG_POLE_WIRE_DRAW
 
 
+FG_POLE_WIRE_MED:						; mid is therefore offset 5
+	ld		hl, FG_LAYER_PIXEL_BUF + (WIN_COL_VIS * 4)
+	jr		FG_POLE_WIRE_DRAW
 
+
+FG_POLE_WIRE_LOW:						; low is therefore offset 6
+	ld		hl, FG_LAYER_PIXEL_BUF + (WIN_COL_VIS * 5)
+
+	; fall through
+
+FG_POLE_WIRE_DRAW:
+	add		hl, de						; col offset
+	ld		(hl), %11111111				; draw the wire
 
    	dec		c							; we're 1 closer to the pole in next col
 
