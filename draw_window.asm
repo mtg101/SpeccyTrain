@@ -525,12 +525,6 @@ WINDOW_RENDER_ATTR_BUF_FG:
 
 
 
-SINGLE_CHAR_PIXEL_BUF_1:
-	defs	8						; 8 byte buf for a single char
-
-SINGLE_CHAR_PIXEL_BUF_2:
-	defs	8						; 8 byte buf for a single char
-
 ; mem address of line
 
 ; not based on WIN_ROW_START or similar, as we need weird bit packing...
