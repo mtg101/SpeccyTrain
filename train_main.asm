@@ -47,7 +47,6 @@ START:
 	call	DRAW_SCENE				; but ink/pap/border all blue while loading
 	call	LOAD_WINDOW_UDGS		; reload for animation
 
-;	jr		ANIMATE_MAIN_BORDER		; use the border version, normally commented out
 
 ANIMATE_MAIN:
 	call	ANIMATE_CLOUDS
@@ -69,21 +68,6 @@ ANIMATE_MAIN:
 	jr		ANIMATE_MAIN
 
 
-; ANIMATE_MAIN_BORDER:				; this will break every time timings change... but fun to play with
-; 									; and TODO it's way out of date with ANIMATE_MAIN
-; 	halt							; wait for vsync
-; 	ld		a, COL_RED
-; 	out		($FE), a
-; 	call	DRAW_WINDOW				; draw row-by-row
-; 	.4 nop							; timing desu!
-; 	ld		a, COL_BLK
-; 	out		($FE), a
-; 	call	ANIMATE_WINDOW			; commented out to show the static border working
-; 									; can also make animate_window do less and fit in under 1 frame
-; 									; at time of writing, clouds&fg work, but buildings on own don't
-; 	jr		ANIMATE_MAIN_BORDER
-
-
 ; set up IM2 - so we don't wate time scanning keyboard and so on
 ; use ROM trick for interrupt table
 ; from http://www.breakintoprogram.co.uk/hardware/computers/zx-spectrum/interrupts 
@@ -102,31 +86,49 @@ INITIALISE_INTERRUPT:
 	ret								; Initialise_Interrupt
  
 INTERRUPT:              
+
+
+; uncomment for border
 	; push af                       ; save all the registers on the stack
 	; push bc                       ; this is probably not necessary unless
 	; push de                       ; we're looking at returning cleanly
 	; push hl                       ; back to basic at some point
 	; push ix
-	; exx
-	; ex af,af'
-	; push af
-	; push bc
-	; push de
-	; push hl
-	; push iy
+
+	; ; for now don't need to worry about these
+	; ; exx
+	; ; ex af,af'
+	; ; push af
+	; ; push bc
+	; ; push de
+	; ; push hl
+	; ; push iy
+
 ;
 ; Your code here...
 ;
-; But I don't need any, just need to resume from halt
-; Also means can not bother DI/EI, push/popping, etc, so commented out
-; 
-	; pop iy                        ; restore all the registers
-	; pop hl
-	; pop de
-	; pop bc
-	; pop af
-	; exx
-	; ex af,af'
+
+; uncomment for border
+ 	; ld		a, COL_BLK
+ 	; out		($FE), a
+
+	; .3480 nop
+
+ 	; ld		a, COL_BLU
+ 	; out		($FE), a
+
+
+
+; 	; don't need to worry about these ones for
+; 	; pop iy                        ; restore all the registers
+; 	; pop hl
+; 	; pop de
+; 	; pop bc
+; 	; pop af
+; 	; exx
+; 	; ex af,af'
+
+; uncomment for border
 	; pop ix
 	; pop hl
 	; pop de
