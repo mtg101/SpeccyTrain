@@ -6,9 +6,11 @@ SETUP_COPTER:
 
 
 ANIMATE_COPTER:
+    call    RNG                                     ; get our own
+
     ld      a, (COPTER_COL) 
     cp      0
-    jr      z, DONE_ANIMATE_COPTER                 ; only draw if we should
+    jr      z, DO_NOT_ANIMATE_COPTER                ; only draw if we should
 
     ; animate udgs by hand
     ld      a, (FRAME_COUNTER)                      
@@ -76,54 +78,33 @@ ANIMATE_DRAW_COPTER:
     add     ix, bc
 	call	XOR_CHAR_PIXELS_VIS
 
-DONE_ANIMATE_COPTER:
-    ret                                             ; ANIMATE_COPTER
-
-UNDRAW_COPTER_UPDATE_STATUS:          
-    call    RNG                                     ; own rng
-
-    ld      a, (COPTER_COL)                         ; check if we're supposed to undraw
-    cp      0
-    jr      z, UNDRAW_DONT_DRAW                    ; don't need to undraw
-
-    ; left copter
-	ld		hl, COPTER_LEFT_PIXELS                  ; dot need udgs
-	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS + (WIN_COL_VIS * 8)
-    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
-    add     ix, bc
-	call	XOR_CHAR_PIXELS_VIS
-
-    ; right copter
-	ld		hl, COPTER_RIGHT_PIXELS              ; don't; need udgs
-	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS + 1 + (WIN_COL_VIS * 8)
-    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
-    add     ix, bc
-	call	XOR_CHAR_PIXELS_VIS
-
     ; should we stop showing?
     ld      a, (NEXT_RNG)
     and     %01111111
     cp      %01111111                               ; 1 in 128 stop showing
-    jr      nz, DONE_STATUS_COPTER                  
+    jr      nz, DONE_ANIMATE_COPTER                  
     ld      a, 0
     ld      (COPTER_COL), a                      
-    jr      DONE_STATUS_COPTER                      ; extra jump over the status update for didn't draw
 
-UNDRAW_DONT_DRAW:
+    jr      DONE_ANIMATE_COPTER                     ; skip to the end...
+
+
+DO_NOT_ANIMATE_COPTER:
     ; should we start showing?
     ld      a, (NEXT_RNG)                           ; 1 in 256 start showing
     cp      %11111111                               
-    jr      nz, DONE_STATUS_COPTER                  
+    jr      nz, DONE_ANIMATE_COPTER                  
 
     ; random col 1-16
-    call    RNG                                     ; new one to avoid always %11010111 for row
+    call    RNG                                     ; otherwise it's always same %____1111 position
     ld      a, (NEXT_RNG)
     and     %00001111                               ; 0-15
     inc     a                                       ; 1-16
     ld      (COPTER_COL), a                         ; save to status
 
-DONE_STATUS_COPTER:
-    ret                                             ; UNDRAW_COPTER_UPDATE_STATUS
+DONE_ANIMATE_COPTER:
+    ret                                             ; ANIMATE_COPTER
+
 
 
 COPTER_COL:                                         ; 0 is off, 2-17 col (from 0-15 + 2 rng)

@@ -56,7 +56,6 @@ ANIMATE_MAIN:
 	call	ANIMATE_FG
 	halt							; wait for vsync before draw
 	call	DRAW_WINDOW
-	call	UNDRAW_COPTER_UPDATE_STATUS
 
 	ld		hl, (FRAME_COUNTER)		
 	inc		hl						; next frame

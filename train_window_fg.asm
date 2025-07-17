@@ -180,6 +180,12 @@ FG_LAYER_TO_RENDER:
 	ld		bc, WIN_COL_VIS * WIN_FG_ROWS * 8	; copy all at once
 	ldir										; copy over
 
+	; top of bottle from screne
+	ld		hl, FG_BOTTLE_T_PIXELS				; the bottle to draw
+	ld		ix, WINDOW_RENDER_PIXEL_BUF_FG + 16 + (WIN_COL_VIS * 8)	
+												; actual render buffer of FG, fixed col 17
+	call 	XOR_CHAR_PIXELS_VIS					; xor over rendered buffer
+
 	ret											; FG_LAYER_TO_RENDER
 
 
@@ -211,3 +217,16 @@ FG_POLE_LOW:
 	defb	%00011000
 	defb	%00011000
 	defb	%00011000
+
+FG_BOTTLE_T_PIXELS:
+	defb	%00000000
+	defb	%00111100
+	defb	%01011010
+	defb	%00111100
+	defb	%00111100
+	defb	%00111100
+	defb	%00111100
+	defb	%01111110
+
+
+

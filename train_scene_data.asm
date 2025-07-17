@@ -27,8 +27,10 @@ SCENE_CHARACTERS:
 	defb	C_SPACE, 11
 	defb	UDG_BENTO_L, 1
 	defb	UDG_BENTO_R, 1
-	defb	UDG_BEER_B, 1
-	defb	C_SPACE, 114
+	defb	UDG_BEER, 1
+	defb	C_SPACE, 11
+	defb	UDG_BOTTLE_B, 1
+	defb	C_SPACE, 102
 	defb	UDG_DITHER_4, 32
 	defb	UDG_DITHER_3, 32
 	defb	UDG_DITHER_2, 32
@@ -111,7 +113,7 @@ SCENE_ATTRS:
 	defb	0
 
 ; UDGs
-NUM_SCENE_UDGS		= 15			; max 19, $A2, due to top-RAM interrupts (plus 128k only has 19)
+NUM_SCENE_UDGS		= 16			; max 19, $A2, due to top-RAM interrupts (plus 128k only has 19)
 
 UDG_BORDER_TL		= $90
 UDG_BORDER_T		= $91
@@ -127,7 +129,8 @@ UDG_DITHER_3		= $9A
 UDG_DITHER_4		= $9B
 UDG_BENTO_L			= $9C
 UDG_BENTO_R			= $9D
-UDG_BEER_B			= $9E
+UDG_BEER			= $9E
+UDG_BOTTLE_B		= $9F
 
 
 UDGS_SCENE_PIXELS:
@@ -271,7 +274,7 @@ UDG_BENTO_R_PIXELS:
 	defb	%11111100
 	defb	%11111100
 
-UDG_BEER_B_PIXELS:
+UDG_BEER_PIXELS:
 	defb	%00000000
 	defb	%00000000
 	defb	%01111110
@@ -281,4 +284,13 @@ UDG_BEER_B_PIXELS:
 	defb	%00111100
 	defb	%00111100
 
+UDG_BOTTLE_B_PIXELS:
+	defb	%01111110
+	defb	%01111110
+	defb	%01001110
+	defb	%01001110
+	defb	%01001110
+	defb	%01001110
+	defb	%01111110
+	defb	%00111100
 
