@@ -6,7 +6,15 @@
 ; can't print the 2x2 $70-$7F as they don't seem to have a font in ROM or anywhere
 
 
-; any char
+; entry point to PRINT_CHAR_AT_Y_X for if already have some pixels in de
+PRINT_DE_AT_Y_X:
+    push	af
+    push	bc
+    push	de
+    push	hl
+	jr 		PRINT_CHAR_COMMON_START
+
+; any char or UDG
 PRINT_CHAR_AT_Y_X:
     push	af
     push	bc
@@ -16,6 +24,7 @@ PRINT_CHAR_AT_Y_X:
 	call	PRINT_CHAR_PIXEL_MEM; addr for pixels from udg / rom in hl
 	ld		de, hl				; de points to pixels for our char
 
+PRINT_CHAR_COMMON_START:
 ; :math:
 	ld		a, (PRINT_AT_Y)		; block Y
 	sla		a					; multiple by 8 to make in pixel

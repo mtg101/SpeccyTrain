@@ -43,8 +43,8 @@ FRAME_COUNTER:
 START:
 	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
 	call	LOAD_BOARDING_SCREEN	; show something while setup
-	call	SETUP_WINDOW			; loading...
-	call	DRAW_SCENE				; but ink/pap/border all blue while loading
+	call	SETUP_WINDOW			; doesn't render, takes time
+	call	DRAW_SCENE				; blue ink/pap as it loads, to avoid trashing loading screen 
 	call	LOAD_WINDOW_UDGS		; reload for animation
 
 
@@ -55,6 +55,7 @@ ANIMATE_MAIN:
 	call	ANIMATE_BUILDINGS
 	call	ANIMATE_FG
 	halt							; wait for vsync before draw
+	call	ANIMATE_SCENE_HANDLES	; first as it's higher up (and should be very quick)
 	call	DRAW_WINDOW
 
 	ld		hl, (FRAME_COUNTER)		
