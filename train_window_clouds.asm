@@ -1,13 +1,10 @@
 
 ANIMATE_CLOUDS:
-	call	CLOUD_PIXEL_SHIFT_LEFT			; shift everything 1 pix over
-	ld		a, (CLOUD_FRAME_COUNTER)	; inc frame counter
-	inc		a
-	ld		(CLOUD_FRAME_COUNTER), a
-	cp		8							; if we've done 8 shifts, we need a new block loaded to offscreen col
+	call	CLOUD_PIXEL_SHIFT_LEFT		; shift everything 1 pix over
+	ld		a, (FRAME_COUNTER)			; get frame counter
+	and		%00000111					; just 0-7	
+	cp		0							; if we've done 8 shifts, we need a new block loaded to offscreen col
 	jr		nz, ANIMATE_CLOUDS_DONE
-	ld		a, 0
-	ld		(CLOUD_FRAME_COUNTER), a	; counter reset
 	call	ANIMATE_CLOUDS_MOVE_BLOCK
 
 ANIMATE_CLOUDS_DONE:
@@ -580,5 +577,3 @@ NEXT_CLOUD_COL:
 CLOUD_CHAR_TO_BUF:
 	defb	0
 	
-CLOUD_FRAME_COUNTER:
-	defb	0

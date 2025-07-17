@@ -13,9 +13,23 @@ SETUP_MOUNTAIN_ATTRS_LOOP:
 
 	; pixels
 	; just run animation a bunch of times...
-	.60 call	ANIMATE_MOUNTAINS
+	; and hack frame_counter...
+	ld		b, 60							; 60 times works for 19 col vis
+SETUP_MOUNTAINS_PIXELS_LOOP:
+	push	bc
+	call	ANIMATE_MOUNTAINS				; add and shift mountains
+	pop		bc
 
-	ret									; SETUP_MOUNTAINSS
+	ld		hl, (FRAME_COUNTER)				; back frame_counter
+	inc		hl
+	ld		(FRAME_COUNTER), hl
+
+	djnz	SETUP_MOUNTAINS_PIXELS_LOOP
+
+	ld		hl, 0							; reset frame _counter
+	ld		(FRAME_COUNTER), hl
+
+	ret										; SETUP_MOUNTAINSS
 
 ANIMATE_MOUNTAINS:
 	; shift stuff 2px left
@@ -24,13 +38,10 @@ ANIMATE_MOUNTAINS:
 	call	MOUNTAIN_PIXEL_SHIFT_LEFT
 	call	MOUNTAIN_PIXEL_SHIFT_LEFT
 
-	ld		a, (MOUNTAINS_FRAME_COUNTER)	; inc frame counter
-	inc		a
-	ld		(MOUNTAINS_FRAME_COUNTER), a
-	cp		4								; if we've done 4 2px shifts
+	ld		a, (FRAME_COUNTER)				; get frame counter
+	and		%00000011						; only at 0-3
+	cp		0								; if we've done 4 2px shifts
 	jr		nz, ANIMATE_MOUNTAINS_DONE		; we need a new block loaded to offscreen col
-	ld		a, 0
-	ld		(MOUNTAINS_FRAME_COUNTER), a	; counter reset
 	call	ANIMATE_MOUNTAINS_NEW_COL_BLOCK
 
 ANIMATE_MOUNTAINS_DONE:
@@ -440,9 +451,6 @@ MOUNTAINS_LAYER_PIXEL_BUF_BUILDINGS:
 
 MOUNTAINS_SKY_HEIGHT:
 	defb	4							; start at bottom
-
-MOUNTAINS_FRAME_COUNTER:
-	defb	0
 
 MOUNTAIN_OR_SKY_PIXELS:
 	defw	0

@@ -11,11 +11,8 @@ SETUP_FG_ATTRS_LOOP:
 	inc		de
 	djnz	SETUP_FG_ATTRS_LOOP
 
-; chars are blank to start - FG_LAYER_PIXEL_BUF sets 0 when setup in draw-window.asm
-
 	ret								; SETUP_FG
 
-; animate by flipping attrs to show | characters, based on LUT
 ANIMATE_FG:
 ; attrs
 
@@ -59,7 +56,6 @@ ANIMATE_FG_ATTR_GOT:
 	ld		de, FG_LAYER_PIXEL_BUF+1	; already cleard first byte
 	ld		bc, (WIN_COL_VIS * WIN_FG_ROWS * 8) -1 ; -1 as we did first byte by hand
 	ldir								; copies the manual zero to +1, then incs so copies +1 0 to +2, etc
-
 ; where is pole?
 	ld		a, (FG_COUNTER)				; 0-8
 	ld		c, a						; into c for accumulator fiddling

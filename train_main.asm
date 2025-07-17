@@ -28,7 +28,7 @@ ATTR_SCENE_BUF:						; needs 768 bytes total
 	defs	768						; separate so can flip attrs after setup... todo optimize						
 
 FRAME_COUNTER:
-	defb	0
+	defw	0
 
 	INCLUDE "speccy_defs.asm"		; must be indented
 	INCLUDE "print_char_y_x.asm"
@@ -58,9 +58,9 @@ ANIMATE_MAIN:
 	call	DRAW_WINDOW
 	call	UNDRAW_COPTER_UPDATE_STATUS
 
-	ld		a, (FRAME_COUNTER)		
-	inc		a						; next frame
-	ld		(FRAME_COUNTER), a
+	ld		hl, (FRAME_COUNTER)		
+	inc		hl						; next frame
+	ld		(FRAME_COUNTER), hl
 ; badum needs timing based on speed of other things
 ; and it's annoying whee debugging, so turned off 
 ;	call	BADUM_BADUM				; track sound
