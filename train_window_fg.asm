@@ -22,10 +22,10 @@ ANIMATE_FG:
 ; attrs
 
 	; shift visible left 2
-	ld		bc, WIN_COL_VIS - 2					; only shifting visible bits
-	ld		hl, FG_ATTR_BUF + 2					; first row
-	ld		de, FG_ATTR_BUF						; move by 2
-	ldir										; do it
+	ld		bc, WIN_COL_VIS - 2		; only shifting visible bits
+	ld		hl, FG_ATTR_BUF + 2		; first row
+	ld		de, FG_ATTR_BUF			; move by 2
+	ldir							; do it
 
 	; decide river (1 in 64) or grass
 	ld		d, %01001000			; assume river (avoids jump if it's the more common grass)
