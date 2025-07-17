@@ -7,9 +7,14 @@ SETUP_FG:
 	ld		de, FG_ATTR_BUF
 SETUP_FG_ATTRS_LOOP:
 	ld		(de), a
-	inc		hl
 	inc		de
 	djnz	SETUP_FG_ATTRS_LOOP
+
+	; but blue ink for the bottle
+	ld		a, %01100001			; everything bright black ink green pap
+	ld		de, FG_ATTR_BUF + WIN_COL_TOTAL + 16
+	ld		(de), a
+
 
 	ret								; SETUP_FG
 
@@ -20,11 +25,6 @@ ANIMATE_FG:
 	ld		bc, WIN_COL_VIS - 2					; only shifting visible bits
 	ld		hl, FG_ATTR_BUF + 2					; first row
 	ld		de, FG_ATTR_BUF						; move by 2
-	ldir										; do it
-
-	ld		bc, WIN_COL_VIS - 2					; only shifting visible bits
-	ld		hl, FG_ATTR_BUF + WIN_COL_TOTAL + 2	; second row
-	ld		de, FG_ATTR_BUF + WIN_COL_TOTAL		; move by 2
 	ldir										; do it
 
 	; decide river (1 in 64) or grass
@@ -180,7 +180,7 @@ FG_LAYER_TO_RENDER:
 	ld		bc, WIN_COL_VIS * WIN_FG_ROWS * 8	; copy all at once
 	ldir										; copy over
 
-	; top of bottle from screne
+	; top of bottle over screen
 	ld		hl, FG_BOTTLE_T_PIXELS				; the bottle to draw
 	ld		ix, WINDOW_RENDER_PIXEL_BUF_FG + 16 + (WIN_COL_VIS * 8)	
 												; actual render buffer of FG, fixed col 17

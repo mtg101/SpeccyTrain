@@ -1,6 +1,7 @@
 ; gfx data
 	INCLUDE "train_scene_data.asm"
 	INCLUDE "train_scene_handles.asm"
+	INCLUDE "train_scene_sign.asm"
 
 DRAW_SCENE:
 	call	LOAD_SCENE_UDGS

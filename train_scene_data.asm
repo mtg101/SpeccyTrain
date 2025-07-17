@@ -78,7 +78,17 @@ SCENE_ATTRS:
 	defb	ATTR_BRED_PAP, 3
 	defb	ATTR_BRPWI, 2
 	defb	ATTR_BRPYI, 1
-	defb	ATTR_BRED_PAP, 15
+
+
+
+	defb	ATTR_BRED_PAP, 11
+
+	defb	ATTR_RPBI, 1
+
+	defb	ATTR_BRED_PAP, 3
+
+
+
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_BRED_PAP, 9
 	defb	ATTR_ALL_BLK, 1

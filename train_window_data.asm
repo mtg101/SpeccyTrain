@@ -58,7 +58,7 @@ ATTR_SCR_ROW_8		= ATTR_SCR_ROW_7 + SCREEN_COLUMNS
 ATTR_SCR_ROW_9		= ATTR_SCR_ROW_8 + SCREEN_COLUMNS
 
 ; UDGs
-NUM_WINDOW_UDGS		= 11			; max 19, $A2, due to top-RAM interrupts (plus 128k only has 19)
+NUM_WINDOW_UDGS		= 12			; max 19, $A2, due to top-RAM interrupts (plus 128k only has 19)
 
 UDG_FENCE			= $90
 UDG_FENCE_ATTR		= %00100000	
@@ -78,6 +78,7 @@ UDG_HEDGE_CLOUD_2x2_TL	= $97
 UDG_HEDGE_CLOUD_2x2_TR	= $98
 UDG_HEDGE_CLOUD_2x2_BL	= $99
 UDG_HEDGE_CLOUD_2x2_BR	= $9A
+UDG_SIGN_SMILIE			= $9B
 
 
 UDGS_WINDOW_PIXELS:
@@ -191,16 +192,14 @@ UDG_HEDGE_CLOUD_2x2_BR_PIXELS:
 	defb	%11111110
 	defb	%11111000
 
-; UDG_TEMPLATE:
-; 	defb	%
-; 	defb	%
-; 	defb	%
-; 	defb	%
-; 	defb	%
-; 	defb	%
-; 	defb	%
-; 	defb	%
-
-
+UDG_SIGN_SMILIE_PIXELS:
+	defb	%00111100
+	defb	%01000010
+	defb	%10100101
+	defb	%10000001
+	defb	%10100101
+	defb	%10011001
+	defb	%01000010
+	defb	%00111100
 
 
