@@ -86,29 +86,21 @@ INITIALISE_INTERRUPT:
 	ret								; Initialise_Interrupt
  
 INTERRUPT:              
-
-
-; uncomment for border
 	; push af                       ; save all the registers on the stack
 	; push bc                       ; this is probably not necessary unless
 	; push de                       ; we're looking at returning cleanly
 	; push hl                       ; back to basic at some point
 	; push ix
+	; exx
+	; ex af,af
+	; push af
+	; push bc
+	; push de
+	; push hl
+	; push iy
 
-	; ; for now don't need to worry about these
-	; ; exx
-	; ; ex af,af'
-	; ; push af
-	; ; push bc
-	; ; push de
-	; ; push hl
-	; ; push iy
 
-;
-; Your code here...
-;
-
-; uncomment for border
+; static border
  	; ld		a, COL_BLK
  	; out		($FE), a
 
@@ -118,17 +110,13 @@ INTERRUPT:
  	; out		($FE), a
 
 
-
-; 	; don't need to worry about these ones for
-; 	; pop iy                        ; restore all the registers
-; 	; pop hl
-; 	; pop de
-; 	; pop bc
-; 	; pop af
-; 	; exx
-; 	; ex af,af'
-
-; uncomment for border
+	; pop iy                        ; restore all the registers
+	; pop hl
+	; pop de
+	; pop bc
+	; pop af
+	; exx
+	; ex af,af
 	; pop ix
 	; pop hl
 	; pop de
