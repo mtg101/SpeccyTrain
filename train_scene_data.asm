@@ -4,18 +4,11 @@ SCENE_CHARACTERS:
 	defb	UDG_DITHER_4, 32
 	defb	UDG_DITHER_3, 32
 	defb	UDG_DITHER_4, 32
-
 	defb	UDG_MIDLINE, 6
-
 	defb	UDG_HANDLE_STRAP, 1
-
 	defb	UDG_MIDLINE, 23
-
 	defb	UDG_HANDLE_STRAP, 1
-
 	defb	UDG_MIDLINE, 1
-
-
 	defb	C_SPACE, 40
 	defb	UDG_BORDER_TL, 1
 	defb	UDG_BORDER_T, 19
@@ -34,7 +27,19 @@ SCENE_CHARACTERS:
 	defb	UDG_BORDER_BL, 1
 	defb	UDG_BORDER_B, 3
 	defb	UDG_BORDER_BR, 1
-	defb	C_SPACE, 218
+	defb	C_SPACE, 26
+	defb	UDG_BORDER_TL, 1
+	defb	UDG_BORDER_T, 7
+	defb	UDG_BORDER_TR, 1
+	defb	C_SPACE, 23
+	defb	UDG_BORDER_L, 1
+	defb	C_SPACE, 7
+	defb	UDG_BORDER_R, 1
+	defb	C_SPACE, 23
+	defb	UDG_BORDER_BL, 1
+	defb	UDG_BORDER_B, 7
+	defb	UDG_BORDER_BR, 1
+	defb	C_SPACE, 119
 	defb	C_SPACE, 11
 	defb	UDG_BENTO_L, 1
 	defb	UDG_BENTO_R, 1
@@ -56,35 +61,17 @@ SCENE_ATTRS:
 	defb	%00010000, 32
 	defb	ATTR_BRED_PAP, 72
 	defb	ATTR_RPBI,    21
-	defb	ATTR_BRED_PAP, 12
-	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_BRED_PAP, 13
-	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_BRED_PAP, 6
+	defb	ATTR_BRED_PAP, 69
 	defb	ATTR_BYPBI,	  3
-	defb	ATTR_BRED_PAP, 4
-	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_BRED_PAP, 13
-	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_BRED_PAP, 13
-	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_BRED_PAP, 13
-	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_BRED_PAP, 13
-	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_BRED_PAP, 13
-	defb	ATTR_CYN_PAP, 19
-	defb	ATTR_BRED_PAP, 11
+	defb	ATTR_BRED_PAP, 92
+	defb	ATTR_BPYI, 7	
+	defb	ATTR_BRED_PAP, 95
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_BRED_PAP, 1
-	defb	ATTR_BGRN_PAP, 19
-	defb	ATTR_BRED_PAP, 1
+	defb	ATTR_BRED_PAP, 21
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_BRED_PAP, 9
 	defb	ATTR_ALL_BLK, 1
-	defb	ATTR_BRED_PAP, 1
-	defb	ATTR_BGRN_PAP, 19
-	defb	ATTR_BRED_PAP, 1
+	defb	ATTR_BRED_PAP, 21
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_BRED_PAP, 9	
 	defb	ATTR_ALL_BLK, 1
