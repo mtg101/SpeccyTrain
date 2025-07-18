@@ -22,9 +22,11 @@ RNG:
 
 ; data
 SEED1:
-	defw	23						; I seed the fnords!
+	defw	23						; during setup gets overwritten by WAIT_FOR_USER 
+                                    ; from train_boarding_scene
+                                    ; after waiting for user, to vary sequence each run
 SEED2:
-	defw	5						; 2+3=5
+	defw	24601					; can't vary this one during setup, as only have one user input
 	
 NEXT_RNG:
 	defw	0

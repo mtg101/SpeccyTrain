@@ -36,6 +36,66 @@ BOARDING_ATTR_BUF_DONE:
 
 	ret										; LOAD_BOARDING_SCREEN
 
+; shows text, starts counter, waits for user, then sets RNG seed before continuing
+WAIT_FOR_USER:
+	; show text on boarding screen
+	; print_chat_at_y_x loop, with attrs set too
+	ld		a, 0
+	ld		(PRINT_AT_Y), a
+	ld		a, 0
+	ld		(PRINT_AT_X), a
+	ld		hl, BOARDING_SCENE_PRESS_SPACE
+	ld		de, ATTR_START + (0*32) + 0	; attr index
+BOARDING_SCENE_PRESS_SPACE_TEXT_LOOP:
+	; next char
+	ld		a, (hl)
+
+	cp		0								; is it 0null terminator?
+	jr		z,  BOARDING_SCENE_WAIT_LOOP
+
+	ld		(PRINT_CHAR), a
+	call	PRINT_CHAR_AT_Y_X
+
+	; next attr
+	ld		a, %10110001
+	ld		(de), a
+
+	; move to next col
+	ld		a, (PRINT_AT_X)
+	inc		a
+	ld		(PRINT_AT_X), a
+
+	; next char
+	inc		hl
+	; next attr
+	inc		de
+
+	jr		BOARDING_SCENE_PRESS_SPACE_TEXT_LOOP
+
+	ld		de, 0					; wait counter
+BOARDING_SCENE_WAIT_LOOP:
+	halt							; wait for next frame
+	inc		de						; inc wait counter	
+
+	; keyboard stuff turns out to be pretty easy
+	; see http://www.breakintoprogram.co.uk/hardware/computers/zx-spectrum/keyboard
+	; ok TODO understand how in a, (c) knows which bank of keys we're talking about..
+	; magically knows because we're pssing in c from bc or something?
+
+	; space pressed?
+	ld		bc, $7FFE				; space to b (space in bit 0)
+	in		a, (c)					; read keys
+	bit		0, a					; space is bit 0
+	jr		nz, BOARDING_SCENE_WAIT_LOOP	; 1 means key not pressed, 0 pressed
+
+BOARDING_SCENE_WAIT_DONE:
+	ld 		(SEED1), de
+
+	ret										; WAIT_FOR_USER
+
+BOARDING_SCENE_PRESS_SPACE:
+	defb	"Press SPACE to board!", 0
+
 
 BOARDING_SCENE_ATTRS:
 	; RLE attr, numTime (max 255 - b is lower bit!), 0 terminated - total 768
