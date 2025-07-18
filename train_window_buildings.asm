@@ -154,7 +154,7 @@ ADD_BULDING_ROW_LOOP:
 	ld		a, UDG_BUILDING			; building udg in a
 	ld		(CHAR_TO_BUF), a
 
-	; work out pap (norm, sun, bright, blind)
+	; work out pap (norm, sun, bright)
 	push 	bc
 	call	RNG						; change (NEXT_RNG)
 	pop		bc
@@ -162,7 +162,7 @@ ADD_BULDING_ROW_LOOP:
 
 	and 	%00001111
 	cp		%00001111				; 1 in 16
-	jr		nz, NOT_SUN_REFLECTION
+	jr		nz, BASIC_BUILDING_ATTR
 
 
 	ld		a, (NEXT_RNG)	
@@ -179,29 +179,6 @@ SUN_REFLECTION_NORM:
 SUN_REFLECTION_BRIGHT:
 	ld		a, (ATTR_TO_BUF)		; get blue/black ink
 	or		%01110000				; yellow pap sun
-	ld		(ATTR_TO_BUF), a		
-	jr		GOT_BUIDLING_ATTR
-
-NOT_SUN_REFLECTION:
-	ld		a, (NEXT_RNG)	
-	and 	%11110000
-	cp		%11110000				; 1 in 16, different end from before
-	jr		nz, NOT_BRIGHT_REFLECTION
-
-	ld		a, (ATTR_TO_BUF)		; get blue/black ink
-	or		%01111000				; bright white pap
-	ld		(ATTR_TO_BUF), a		
-	jr		GOT_BUIDLING_ATTR
-
-NOT_BRIGHT_REFLECTION:	
-	ld		a, c					; get blue/black ink
-	ld		a, (NEXT_RNG+1)			; RNG is 16 bit... use the other byte!
-	and 	%01111111
-	cp		%01111111				; 1 in 128 blinds down
-	jr		nz, BASIC_BUILDING_ATTR
-
-	ld		a, (ATTR_TO_BUF)		; get blue/black ink
-	or		%00000000				; black pap - TODO opposite blue/black
 	ld		(ATTR_TO_BUF), a		
 	jr		GOT_BUIDLING_ATTR
 
