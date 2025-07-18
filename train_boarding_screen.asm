@@ -89,7 +89,9 @@ BOARDING_SCENE_WAIT_LOOP:
 	jr		nz, BOARDING_SCENE_WAIT_LOOP	; 1 means key not pressed, 0 pressed
 
 BOARDING_SCENE_WAIT_DONE:
-	ld 		(SEED1), de
+	ld 		(SEED1), de				; our coutner for SEED1
+	ld		a, r					; undocumented R register counter for DRAM refresh
+	ld		(SEED2), a				; foor SEED2
 
 	ret										; WAIT_FOR_USER
 

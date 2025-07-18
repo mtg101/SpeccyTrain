@@ -20,13 +20,12 @@ RNG:
 	ld		(NEXT_RNG), hl			; store in (NEXT_RNG)
     ret								; RNG
 
-; data
+; seeds are static for setup
+; but then we wait for user to press space and use coutners to ramdomize seeds for animation
 SEED1:
-	defw	23						; during setup gets overwritten by WAIT_FOR_USER 
-                                    ; from train_boarding_scene
-                                    ; after waiting for user, to vary sequence each run
+	defw	23						
 SEED2:
-	defw	24601					; can't vary this one during setup, as only have one user input
+	defw	24601					
 	
 NEXT_RNG:
 	defw	0
