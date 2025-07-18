@@ -1,6 +1,3 @@
-; PRINT_CHAR_Y_X has to recalculate pixel row every char, which is slow
-; this prints a row at a time, specifically for the 19x10 window
-
 ; print row from buf
 ; buf is pixel row at a time, precalc'd for draw speed
 DRAW_WINDOW:

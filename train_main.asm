@@ -54,9 +54,12 @@ ANIMATE_MAIN:
 	call	ANIMATE_MOUNTAINS
 	call	ANIMATE_BUILDINGS
 	call	ANIMATE_FG
+
 	halt							; wait for vsync before draw
-	call	ANIMATE_SCENE_HANDLES	; first as it's higher up (and should be very quick)
-	call	DRAW_WINDOW
+
+	call	ANIMATE_SCENE_HANDLES		; first as it's higher up (and should be very quick)
+	call	ANIMATE_TRAIN_SCENE_SIGN	; also fast? todo needs testing
+	call	DRAW_WINDOW					; the big one...
 
 	ld		hl, (FRAME_COUNTER)		
 	inc		hl						; next frame
