@@ -44,7 +44,7 @@ START:
 	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
 	call	LOAD_BOARDING_SCREEN	; show something while setup
 	call	SETUP_WINDOW			; doesn't render, takes time
-	call	WAIT_FOR_USER			; varying RNG seed - comment out while debugging (and uncomment...)
+;	call	WAIT_FOR_USER			; varying RNG seed - comment out while debugging (and uncomment...)
 	call	DRAW_SCENE				; blue ink/pap as it loads, to avoid trashing loading screen 
 	call	LOAD_WINDOW_UDGS		; reload for animation
 
@@ -59,7 +59,7 @@ ANIMATE_MAIN:
 	halt							; wait for vsync before draw
 
 	call	ANIMATE_SCENE_HANDLES		; first as it's higher up (and should be very quick)
-	call	ANIMATE_TRAIN_SCENE_SIGN	; also fast? todo needs testing
+	call	ANIMATE_TRAIN_SCENE_SIGN	; also fast
 	call	DRAW_WINDOW					; the big one...
 
 	ld		hl, (FRAME_COUNTER)		

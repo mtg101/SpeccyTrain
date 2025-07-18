@@ -56,6 +56,9 @@ SCENE_CHARACTERS:
 SCENE_ATTRS:
 	; RLE attr, numTime (max 255 - b is lower bit!), 0 terminated
 	; total 32*24=768 
+
+ATTR_SIGN_BORDER	= %01010001
+
 	defb	%00001000, 32
 	defb	%00001010, 32
 	defb	%00010000, 32
@@ -63,9 +66,20 @@ SCENE_ATTRS:
 	defb	ATTR_RPBI,    21
 	defb	ATTR_BRED_PAP, 69
 	defb	ATTR_BYPBI,	  3
-	defb	ATTR_BRED_PAP, 92
-	defb	ATTR_BPYI, 7	
-	defb	ATTR_BRED_PAP, 95
+	defb	ATTR_BRED_PAP, 59
+	defb	ATTR_SIGN_BORDER, 9
+	defb	ATTR_BRED_PAP, 23
+	defb	ATTR_SIGN_BORDER, 1	
+	defb	ATTR_BKPYI, 7	
+	defb	ATTR_SIGN_BORDER, 1	
+	defb	ATTR_BRED_PAP, 23
+	defb	ATTR_SIGN_BORDER, 9
+	defb	ATTR_BRED_PAP, 62
+
+
+
+
+;	defb	ATTR_BRED_PAP, 94
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_BRED_PAP, 21
 	defb	ATTR_ALL_BLK, 1
