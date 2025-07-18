@@ -10,16 +10,9 @@ ANIMATE_TRAIN_SCENE_SIGN:
 	call	RNG
 	ld		a, (NEXT_RNG)				; should we start text? 
 	cp		0 							; 1 in 256 for now
-;	ret		nz							; keep not showing, return early from ANIMATE_TRAIN_SCENE_SIGN
+	ret		nz							; keep not showing, return early from ANIMATE_TRAIN_SCENE_SIGN
 
 	; turn on text
-
-
-; hack 
-	jr 		ANIMATE_TRAIN_SCENE_SIGN_MESSAGE_3
-
-
-
 
 	; 1 in 4 random which message
 	; new rng for it
