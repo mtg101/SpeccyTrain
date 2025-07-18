@@ -79,8 +79,8 @@ BOARDING_SCENE_WAIT_LOOP:
 
 	; keyboard stuff turns out to be pretty easy
 	; see http://www.breakintoprogram.co.uk/hardware/computers/zx-spectrum/keyboard
-	; ok TODO understand how in a, (c) knows which bank of keys we're talking about..
-	; magically knows because we're pssing in c from bc or something?
+	; there's just their weird thing where you prep bc with the extra part of the channel
+	; but only pass in (c) to IN -- and it knows about the b part...
 
 	; space pressed?
 	ld		bc, $7FFE				; space to b (space in bit 0)
