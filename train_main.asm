@@ -41,7 +41,7 @@ FRAME_COUNTER:
 	INCLUDE "vector.asm"
 	
 START:
-5	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
+	call	INITIALISE_INTERRUPT	; IM2 with ROM trick
 	call	LOAD_BOARDING_SCREEN	; show something while setup
 	call	SETUP_WINDOW			; doesn't render, takes time
 	call	WAIT_FOR_USER			; varying RNG seed - comment out while debugging (and uncomment...)
