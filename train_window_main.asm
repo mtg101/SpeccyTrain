@@ -6,8 +6,8 @@
 	INCLUDE "train_window_fg.asm"
 	INCLUDE "train_window_copter.asm"
 	INCLUDE "train_window_mountains.asm"
+	INCLUDE "train_window_tunnel.asm"
 
-	
 SETUP_WINDOW:
 	call	LOAD_WINDOW_UDGS
 	call	SETUP_CLOUDS

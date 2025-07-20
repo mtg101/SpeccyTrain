@@ -1,6 +1,6 @@
 	SLDOPT COMMENT WPMEM, LOGPOINT, ASSERTION	; for VSCODE and debugging
 	DEVICE ZXSPECTRUM48 			; needed for SNA export (must be tab indented)
-	org $8000
+	org $8000						; the uncontended 32KiB
 	
 ; re-use the scene buffers for the building buffer too
 CHAR_WINDOW_BUF:
@@ -55,6 +55,7 @@ ANIMATE_MAIN:
 	call	ANIMATE_MOUNTAINS
 	call	ANIMATE_BUILDINGS
 	call	ANIMATE_FG
+	call	ANIMATE_WINDOW_TUNNEL
 
 	halt							; wait for vsync before draw
 
