@@ -10,8 +10,36 @@ ANIMATE_COPTER:
 
     ld      a, (COPTER_COL) 
     cp      0
-    jr      z, DO_NOT_ANIMATE_COPTER                ; only draw if we should
+    jr      z, ANIMATE_DRAW_COPTER_NOT_SHOWING      ; only draw if we should
 
+    ; should we stop showing?
+    ld      a, (NEXT_RNG)
+    and     %01111111
+    cp      %01111111                               ; 1 in 128 stop showing
+    jr      nz, ANIMATE_COPTER_CONTINUE                  
+
+    ; draw in top row this frame
+    ; draw left copter
+ 	ld		hl, COPTER_LEFT_PIXELS                  ; don't need udgs
+	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS
+    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
+    add     ix, bc
+	call	XOR_CHAR_PIXELS_VIS
+
+    ; draw right copter
+	ld		hl, COPTER_RIGHT_PIXELS                 ; don't need udgs
+	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS + 1
+    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL+1
+    add     ix, bc
+	call	XOR_CHAR_PIXELS_VIS
+
+    ; 0 col means not showing
+    ld      a, 0
+    ld      (COPTER_COL), a                      
+
+    ret                                             ; ANIMATE_COPTER
+
+ANIMATE_COPTER_CONTINUE:
     ; animate udgs by hand
     ld      a, (FRAME_COUNTER)                      
     and     %00000011                               ; 0-3
@@ -71,22 +99,11 @@ ANIMATE_DRAW_COPTER:
     add     ix, bc
 	call	XOR_CHAR_PIXELS_VIS
 
-    ; should we stop showing?
-    ld      a, (NEXT_RNG)
-    and     %01111111
-    cp      %01111111                               ; 1 in 128 stop showing
-    jr      nz, DONE_ANIMATE_COPTER                  
-    ld      a, 0
-    ld      (COPTER_COL), a                      
-
-    jr      DONE_ANIMATE_COPTER                     ; skip to the end...
-
-
-DO_NOT_ANIMATE_COPTER:
+ANIMATE_DRAW_COPTER_NOT_SHOWING:
     ; should we start showing?
     ld      a, (NEXT_RNG)                           ; 1 in 256 start showing
     cp      %11111111                               
-    jr      nz, DONE_ANIMATE_COPTER                  
+    ret     nz                                      ; ANIMATE_COPTER
 
     ; random col 1-16
     call    RNG                                     ; otherwise it's always same %____1111 position
@@ -95,7 +112,21 @@ DO_NOT_ANIMATE_COPTER:
     inc     a                                       ; 1-16
     ld      (COPTER_COL), a                         ; save to status
 
-DONE_ANIMATE_COPTER:
+    ; draw in top row this frame
+    ; draw left copter
+	ld		hl, COPTER_LEFT_PIXELS                  ; don't need udgs
+	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS
+    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
+    add     ix, bc
+	call	XOR_CHAR_PIXELS_VIS
+
+    ; draw right copter
+	ld		hl, COPTER_RIGHT_PIXELS                 ; don't need udgs
+	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS + 1
+    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL+1
+    add     ix, bc
+	call	XOR_CHAR_PIXELS_VIS
+
     ret                                             ; ANIMATE_COPTER
 
 
