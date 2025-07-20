@@ -35,7 +35,6 @@ FRAME_COUNTER:
 	INCLUDE "draw_window.asm"
 	INCLUDE "train_scene.asm"
 	INCLUDE "train_window_main.asm"
-	INCLUDE "sound.asm"
 	INCLUDE "maths.asm"
 	INCLUDE "train_boarding_screen.asm"
 	INCLUDE "vector.asm"
@@ -66,9 +65,6 @@ ANIMATE_MAIN:
 	ld		hl, (FRAME_COUNTER)		
 	inc		hl						; next frame
 	ld		(FRAME_COUNTER), hl
-; badum needs timing based on speed of other things
-; and it's annoying whee debugging, so turned off 
-;	call	BADUM_BADUM				; track sound
 
 	jr		ANIMATE_MAIN
 

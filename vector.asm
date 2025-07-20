@@ -56,19 +56,6 @@ Plot:			CALL Get_Pixel_Address		; Get screen address in HL, pixel position (0 to
 			RET
 
 
-; Unplot routine
-; B = Y pixel position
-; C = X pixel position
-;
-Unplot:			CALL Get_Pixel_Address		; Same as Plot...
-			LD BC,Unplot_Point
-			ADD A,C
-			LD C,A
-			LD A,(BC)
-			AND (HL)			; AND with screen data
-			LD (HL),A
-			RET
-
 ; Draw Circle (Beta - uses Plot to draw the circle outline as a proof of concept)
 ; B = Y pixel position of circle centre
 ; C = X pixel position of circle centre
@@ -199,45 +186,7 @@ Draw_Circle_2:		INC BC				; D2=D2+2
 			INC DE	
 			INC IXL				; X=X+1
 			JR Draw_Circle_Loop
-			
 
-; Draw Triangle
-; IY = Pointer to 3 bytes worth of coordinate data
-;
-Draw_Triangle:		LD C,(IY+0)
-			LD B,(IY+1)
-			LD E,(IY+2)
-			LD D,(IY+3)
-			CALL Draw_Line
-			LD C,(IY+2)
-			LD B,(IY+3)
-			LD E,(IY+4)
-			LD D,(IY+5)
-			CALL Draw_Line
-			LD C,(IY+4)
-			LD B,(IY+5)
-			LD E,(IY+0)
-			LD D,(IY+1)
-			JP Draw_Line
-
-; Erase Triangle
-; IY = Pointer to 3 bytes worth of coordinate data
-;
-Erase_Triangle:		LD C,(IY+0)
-			LD B,(IY+1)
-			LD E,(IY+2)
-			LD D,(IY+3)
-			CALL Erase_Line
-			LD C,(IY+2)
-			LD B,(IY+3)
-			LD E,(IY+4)
-			LD D,(IY+5)
-			CALL Erase_Line
-			LD C,(IY+4)
-			LD B,(IY+5)
-			LD E,(IY+0)
-			LD D,(IY+1)
-			JP Erase_Line
  
 ; Draw Line routine
 ; B = Y pixel position 1
@@ -358,128 +307,6 @@ Draw_Line_Q2_S:		LD E,A				; Store the error value back in
 			DJNZ Draw_Line_Q2_L
 			JR Draw_Line_P			; Plot the final point
 
-; Erase Line routine
-; B = Y pixel position 1
-; C = X pixel position 1
-; D = Y pixel position 2
-; E = X pixel position 2
-;
-Erase_Line:		LD A,D				; Check whether we are going to be drawing up
-			CP B
-			JR NC,Erase_Line_1
-
-			PUSH BC				; If we are, then this neat trick swaps BC and DE
-			PUSH DE				; using the stack, forcing the line to be always
-			POP BC				; drawn downwards
-			POP DE
-
-Erase_Line_1:		CALL Get_Pixel_Address		; Get screen address in HL, pixel position (0-7) in A
-;
-; At this point we have
-;  A = Pixel position (0-7)
-; HL = Screen address of the start point
-; BC = Start coordinate (B=Y1, C=X1)
-; DE = End coordinates  (D=Y2, E=X2)
-;
-			LD IX,Unplot_Point		; Point to the Unplot_Point table
-			ADD A,IXL			; Add the pixel position to get entry in table
-			LD IXL,A
-
-			LD A,D				; Calculate the line height in B (Y2-Y1)
-			SUB B
-			LD B,A
-	
-			LD A,E				; Calculate the line width in C (X2-X1)
-			SUB C
-			JR C,Erase_Line_X1		; If carry set (negative result) then we are drawing from right to left
-;
-; This bit of code mods the main loop for drawing left to right
-;
-			LD C,A				; Store the line width
-			LD A,0x2C			; Code for INC L
-			LD (Erase_Line_Q1_M3),A		; Mod the code
-			LD (Erase_Line_Q2_M3),A
-			LD A,0x0A			; Code for RRC D (CB 0A)
-			JR Erase_Line_X2		; Skip the next bit
-;
-; This bit of code mods the main loop for drawing right to left
-;
-Erase_Line_X1:		NEG				; The width of line is negative, so make it positive again
-			LD C,A				; Store the line width
-			LD A,0x2D			; Code for DEC L
-			LD (Erase_Line_Q1_M3),A
-			LD (Erase_Line_Q2_M3),A
-			LD A,0x02			; Code for RLC D (CB 02)
-;
-; We've got the basic information at this point
-;
-Erase_Line_X2:		LD (Erase_Line_Q1_M2 + 1),A	; A contains the code for RLC D or RRC D, so make the mods
-			LD (Erase_Line_Q2_M2 + 1),A
-			LD D,(IX+0)			; Get the pixel data from the Unplot_Point table
-			LD A,B				; Check if B and C are 0
-			OR C
-			JR NZ,Erase_Line_Q		; There is a line to draw, so skip to the next bit
-			LD A,(HL)			; Here we've got a single point line, so plot and return
-			AND D
-			LD (HL),A
-			RET
-;
-; At this point
-; HL = Screen address of the start point
-;  B = Line height
-;  C = Line width
-;  D = Pixel data
-;
-Erase_Line_Q:		LD A,B				; Work out which diagonal we are on
-			CP C
-			JR NC,Erase_Line_Q2
-;
-; This bit of code draws the line where B<C (more horizontal than vertical)
-;
-Erase_Line_Q1:		LD A,C
-			LD (Erase_Line_Q1_M1 + 1),A	; Self-mod the code again to store the line width
-			LD C,B
-			LD B,A
-			LD E,B				; Calculate the error value
-			SRL E
-Erase_Line_Q1_L:	LD A,(HL)			; Unplot the pixel
-			AND D
-			LD (HL),A
-			LD A,E
-			SUB C
-			LD E,A
-			JR NC,Erase_Line_Q1_M2
-Erase_Line_Q1_M1:	ADD A,0				; Add the line height (previously stored; self modifying code)
-			LD E,A
-			CALL Pixel_Address_Down
-Erase_Line_Q1_M2:	RRC D				; Rotate the pixel right or left; more self-modifying code
-			JR C,Erase_Line_Q1_S		; Note the change here from the Draw_Line routine
-Erase_Line_Q1_M3:	INC L				; If we get no carry then move to adjacent screen address; more self modifying code
-Erase_Line_Q1_S:	DJNZ Erase_Line_Q1_L		; Loop until the line is drawn
-Erase_Line_P:		LD A,(HL)			; Plot the final pixel
-			AND D
-			LD (HL),A
-			RET
-;
-; This bit draws the line where B>=C (more vertical than horizontal, or diagonal)
-;
-Erase_Line_Q2:		LD (Erase_Line_Q2_M1 + 1),A
-			LD E,B				; Calculate the error value
-			SRL E
-Erase_Line_Q2_L:	LD A,(HL)			; Unplot the pixel
-			AND D
-			LD (HL),A
-			LD A,E				; Get the error value
-			SUB C				; Add the line length to it (X2-X1)
-			JR NC,Erase_Line_Q2_S		; Skip the next bit if we don't get a carry
-Erase_Line_Q2_M1: 	ADD A,0				; Add the line height (previously stored; self modifying code)
-Erase_Line_Q2_M2:	RRC D				; Rotates the pixel right with carry
-			JR C,Erase_Line_Q2_S		; Note the change here from the Draw_Line routine
-Erase_Line_Q2_M3:	INC L				; If we get no carry then move to adjacent screen address; more self modifying code
-Erase_Line_Q2_S:	LD E,A				; Store the error value back in
-			CALL Pixel_Address_Down		; And also move down
-			DJNZ Erase_Line_Q2_L
-			JR Erase_Line_P			; Plot the final pixel
 
 ; Note that the functions above only work if each of these tables are in a byte boundary
 ;

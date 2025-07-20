@@ -54,13 +54,6 @@ ANIMATE_NOT_2:                                      ; it's %000001100
     ld      a, %11000000                            ; still pillar
     ld      (hl), a                                 ; hack the udg
 
-    ; sound once per loop
-    ; sounds crap if you don't tweak it based on other things going on
-    ; annoying as hell while debugging, so turned off
-    ; ld      hl, C_1_PITCH
-    ; ld      de, C_1_DUR_1S / 64
-    ; call    BEEP
-
     ; fall through
 
 ANIMATE_DRAW_COPTER:
