@@ -75,11 +75,6 @@ ATTR_SIGN_BORDER	= %01010001
 	defb	ATTR_BRED_PAP, 23
 	defb	ATTR_SIGN_BORDER, 9
 	defb	ATTR_BRED_PAP, 62
-
-
-
-
-;	defb	ATTR_BRED_PAP, 94
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_BRED_PAP, 21
 	defb	ATTR_ALL_BLK, 1
@@ -92,17 +87,9 @@ ATTR_SIGN_BORDER	= %01010001
 	defb	ATTR_BRED_PAP, 3
 	defb	ATTR_BRPWI, 2
 	defb	ATTR_BRPYI, 1
-
-
-
 	defb	ATTR_BRED_PAP, 11
-
 	defb	ATTR_RPBI, 1
-
 	defb	ATTR_BRED_PAP, 3
-
-
-
 	defb	ATTR_ALL_BLK, 1
 	defb	ATTR_BRED_PAP, 9
 	defb	ATTR_ALL_BLK, 1
