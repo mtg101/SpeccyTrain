@@ -10,7 +10,7 @@ ANIMATE_COPTER:
 
     ld      a, (COPTER_COL) 
     cp      0
-    jr      z, ANIMATE_DRAW_COPTER_NOT_SHOWING      ; only draw if we should
+    jp      z, ANIMATE_DRAW_COPTER_NOT_SHOWING      ; only draw if we should
 
     ; should we stop showing?
     ld      a, (NEXT_RNG)
@@ -18,19 +18,47 @@ ANIMATE_COPTER:
     cp      %01111111                               ; 1 in 128 stop showing
     jr      nz, ANIMATE_COPTER_CONTINUE                  
 
+    ; stop showing 
     ; draw in top row this frame
+
+    ; left / mid / mid / right fly-out
+    call    RNG                                     ; new or always 128
+    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL-ish
+    ld      a, (NEXT_RNG)
+    and     %00000011
+
+    cp      0
+    jr      z, ANIMATE_COPTER_LEAVE_LEFT
+    cp      3
+    jr      z, ANIMATE_COPTER_LEAVE_RIGHT
+
+    ; fall through
+ANIMATE_COPTER_LEAVE_MID:
+    jr      ANIMATE_COPTER_LEAVE_DRAW
+
+ANIMATE_COPTER_LEAVE_LEFT:
+    dec     bc
+    jr      ANIMATE_COPTER_LEAVE_DRAW
+
+ANIMATE_COPTER_LEAVE_RIGHT:
+    inc     bc
+    ; fall through
+
+ANIMATE_COPTER_LEAVE_DRAW:
     ; draw left copter
  	ld		hl, COPTER_LEFT_PIXELS                  ; don't need udgs
 	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS
-    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
     add     ix, bc
+
+    push    bc
 	call	XOR_CHAR_PIXELS_VIS
+    pop     bc
 
     ; draw right copter
 	ld		hl, COPTER_RIGHT_PIXELS                 ; don't need udgs
 	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS + 1
-    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL+1
     add     ix, bc
+
 	call	XOR_CHAR_PIXELS_VIS
 
     ; 0 col means not showing
@@ -113,17 +141,43 @@ ANIMATE_DRAW_COPTER_NOT_SHOWING:
     ld      (COPTER_COL), a                         ; save to status
 
     ; draw in top row this frame
+
+    ; left / mid / mid / right fly-out
+    call    RNG                                     ; new or always 128
+    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL-ish
+    ld      a, (NEXT_RNG)
+    and     %00000011
+
+    cp      0
+    jr      z, ANIMATE_COPTER_ENTER_LEFT
+    cp      3
+    jr      z, ANIMATE_COPTER_ENTER_RIGHT
+
+    ; fall through
+ANIMATE_COPTER_ENTER_MID:
+    jr      ANIMATE_COPTER_ENTER_DRAW
+
+ANIMATE_COPTER_ENTER_LEFT:
+    dec     bc
+    jr      ANIMATE_COPTER_ENTER_DRAW
+
+ANIMATE_COPTER_ENTER_RIGHT:
+    inc     bc
+    ; fall through
+
+ANIMATE_COPTER_ENTER_DRAW:
     ; draw left copter
 	ld		hl, COPTER_LEFT_PIXELS                  ; don't need udgs
 	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS
-    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL
     add     ix, bc
+
+    push    bc
 	call	XOR_CHAR_PIXELS_VIS
+    pop     bc
 
     ; draw right copter
 	ld		hl, COPTER_RIGHT_PIXELS                 ; don't need udgs
 	ld		ix, WINDOW_RENDER_PIXEL_BUF_CLOUDS + 1
-    ld      bc, (COPTER_COL)                        ; show at COPTOR_COL+1
     add     ix, bc
 	call	XOR_CHAR_PIXELS_VIS
 
