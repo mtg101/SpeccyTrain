@@ -129,31 +129,42 @@ ANIMATE_WINDOW_TUNNEL_SHIFT_AND_DRAW_ON:
 	.15 ldi
 
 	; light
-	ld		c, %00000000				; default black on black
-
 	ld		a, (ANIMATE_WINDOW_TUNNEL_COUNTER)
 	cp 		0							; light when counter is done
-	dec 	a							; doesn't matter if goes neg, as on 0 we reset
-	ld		(ANIMATE_WINDOW_TUNNEL_COUNTER), a
-	jr		nz, ANIMATE_WINDOW_TUNNEL_GOT_LIGHT
+	jr		nz, ANIMATE_WINDOW_TUNNEL_LIGHT_OFF
 
 	; light is on
-	ld		c, %00110110				; yellow on yellow
+	ld 		hl, ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 1)
+	ld		(hl), %00000000
+	ld 		hl, ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 2)
+	ld		(hl), %00001001
+	ld 		hl, ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 3)
+	ld		(hl), %01001001
+	ld 		hl, ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 4)
+	ld		(hl), %00011011
 
 	; reset counter
 	ld		a, LIGHT_COUNTER_MAX
 	ld		(ANIMATE_WINDOW_TUNNEL_COUNTER), a
 
-ANIMATE_WINDOW_TUNNEL_GOT_LIGHT:
-	ld 		a, %00000000
-	ld		(ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 1)), a
-	ld		(ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 2)), a
-	ld 		b, a
-	ld		a, c
-	ld		(ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 3)), a	; light
-	ld 		a, b
-	ld		(ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 4)), a
+	jr		ANIMATE_WINDOW_TUNNEL_BOTTLE		; skip over off
 
+ANIMATE_WINDOW_TUNNEL_LIGHT_OFF:
+	; light is off
+	ld 		hl, ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 1)
+	ld		(hl), %00000000
+	ld 		hl, ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 2)
+	ld		(hl), %00000000
+	ld 		hl, ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 3)
+	ld		(hl), %00000000
+	ld 		hl, ANIMATE_WINDOW_TUNNEL_ATTR_BUF_4 + (WIN_COL_VIS - 4)
+	ld		(hl), %00000000
+
+	; update counter
+	dec 	a						
+	ld		(ANIMATE_WINDOW_TUNNEL_COUNTER), a
+
+ANIMATE_WINDOW_TUNNEL_BOTTLE:
 	; top of bottle over screen
 	ld		de, ANIMATE_WINDOW_TUNNEL_ATTR_BUF_9 + 16
 	ld		a, %00000001				; blue ink black pap
