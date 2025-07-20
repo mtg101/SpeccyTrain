@@ -121,6 +121,77 @@ ATTR_SIGN_BORDER	= %01010001
 	defb	ATTR_ALL_BLK, 32
 	defb	0
 
+SCENE_ATTRS_TUNNEL:
+	; RLE attr, numTime (max 255 - b is lower bit!), 0 terminated
+	; total 32*24=768 
+
+ATTR_SIGN_BORDER_DIM	= %00010001
+
+	defb	%00001000, 32
+	defb	%00001010, 32
+	defb	%00010000, 32
+	defb	ATTR_RED_PAP, 72
+	defb	ATTR_RPBI,    21
+	defb	ATTR_RED_PAP, 69
+	defb	ATTR_BYPBI,	  3
+	defb	ATTR_RED_PAP, 59
+	defb	ATTR_SIGN_BORDER_DIM, 9
+	defb	ATTR_RED_PAP, 23
+	defb	ATTR_SIGN_BORDER_DIM, 1	
+	defb	ATTR_BKPYI, 7	
+	defb	ATTR_SIGN_BORDER_DIM, 1	
+	defb	ATTR_RED_PAP, 23
+	defb	ATTR_SIGN_BORDER_DIM, 9
+	defb	ATTR_RED_PAP, 62
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 21
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 9
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 21
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 9	
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 3
+	defb	ATTR_BRPWI, 2
+	defb	ATTR_BRPYI, 1
+	defb	ATTR_RED_PAP, 11
+	defb	ATTR_RPBI, 1
+	defb	ATTR_RED_PAP, 3
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 9
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 2
+	defb	ATTR_ALL_BLK, 17
+	defb	ATTR_RED_PAP, 2
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 9
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 4
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 11
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 4
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 9
+	defb	ATTR_ALL_BLK, 3
+	defb	ATTR_RED_PAP, 17
+	defb	ATTR_ALL_BLK, 3
+	defb	ATTR_RED_PAP, 10
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 19
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 11
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 19
+	defb	ATTR_ALL_BLK, 1
+	defb	ATTR_RED_PAP, 35
+	defb	ATTR_ALL_BLK, 32
+	defb	0
+
+
+
+
 ; UDGs
 NUM_SCENE_UDGS		= 17			; max 19, $A2, due to top-RAM interrupts (plus 128k only has 19)
 

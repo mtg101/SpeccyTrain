@@ -30,26 +30,8 @@ LOOP_RLE_CHAR:						; assume: num times not 0...
 	jr		LOOP_CHAR				; next RLE block
 	
 CHAR_BUF_DONE:
-
-; RLE attrs to buffer
 	ld		hl, SCENE_ATTRS			; load addr of RLE attrs
-	ld		de, ATTR_SCENE_BUF		; de points to ATTR buffer
-LOOP_ATTR:
-	ld		a, (hl)					; get attr to use
-	cp		a, 0					; check it's not null
-	jr		z, ATTR_BUF_DONE		; if null we're done
-	inc		hl						; move to num times
-	ld		b, (hl)					; load b counter with num times to display
-LOOP_RLE_ATTR:						; assume: num times not 0...
-	ld		(de), a					; put the attr in buffer
-	inc		de
-	djnz	LOOP_RLE_ATTR			; lool until done
-	
-	inc		hl						; next attr (null check comes at start of loop)
-	jr		LOOP_ATTR				; next RLE block
-	
-ATTR_BUF_DONE:
-
+	call	DRAW_SCENE_ATTRS
 	
 DRAW_SCENE_CHARS:					; invisible due to ink&paper smae
 ; RST chars
@@ -80,17 +62,171 @@ DRAW_SCENE_CHARS_COl_LOOP:
 	pop		bc						; for outer row loop
 	djnz	DRAW_SCENE_CHARS_ROW_LOOP
 
-
-; ldir ATTRs (will show what's been drawn above while pap&ink were the same)
-	ld		de, ATTR_START			; ATTR mem target
-	ld		hl, ATTR_SCENE_BUF		; buffer source
-	ld		bc, NUM_SCREEN_ATTRS	; num attrs to blit
-	ldir
+	call	RENDER_SCENE_ATTRS
 
 	call	DRAW_SCENE_WHEEL
 
-
 	ret								; DRAW_SCENE
+
+RENDER_SCENE_ATTRS:
+; ldir ATTRs (will show what's been drawn above while pap&ink were the same)
+
+ ; before window
+	ld		de, ATTR_START			; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF		; buffer source
+	ld		bc, SCREEN_COLUMNS * WIN_ROW_START	; num attrs to blit
+	ldir
+
+; 10 window lines
+	; left
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START))	; buffer source
+	ld		bc, WIN_COL_START		; num attrs to blit
+	ldir
+
+	; right
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START)) + WIN_COL_VIS + WIN_COL_START ; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START)) + WIN_COL_VIS + WIN_COL_START ; buffer source
+	ld		bc, SCREEN_COLUMNS - WIN_COL_START - WIN_COL_VIS	; num attrs to blit
+	ldir
+
+	; left
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 1))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 1))	; buffer source
+	ld		bc, WIN_COL_START		; num attrs to blit
+	ldir
+
+	; right
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 1)) + WIN_COL_VIS + WIN_COL_START ; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 1)) + WIN_COL_VIS + WIN_COL_START ; buffer source
+	ld		bc, SCREEN_COLUMNS - WIN_COL_START - WIN_COL_VIS	; num attrs to blit
+	ldir
+
+	; left
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 2))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 2))	; buffer source
+	ld		bc, WIN_COL_START		; num attrs to blit
+	ldir
+
+	; right
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 2)) + WIN_COL_VIS + WIN_COL_START ; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 2)) + WIN_COL_VIS + WIN_COL_START ; buffer source
+	ld		bc, SCREEN_COLUMNS - WIN_COL_START - WIN_COL_VIS	; num attrs to blit
+	ldir
+
+	; left
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 3))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 3))	; buffer source
+	ld		bc, WIN_COL_START		; num attrs to blit
+	ldir
+
+	; right
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 3)) + WIN_COL_VIS + WIN_COL_START ; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 3)) + WIN_COL_VIS + WIN_COL_START ; buffer source
+	ld		bc, SCREEN_COLUMNS - WIN_COL_START - WIN_COL_VIS	; num attrs to blit
+	ldir
+
+	; left
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 4))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 4))	; buffer source
+	ld		bc, WIN_COL_START		; num attrs to blit
+	ldir
+
+	; right
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 4)) + WIN_COL_VIS + WIN_COL_START ; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 4)) + WIN_COL_VIS + WIN_COL_START ; buffer source
+	ld		bc, SCREEN_COLUMNS - WIN_COL_START - WIN_COL_VIS	; num attrs to blit
+	ldir
+
+	; left
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 5))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 5))	; buffer source
+	ld		bc, WIN_COL_START		; num attrs to blit
+	ldir
+
+	; right
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 5)) + WIN_COL_VIS + WIN_COL_START ; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 5)) + WIN_COL_VIS + WIN_COL_START ; buffer source
+	ld		bc, SCREEN_COLUMNS - WIN_COL_START - WIN_COL_VIS	; num attrs to blit
+	ldir
+
+	; left
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 6))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 6))	; buffer source
+	ld		bc, WIN_COL_START		; num attrs to blit
+	ldir
+
+	; right
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 6)) + WIN_COL_VIS + WIN_COL_START ; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 6)) + WIN_COL_VIS + WIN_COL_START ; buffer source
+	ld		bc, SCREEN_COLUMNS - WIN_COL_START - WIN_COL_VIS	; num attrs to blit
+	ldir
+
+	; left
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 7))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 7))	; buffer source
+	ld		bc, WIN_COL_START		; num attrs to blit
+	ldir
+
+	; right
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 7)) + WIN_COL_VIS + WIN_COL_START ; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 7)) + WIN_COL_VIS + WIN_COL_START ; buffer source
+	ld		bc, SCREEN_COLUMNS - WIN_COL_START - WIN_COL_VIS	; num attrs to blit
+	ldir
+
+	; left
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 8))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 8))	; buffer source
+	ld		bc, WIN_COL_START		; num attrs to blit
+	ldir
+
+	; right
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 8)) + WIN_COL_VIS + WIN_COL_START ; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 8)) + WIN_COL_VIS + WIN_COL_START ; buffer source
+	ld		bc, SCREEN_COLUMNS - WIN_COL_START - WIN_COL_VIS	; num attrs to blit
+	ldir
+
+	; left
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 9))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 9))	; buffer source
+	ld		bc, WIN_COL_START		; num attrs to blit
+	ldir
+
+	; right
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + 9)) + WIN_COL_VIS + WIN_COL_START ; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + 9)) + WIN_COL_VIS + WIN_COL_START ; buffer source
+	ld		bc, SCREEN_COLUMNS - WIN_COL_START - WIN_COL_VIS	; num attrs to blit
+	ldir
+
+; after window
+	ld		de, ATTR_START + (SCREEN_COLUMNS * (WIN_ROW_START + WIN_ROW_TOTAL))	; ATTR mem target
+	ld		hl, ATTR_SCENE_BUF + (SCREEN_COLUMNS * (WIN_ROW_START + WIN_ROW_TOTAL)) ; buf source
+	ld		bc, SCREEN_COLUMNS * (SCREEN_ALL_ROWS - WIN_ROW_TOTAL - WIN_ROW_START) ; WIN_ROW_START happens to be the 6 we need
+	ldir
+
+	ret 							; RENDER_SCENE_ATTRS
+
+
+; RLE attrs to buffer
+; pass in hl pointing to rle attrs
+DRAW_SCENE_ATTRS:
+	ld		de, ATTR_SCENE_BUF		; de points to ATTR buffer
+LOOP_ATTR:
+	ld		a, (hl)					; get attr to use
+	cp		a, 0					; check it's not null
+	jr		z, ATTR_BUF_DONE		; if null we're done
+	inc		hl						; move to num times
+	ld		b, (hl)					; load b counter with num times to display
+LOOP_RLE_ATTR:						; assume: num times not 0...
+	ld		(de), a					; put the attr in buffer
+	inc		de
+	djnz	LOOP_RLE_ATTR			; lool until done
+	
+	inc		hl						; next attr (null check comes at start of loop)
+	jr		LOOP_ATTR				; next RLE block
+	
+ATTR_BUF_DONE:
+	ret								; DRAW_SCENE_ATTRS
 
 ; draw the bicycle wheel usinng vector.asm routines
 DRAW_SCENE_WHEEL:

@@ -58,6 +58,11 @@ ANIMATE_WINDOW_TUNNEL_1:			; tunnel on
 	ld		a, 5					; 4 blocks at a time, 5 does 20, more than WIN_COL_VIS
 	ld		(ANIMATE_WINDOW_TUNNEL_COUNTER), a
 
+	; restore scene brighness
+	ld		hl, SCENE_ATTRS			; load addr of RLE attrs
+	call	DRAW_SCENE_ATTRS
+	call	RENDER_SCENE_ATTRS
+
 	ret								; we're done ANIMATE_WINDOW_TUNNEL
 
 ANIMATE_WINDOW_TUNNEL_2:			; tunnel turning off
@@ -100,6 +105,11 @@ ANIMATE_WINDOW_TUNNEL_3:			; tunnel turning on
 	; counter for light
 	ld		a, LIGHT_COUNTER_MAX
 	ld		(ANIMATE_WINDOW_TUNNEL_COUNTER), a
+
+	; dim attrs
+	ld		hl, SCENE_ATTRS_TUNNEL		; load addr of RLE attrs
+	call	DRAW_SCENE_ATTRS
+	call	RENDER_SCENE_ATTRS
 
 	ret									; ANIMATE_WINDOW_TUNNEL
 
