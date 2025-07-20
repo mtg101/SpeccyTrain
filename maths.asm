@@ -23,7 +23,7 @@ RNG:
 ; seeds are static for setup
 ; but then we wait for user to press space and use coutners to ramdomize seeds for animation
 SEED1:
-	defw	141						
+	defw	255
 SEED2:
 	defw	1312					
 	
