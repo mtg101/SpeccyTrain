@@ -126,7 +126,6 @@ INTERRUPT:
 	ei                               ; Enable interrupts
 	ret                              ; INTERRUPT
 
-
 ; Deployment: Snapshot
    SAVESNA 	"speccy_train.sna", START
    
